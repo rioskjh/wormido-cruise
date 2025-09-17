@@ -1,0 +1,268 @@
+# Wormi Cruise 웹 프로젝트 개발 규칙
+
+## 프로젝트 개요
+- **프로젝트명**: Wormi Cruise (월미도 크루즈 예약 시스템)
+- **기술 스택**: Next.js 14 (App Router) + TypeScript + Prisma + PostgreSQL
+- **스타일링**: Tailwind CSS + shadcn/ui
+- **인증**: JWT + bcrypt
+- **결제**: 이니시스 연동
+
+## 기술 스택 및 아키텍처
+
+### 프론트엔드
+- **Next.js 14**: App Router 사용, Server Component 우선
+- **TypeScript**: strict 모드 활성화, 타입 안정성 보장
+- **Tailwind CSS**: 유틸리티 퍼스트 CSS 프레임워크
+- **shadcn/ui**: Radix UI 기반 컴포넌트 라이브러리
+- **Lucide React**: 아이콘 라이브러리
+
+### 백엔드
+- **Prisma ORM**: PostgreSQL 데이터베이스 ORM
+- **JWT**: 인증 토큰 관리
+- **bcryptjs**: 비밀번호 해싱
+- **Zod**: 스키마 검증
+
+### 데이터베이스
+- **PostgreSQL**: 메인 데이터베이스
+- **주요 테이블**: Admin, Member, Product, Order, Reservation, Board, Post
+
+## 코딩 규칙
+
+### TypeScript 규칙
+```typescript
+// 엄격한 타입 체크 활성화
+"strict": true,
+"noImplicitAny": true,
+"noUncheckedIndexedAccess": false,
+"exactOptionalPropertyTypes": false,
+"noFallthroughCasesInSwitch": true,
+"forceConsistentCasingInFileNames": true
+```
+
+### 파일 구조 규칙
+```
+app/
+├── (auth)/          # 인증 관련 페이지
+├── admin/           # 관리자 페이지
+├── api/             # API 라우트
+├── reservation/     # 예약 관련 페이지
+├── events/          # 이벤트 페이지
+├── gallery/         # 갤러리 페이지
+└── support/         # 고객지원 페이지
+
+components/
+├── ui/              # shadcn/ui 컴포넌트
+├── Navigation.tsx   # 네비게이션
+└── PrivateRoute.tsx # 인증 보호 라우트
+
+lib/
+├── prisma.ts        # Prisma 클라이언트
+├── auth.ts          # 인증 유틸리티
+├── utils.ts         # 공통 유틸리티
+└── env.ts           # 환경변수 검증
+```
+
+### API 설계 규칙
+- **RESTful API**: 표준 HTTP 메서드 사용
+- **응답 형식**: `{ ok: boolean, data?: any, error?: string }`
+- **에러 처리**: try-catch 블록으로 모든 API 핸들러 감싸기
+- **인증**: JWT 토큰 기반 인증
+- **권한**: Role 기반 접근 제어 (USER, EDITOR, ADMIN)
+
+### 컴포넌트 규칙
+- **Server Component 우선**: 클라이언트 기능이 필요한 경우에만 Client Component 사용
+- **shadcn/ui 활용**: 기존 UI 컴포넌트 재사용
+- **반응형 디자인**: Tailwind CSS 반응형 클래스 사용
+- **접근성**: ARIA 속성 및 키보드 네비게이션 지원
+
+### 스타일링 규칙
+- **Tailwind CSS**: 인라인 스타일 금지
+- **커스텀 CSS**: globals.css에서 CSS 변수 정의
+- **색상 시스템**: HSL 기반 색상 팔레트 사용
+- **반응형**: mobile-first 접근법
+
+## 데이터베이스 규칙
+
+### Prisma 스키마
+- **명명 규칙**: camelCase 사용
+- **관계**: 적절한 foreign key 및 index 설정
+- **제약조건**: unique, required 필드 명시
+- **마이그레이션**: `prisma migrate dev` 사용
+
+### 주요 모델
+```prisma
+model Member {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  email    String @unique
+  role     Role   @default(USER)
+  // ...
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  name        String
+  basePrice   Int
+  maxCapacity Int
+  // ...
+}
+
+model Reservation {
+  id            Int      @id @default(autoincrement())
+  orderNumber   String   @unique
+  customerName  String
+  totalAmount   Int
+  // ...
+}
+```
+
+## 인증 및 보안
+
+### JWT 토큰 관리
+- **Access Token**: 15분 만료
+- **Refresh Token**: 7일 만료, HttpOnly 쿠키 저장
+- **토큰 갱신**: `/api/auth/refresh` 엔드포인트
+
+### 권한 관리
+- **USER**: 일반 사용자, 예약 가능
+- **EDITOR**: 편집자, 상품 관리 가능
+- **ADMIN**: 관리자, 모든 권한
+
+### 보안 규칙
+- **비밀번호**: bcrypt로 해싱
+- **환경변수**: 민감한 정보는 .env.local에 저장
+- **CORS**: 적절한 CORS 설정
+- **Rate Limiting**: API 호출 제한
+
+## 결제 시스템
+
+### 이니시스 연동
+- **결제 방식**: PC/모바일 일반결제
+- **환경**: 테스트/운영 환경 분리
+- **보안**: 서명 검증 및 결제 승인 처리
+
+### 결제 플로우
+1. 예약 정보 입력
+2. 결제 요청 (이니시스)
+3. 결제 승인
+4. 예약 확정
+
+## 개발 환경 설정
+
+### 필수 스크립트
+```json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "db:seed": "tsx prisma/seed.ts"
+  }
+}
+```
+
+### 환경변수
+```env
+# 데이터베이스
+DATABASE_URL="postgresql://..."
+
+# JWT
+JWT_SECRET="your-secret-key"
+
+# 이니시스
+INICIS_MID="your-mid"
+INICIS_SIGNKEY="your-signkey"
+```
+
+## 배포 규칙
+
+### Vercel 배포
+- **빌드 최적화**: SWC minify 활성화
+- **이미지 최적화**: Next.js Image 컴포넌트 사용
+- **환경변수**: Vercel 대시보드에서 설정
+
+### 성능 최적화
+- **코드 분할**: 동적 import 사용
+- **캐싱**: 적절한 캐시 헤더 설정
+- **번들 크기**: 불필요한 의존성 제거
+
+## 코드 품질
+
+### ESLint 규칙
+- **Next.js 규칙**: next/core-web-vitals
+- **TypeScript 규칙**: @typescript-eslint/recommended
+- **에러 처리**: console.log 금지, console.warn/error만 허용
+
+### Git 규칙
+- **커밋 메시지**: 명확하고 간결한 메시지
+- **브랜치**: feature/, bugfix/, hotfix/ 접두사 사용
+- **PR**: 코드 리뷰 필수
+
+## 테스트 규칙
+
+### 단위 테스트
+- **API 테스트**: 각 엔드포인트별 테스트
+- **컴포넌트 테스트**: 주요 컴포넌트 테스트
+- **유틸리티 테스트**: lib 함수들 테스트
+
+### 통합 테스트
+- **인증 플로우**: 로그인/로그아웃 테스트
+- **예약 플로우**: 전체 예약 프로세스 테스트
+- **결제 플로우**: 결제 연동 테스트
+
+## 문서화 규칙
+
+### 코드 문서화
+- **JSDoc**: 복잡한 함수에 주석 추가
+- **README**: 프로젝트 설정 및 실행 방법
+- **API 문서**: 각 엔드포인트별 설명
+
+### 주석 규칙
+- **한국어 주석**: 비즈니스 로직 설명
+- **영어 주석**: 기술적 구현 설명
+- **TODO**: 임시 코드에 TODO 주석 추가
+
+## 성능 모니터링
+
+### 메트릭 수집
+- **페이지 로딩 시간**: Core Web Vitals 측정
+- **API 응답 시간**: 각 엔드포인트별 모니터링
+- **에러 추적**: 에러 발생률 및 유형 분석
+
+### 최적화 목표
+- **LCP**: 2.5초 이하
+- **FID**: 100ms 이하
+- **CLS**: 0.1 이하
+
+## 접근성 (A11y)
+
+### WCAG 2.1 AA 준수
+- **키보드 네비게이션**: 모든 인터랙션 요소 접근 가능
+- **스크린 리더**: 적절한 ARIA 레이블
+- **색상 대비**: 4.5:1 이상 대비율
+- **포커스 표시**: 명확한 포커스 인디케이터
+
+## 국제화 (i18n)
+
+### 다국어 지원
+- **기본 언어**: 한국어
+- **확장 가능**: 영어 지원 준비
+- **날짜/시간**: 한국 표준시 (KST) 사용
+- **통화**: 원화 (KRW) 기본
+
+## 모니터링 및 로깅
+
+### 로그 레벨
+- **ERROR**: 시스템 에러
+- **WARN**: 경고 사항
+- **INFO**: 일반 정보
+- **DEBUG**: 개발 디버깅
+
+### 감사 로그
+- **사용자 행동**: 로그인/로그아웃, 예약 생성/수정
+- **관리자 행동**: 상품 관리, 사용자 관리
+- **보안 이벤트**: 권한 위반, 비정상 접근
+
+이 규칙들을 따라 일관성 있고 유지보수가 용이한 코드를 작성하세요.
