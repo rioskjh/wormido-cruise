@@ -16,13 +16,26 @@ export async function GET(request: NextRequest) {
     }
 
     const token = authHeader.substring(7)
-    const payload = verifyToken(token)
+    console.log('받은 토큰:', token)
+    console.log('토큰 길이:', token.length)
     
-    if (!payload || payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN') {
+    const payload = verifyToken(token)
+    console.log('검증된 페이로드:', payload)
+    
+    if (!payload) {
+      console.log('토큰 검증 실패')
       return NextResponse.json({
         ok: false,
-        error: 'Unauthorized',
+        error: '토큰 검증 실패',
       }, { status: 401 })
+    }
+    
+    if (payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN') {
+      console.log('권한 부족:', payload.role)
+      return NextResponse.json({
+        ok: false,
+        error: '관리자 권한이 필요합니다',
+      }, { status: 403 })
     }
 
     // 통계 데이터 조회
