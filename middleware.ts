@@ -11,9 +11,10 @@ export function middleware(request: NextRequest) {
     '/api/orders',
   ]
 
-  // 페이지에서 인증이 필요한 경로들
+  // 페이지에서 인증이 필요한 경로들 (관리자 로그인 페이지 제외)
   const protectedPageRoutes = [
-    '/admin',
+    '/admin/dashboard',
+    '/admin/reservations',
     '/reservation',
     '/my-reservations',
   ]
@@ -57,16 +58,29 @@ export function middleware(request: NextRequest) {
     })
   }
 
+  // 관리자 로그인 페이지는 인증 없이 접근 가능
+  if (pathname === '/admin/login') {
+    return NextResponse.next()
+  }
+
   // 페이지 라우트 인증 확인
   if (protectedPageRoutes.some(route => pathname.startsWith(route))) {
     const token = request.cookies.get('accessToken')?.value
     
     if (!token) {
+      // 관리자 페이지인 경우 관리자 로그인으로 리다이렉트
+      if (pathname.startsWith('/admin')) {
+        return NextResponse.redirect(new URL('/admin/login', request.url))
+      }
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
     const payload = verifyAccessToken(token)
     if (!payload) {
+      // 관리자 페이지인 경우 관리자 로그인으로 리다이렉트
+      if (pathname.startsWith('/admin')) {
+        return NextResponse.redirect(new URL('/admin/login', request.url))
+      }
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
