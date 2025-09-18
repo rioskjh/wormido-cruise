@@ -12,10 +12,8 @@ export function middleware(request: NextRequest) {
     '/api/orders',
   ]
 
-  // 페이지에서 인증이 필요한 경로들 (관리자 로그인 페이지 제외)
+  // 페이지에서 인증이 필요한 경로들 (관리자 페이지 제외)
   const protectedPageRoutes = [
-    '/admin/dashboard',
-    '/admin/reservations',
     '/reservation',
     '/my-reservations',
   ]
@@ -64,30 +62,17 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // 페이지 라우트 인증 확인
+  // 페이지 라우트 인증 확인 (관리자 페이지 제외)
   if (protectedPageRoutes.some(route => pathname.startsWith(route))) {
     const token = request.cookies.get('accessToken')?.value
     
     if (!token) {
-      // 관리자 페이지인 경우 관리자 로그인으로 리다이렉트
-      if (pathname.startsWith('/admin')) {
-        return NextResponse.redirect(new URL('/admin/login', request.url))
-      }
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
     const payload = verifyAccessToken(token)
     if (!payload) {
-      // 관리자 페이지인 경우 관리자 로그인으로 리다이렉트
-      if (pathname.startsWith('/admin')) {
-        return NextResponse.redirect(new URL('/admin/login', request.url))
-      }
       return NextResponse.redirect(new URL('/login', request.url))
-    }
-
-    // 관리자 페이지 권한 확인
-    if (pathname.startsWith('/admin') && payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN') {
-      return NextResponse.redirect(new URL('/', request.url))
     }
   }
 
@@ -99,8 +84,8 @@ export const config = {
     '/api/admin/:path*',
     '/api/reservations/:path*',
     '/api/orders/:path*',
-    '/admin/:path*',
     '/reservation/:path*',
     '/my-reservations/:path*',
+    // '/admin/:path*' 제거 - 관리자 페이지는 클라이언트 사이드에서 인증 처리
   ],
 }

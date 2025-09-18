@@ -63,7 +63,8 @@ export async function POST(request: NextRequest) {
     // 응답 데이터에서 비밀번호 제외
     const { password: _, ...adminWithoutPassword } = admin
 
-    return NextResponse.json({
+    // 응답 생성
+    const response = NextResponse.json({
       ok: true,
       data: {
         admin: adminWithoutPassword,
@@ -71,6 +72,23 @@ export async function POST(request: NextRequest) {
         refreshToken,
       },
     })
+
+    // 쿠키에 토큰 저장 (미들웨어에서 사용)
+    response.cookies.set('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 15 * 60, // 15분
+    })
+
+    response.cookies.set('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60, // 7일
+    })
+
+    return response
 
   } catch (error) {
     console.error('Admin login error:', error)

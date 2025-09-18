@@ -18,9 +18,15 @@ export default function AdminDashboardPage() {
   const router = useRouter()
 
   useEffect(() => {
-    // 관리자 인증 확인
+    // 관리자 인증 확인 (localStorage와 쿠키 모두 확인)
     const adminToken = localStorage.getItem('adminToken')
-    if (!adminToken) {
+    
+    // 쿠키에서도 토큰 확인 (document.cookie에서 accessToken 찾기)
+    const cookies = document.cookie.split(';')
+    const accessTokenCookie = cookies.find(cookie => cookie.trim().startsWith('accessToken='))
+    const cookieToken = accessTokenCookie ? accessTokenCookie.split('=')[1] : null
+    
+    if (!adminToken && !cookieToken) {
       router.push('/admin/login')
       return
     }
@@ -30,7 +36,20 @@ export default function AdminDashboardPage() {
 
   const fetchDashboardStats = async () => {
     try {
-      const adminToken = localStorage.getItem('adminToken')
+      // localStorage에서 토큰 우선 확인, 없으면 쿠키에서 확인
+      let adminToken = localStorage.getItem('adminToken')
+      
+      if (!adminToken) {
+        const cookies = document.cookie.split(';')
+        const accessTokenCookie = cookies.find(cookie => cookie.trim().startsWith('accessToken='))
+        adminToken = accessTokenCookie ? accessTokenCookie.split('=')[1] : null
+      }
+      
+      if (!adminToken) {
+        router.push('/admin/login')
+        return
+      }
+      
       const response = await fetch('/api/admin/dashboard/stats', {
         headers: {
           'Authorization': `Bearer ${adminToken}`,
