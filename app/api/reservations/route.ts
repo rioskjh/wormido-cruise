@@ -161,6 +161,7 @@ export async function POST(request: NextRequest) {
         customerPhone,
         customerEmail,
         reservationDate: new Date(reservationDate),
+        reservationTime: '10:00', // 기본값 설정
         adults: adultCount || 0,
         children: childCount || 0,
         infants: infantCount || 0,
