@@ -51,8 +51,8 @@ export async function POST(request: NextRequest) {
       role: admin.role,
     }
 
-    const accessToken = generateAccessToken(tokenPayload)
-    const refreshToken = generateRefreshToken(tokenPayload)
+    const accessToken = generateAccessToken(tokenPayload).replace(/\s/g, '')
+    const refreshToken = generateRefreshToken(tokenPayload).replace(/\s/g, '')
 
     // 마지막 로그인 시간 업데이트
     await prisma.admin.update({
