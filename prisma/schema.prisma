@@ -41,8 +41,8 @@ model Member {
   role          Role           @default(USER)
   level         Int            @default(1)
   point         Int            @default(0)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
   accounts      Account[]
   auditLogs     AuditLog[]
   comments      Comment[]
