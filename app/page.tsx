@@ -68,6 +68,12 @@ export default function Home() {
               >
                 회원가입
               </Link>
+              <Link 
+                href="/admin/login" 
+                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+              >
+                관리자
+              </Link>
             </div>
           </div>
         </div>

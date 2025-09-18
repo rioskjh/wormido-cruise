@@ -1,27 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyToken } from '@/lib/auth'
+import { verifyAdminToken } from '@/lib/admin-auth'
 
 export const runtime = 'nodejs'
 
 // 관리자 예약 목록 조회 (GET)
 export async function GET(request: NextRequest) {
   try {
-    // 인증 확인
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    if (!token) {
+    // 관리자 인증 확인
+    const admin = verifyAdminToken(request)
+    if (!admin) {
       return NextResponse.json({
         ok: false,
-        error: '인증이 필요합니다.',
+        error: 'Unauthorized',
       }, { status: 401 })
-    }
-
-    const payload = verifyToken(token)
-    if (!payload || payload.role !== 'ADMIN') {
-      return NextResponse.json({
-        ok: false,
-        error: '관리자 권한이 필요합니다.',
-      }, { status: 403 })
     }
 
     const { searchParams } = request.nextUrl
