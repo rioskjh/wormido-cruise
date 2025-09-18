@@ -1,0 +1,361 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 관리자 테이블
+model Admin {
+  id          Int      @id @default(autoincrement())
+  username    String   @unique
+  password    String
+  email       String   @unique
+  name        String
+  role        AdminRole @default(ADMIN)
+  isActive    Boolean  @default(true)
+  lastLoginAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  auditLogs   AuditLog[]
+
+  @@map("admins")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+}
+
+// 회원 테이블
+model Member {
+  id            Int            @id @default(autoincrement())
+  username      String         @unique
+  password      String
+  email         String         @unique
+  phone         String?
+  nickname      String
+  role          Role           @default(USER)
+  level         Int            @default(1)
+  point         Int            @default(0)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  accounts      Account[]
+  auditLogs     AuditLog[]
+  comments      Comment[]
+  orders        Order[]
+  posts         Post[]
+  refreshTokens RefreshToken[]
+  reservations  Reservation[]
+
+  @@map("members")
+}
+
+// 상품 카테고리 테이블
+model ProductCategory {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+
+  @@map("product_categories")
+}
+
+// 상품 테이블
+model Product {
+  id            Int      @id @default(autoincrement())
+  name          String
+  description   String?
+  categoryId    Int?
+  category      ProductCategory? @relation(fields: [categoryId], references: [id])
+  basePrice     Int      @default(0)
+  adultPrice    Int      @default(0)
+  childPrice    Int      @default(0)
+  infantPrice   Int      @default(0)
+  maxCapacity   Int      @default(50)
+  currentBookings Int    @default(0)
+  isActive      Boolean  @default(true)
+  useOptions    Boolean  @default(false)
+  startDate     DateTime?
+  endDate       DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+  personTypePrices PersonTypePrice[]
+  orders        Order[]
+  orderItems    OrderItem[]
+  productOptions ProductOption[]
+  productSchedules ProductSchedule[]
+  reservations  Reservation[]
+
+  @@map("products")
+}
+
+// 인원 타입별 가격 테이블
+model PersonTypePrice {
+  id        Int        @id @default(autoincrement())
+  productId Int
+  product   Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  personType PersonType
+  price     Int
+  createdAt DateTime   @default(now())
+
+  @@unique([productId, personType])
+  @@map("person_type_prices")
+}
+
+// 상품 옵션 테이블
+model ProductOption {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  values    ProductOptionValue[]
+
+  @@map("product_options")
+}
+
+// 상품 옵션 값 테이블
+model ProductOptionValue {
+  id        Int           @id @default(autoincrement())
+  optionId  Int
+  option    ProductOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  value     String
+  price     Int           @default(0)
+  sortOrder Int           @default(0)
+  isActive  Boolean       @default(true)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  option1Schedules ProductSchedule[] @relation("Option1Schedules")
+  option2Schedules ProductSchedule[] @relation("Option2Schedules")
+  option3Schedules ProductSchedule[] @relation("Option3Schedules")
+
+  @@map("product_option_values")
+}
+
+// 상품 스케줄 테이블
+model ProductSchedule {
+  id              Int      @id @default(autoincrement())
+  productId       Int
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  option1ValueId  Int?
+  option1Value    ProductOptionValue? @relation("Option1Schedules", fields: [option1ValueId], references: [id])
+  option2ValueId  Int?
+  option2Value    ProductOptionValue? @relation("Option2Schedules", fields: [option2ValueId], references: [id])
+  option3ValueId  Int?
+  option3Value    ProductOptionValue? @relation("Option3Schedules", fields: [option3ValueId], references: [id])
+  maxCapacity     Int      @default(0)
+  currentBookings Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  reservations    Reservation[]
+
+  @@unique([productId, option1ValueId, option2ValueId, option3ValueId])
+  @@map("product_schedules")
+}
+
+// 예약 테이블
+model Reservation {
+  id            Int      @id @default(autoincrement())
+  orderNumber   String   @unique
+  memberId      Int?
+  productId     Int
+  scheduleId    Int?
+  customerName  String
+  customerPhone String
+  customerEmail String
+  reservationDate DateTime
+  reservationTime String
+  adults        Int      @default(0)
+  children      Int      @default(0)
+  infants       Int      @default(0)
+  totalAmount   Int      @default(0)
+  status        String   @default("PENDING")
+  paymentMethod String?
+  paymentStatus String   @default("PENDING")
+  paymentDate   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  member        Member?  @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  schedule      ProductSchedule? @relation(fields: [scheduleId], references: [id], onDelete: SetNull)
+
+  @@map("reservations")
+}
+
+// 주문 테이블
+model Order {
+  id            Int         @id @default(autoincrement())
+  memberId      Int
+  productId     Int
+  totalAmount   Int
+  status        OrderStatus @default(PENDING)
+  paymentMethod String?
+  paymentId     String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  member        Member      @relation(fields: [memberId], references: [id])
+  product       Product     @relation(fields: [productId], references: [id])
+  items         OrderItem[]
+
+  @@map("orders")
+}
+
+// 주문 아이템 테이블
+model OrderItem {
+  id          Int     @id @default(autoincrement())
+  orderId     Int
+  productId   Int
+  adultCount  Int     @default(0)
+  childCount  Int     @default(0)
+  infantCount Int     @default(0)
+  subtotal    Int
+  createdAt   DateTime @default(now())
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+// 게시판 테이블
+model Board {
+  id          Int    @id @default(autoincrement())
+  boardId     String @unique
+  title       String
+  description String?
+  skin        String @default("default")
+  useComment  Boolean @default(true)
+  useUpload   Boolean @default(false)
+  createdAt   DateTime @default(now())
+  posts       Post[]
+
+  @@map("boards")
+}
+
+// 게시글 테이블
+model Post {
+  id        Int      @id @default(autoincrement())
+  boardId   String
+  memberId  Int
+  title     String
+  content   String
+  viewCount Int      @default(0)
+  isNotice  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  board     Board    @relation(fields: [boardId], references: [boardId], onDelete: Cascade)
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  comments  Comment[]
+  attachments Attachment[]
+
+  @@map("posts")
+}
+
+// 댓글 테이블
+model Comment {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  memberId  Int
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+// 첨부파일 테이블
+model Attachment {
+  id       Int    @id @default(autoincrement())
+  postId   Int
+  fileName String
+  filePath String
+  fileSize Int
+  createdAt DateTime @default(now())
+  post     Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("attachments")
+}
+
+// 감사 로그 테이블
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  memberId   Int?
+  adminId    Int?
+  action     String
+  resource   String
+  resourceId Int?
+  details    String?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  member     Member?  @relation(fields: [memberId], references: [id])
+  admin      Admin?   @relation(fields: [adminId], references: [id])
+
+  @@map("audit_logs")
+}
+
+// 리프레시 토큰 테이블
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  memberId  Int
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+// 소셜 계정 테이블
+model Account {
+  id                Int     @id @default(autoincrement())
+  memberId          Int
+  provider          String
+  providerAccountId String
+  accessToken       String?
+  refreshToken      String?
+  expiresAt         Int?
+  tokenType         String?
+  scope             String?
+  idToken           String?
+  sessionState      String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  member            Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+// 열거형들
+enum Role {
+  USER
+  EDITOR
+  ADMIN
+}
+
+enum PersonType {
+  ADULT
+  CHILD
+  INFANT
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}

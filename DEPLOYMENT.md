@@ -502,3 +502,4 @@ NEXTAUTH_SECRET="your-nextauth-secret"
 #### 단계 4: 도메인 설정 (선택사항)
 1. Vercel 대시보드 → Settings → Domains
 ```
+

@@ -424,3 +424,4 @@ psql -h localhost -U username -d wormi_cruise < backup.sql
 - 데이터베이스 성능 모니터링
 - 연결 풀 관리
 - 정기적인 통계 업데이트
+
