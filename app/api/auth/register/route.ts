@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { hashPassword, generateAccessToken, generateRefreshToken } from '@/lib/auth'
 import { z } from 'zod'
 
+export const runtime = 'nodejs'
+
 const registerSchema = z.object({
   username: z.string().min(3, '사용자명은 최소 3자 이상이어야 합니다'),
   email: z.string().email('올바른 이메일 형식이 아닙니다'),

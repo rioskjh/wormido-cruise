@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
+export const runtime = 'nodejs'
+
 // 관리자 예약 상태 변경 (PUT)
 export async function PUT(
   request: NextRequest,

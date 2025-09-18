@@ -39,3 +39,6 @@ export function verifyRefreshToken(token: string): TokenPayload | null {
     return null
   }
 }
+
+// verifyToken은 verifyAccessToken의 별칭
+export const verifyToken = verifyAccessToken
