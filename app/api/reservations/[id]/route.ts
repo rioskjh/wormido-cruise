@@ -63,7 +63,7 @@ export async function GET(
     }
 
     // 본인 예약인지 확인 (관리자가 아닌 경우)
-    if (payload.role !== 'ADMIN' && reservation.memberId !== payload.userId) {
+    if (payload.role !== 'ADMIN' && reservation.memberId !== payload.id) {
       return NextResponse.json({
         ok: false,
         error: '접근 권한이 없습니다.',
@@ -140,7 +140,7 @@ export async function PUT(
     }
 
     // 본인 예약인지 확인 (관리자가 아닌 경우)
-    if (payload.role !== 'ADMIN' && existingReservation.memberId !== payload.userId) {
+    if (payload.role !== 'ADMIN' && existingReservation.memberId !== payload.id) {
       return NextResponse.json({
         ok: false,
         error: '접근 권한이 없습니다.',
@@ -228,7 +228,7 @@ export async function DELETE(
     }
 
     // 본인 예약인지 확인 (관리자가 아닌 경우)
-    if (payload.role !== 'ADMIN' && existingReservation.memberId !== payload.userId) {
+    if (payload.role !== 'ADMIN' && existingReservation.memberId !== payload.id) {
       return NextResponse.json({
         ok: false,
         error: '접근 권한이 없습니다.',

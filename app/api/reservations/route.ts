@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
 
     // 필터 조건 구성
     const where: any = {
-      memberId: payload.userId,
+      memberId: payload.id,
     }
 
     if (status) {
@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
       data: {
         orderNumber,
         productId,
-        memberId: payload.userId,
+        memberId: payload.id,
         customerName,
         customerPhone,
         customerEmail,
