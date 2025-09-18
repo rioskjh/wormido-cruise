@@ -9,6 +9,14 @@ const nextConfig = {
   // 성능 최적화
   swcMinify: true,
   compress: true,
+  // Vercel 배포 설정
+  output: 'standalone',
+  // API 라우트 동적 렌더링 설정
+  api: {
+    bodyParser: {
+      sizeLimit: '1mb',
+    },
+  },
 }
 
 module.exports = nextConfig
