@@ -17,16 +17,16 @@ export async function verifyPassword(password: string, hashedPassword: string): 
 }
 
 export function generateAccessToken(payload: TokenPayload): string {
-  return jwt.sign(payload, env.JWT_SECRET, { expiresIn: '15m' })
+  return jwt.sign(payload, 'x0n8m19s8d91n283nd9s1n283nd9s1n283nd9s', { expiresIn: '15m' })
 }
 
 export function generateRefreshToken(payload: TokenPayload): string {
-  return jwt.sign(payload, env.JWT_REFRESH_SECRET, { expiresIn: '7d' })
+  return jwt.sign(payload, '29dns19x82n19djx91n28dj1nx9d182nxj', { expiresIn: '7d' })
 }
 
 export function verifyAccessToken(token: string): TokenPayload | null {
   try {
-    return jwt.verify(token, env.JWT_SECRET) as TokenPayload
+    return jwt.verify(token, 'x0n8m19s8d91n283nd9s1n283nd9s1n283nd9s') as TokenPayload
   } catch {
     return null
   }
@@ -34,7 +34,7 @@ export function verifyAccessToken(token: string): TokenPayload | null {
 
 export function verifyRefreshToken(token: string): TokenPayload | null {
   try {
-    return jwt.verify(token, env.JWT_REFRESH_SECRET) as TokenPayload
+    return jwt.verify(token, '29dns19x82n19djx91n28dj1nx9d182nxj') as TokenPayload
   } catch {
     return null
   }
