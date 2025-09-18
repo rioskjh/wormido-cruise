@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// 관리자 ?�이�?
+// 관리자 테이블
 model Admin {
   id          Int      @id @default(autoincrement())
   username    String   @unique
@@ -30,7 +30,7 @@ enum AdminRole {
   EDITOR
 }
 
-// ?�원 ?�이�?
+// 회원 테이블
 model Member {
   id            Int            @id @default(autoincrement())
   username      String         @unique
@@ -54,39 +54,39 @@ model Member {
   @@map("members")
 }
 
-// ?�품 카테고리 ?�이�?
+// 상품 카테고리 테이블
 model ProductCategory {
   id          Int       @id @default(autoincrement())
   name        String
   description String?
-  isActive    Boolean   @default(true) @map("is_active")
-  sortOrder   Int       @default(0) @map("sort_order")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   products    Product[]
 
   @@map("product_categories")
 }
 
-// ?�품 ?�이�?
+// 상품 테이블
 model Product {
   id            Int      @id @default(autoincrement())
   name          String
   description   String?
-  categoryId    Int?     @map("category_id")
+  categoryId    Int?
   category      ProductCategory? @relation(fields: [categoryId], references: [id])
-  basePrice     Int      @default(0) @map("base_price")
-  adultPrice    Int      @default(0) @map("adult_price")
-  childPrice    Int      @default(0) @map("child_price")
-  infantPrice   Int      @default(0) @map("infant_price")
-  maxCapacity   Int      @default(50) @map("max_capacity")
-  currentBookings Int    @default(0) @map("current_bookings")
-  isActive      Boolean  @default(true) @map("is_active")
-  useOptions    Boolean  @default(false) @map("use_options")
-  startDate     DateTime? @map("start_date")
-  endDate       DateTime? @map("end_date")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+  basePrice     Int      @default(0)
+  adultPrice    Int      @default(0)
+  childPrice    Int      @default(0)
+  infantPrice   Int      @default(0)
+  maxCapacity   Int      @default(50)
+  currentBookings Int    @default(0)
+  isActive      Boolean  @default(true)
+  useOptions    Boolean  @default(false)
+  startDate     DateTime?
+  endDate       DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
   personTypePrices PersonTypePrice[]
   orders        Order[]
   orderItems    OrderItem[]
@@ -97,23 +97,23 @@ model Product {
   @@map("products")
 }
 
-// ?�원 ?�?�별 가�??�이�?
+// 인원 타입별 가격 테이블
 model PersonTypePrice {
   id        Int        @id @default(autoincrement())
-  productId Int        @map("product_id")
+  productId Int
   product   Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
-  personType PersonType @map("person_type")
+  personType PersonType
   price     Int
-  createdAt DateTime   @default(now()) @map("created_at")
+  createdAt DateTime   @default(now())
 
   @@unique([productId, personType])
   @@map("person_type_prices")
 }
 
-// ?�품 ?�션 ?�이�?
+// 상품 옵션 테이블
 model ProductOption {
   id        Int      @id @default(autoincrement())
-  productId Int        @map("product_id")
+  productId Int
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   name      String
   sortOrder Int      @default(0)
@@ -125,7 +125,7 @@ model ProductOption {
   @@map("product_options")
 }
 
-// ?�품 ?�션 �??�이�?
+// 상품 옵션 값 테이블
 model ProductOptionValue {
   id        Int           @id @default(autoincrement())
   optionId  Int
@@ -143,7 +143,7 @@ model ProductOptionValue {
   @@map("product_option_values")
 }
 
-// ?�품 ?��?�??�이�?
+// 상품 스케줄 테이블
 model ProductSchedule {
   id              Int      @id @default(autoincrement())
   productId       Int
@@ -165,28 +165,28 @@ model ProductSchedule {
   @@map("product_schedules")
 }
 
-// ?�약 ?�이�?
+// 예약 테이블
 model Reservation {
   id            Int      @id @default(autoincrement())
-  orderNumber   String   @unique @map("order_number")
-  memberId      Int?     @map("member_id")
-  productId     Int      @map("product_id")
-  scheduleId    Int?     @map("schedule_id")
-  customerName  String   @map("customer_name")
-  customerPhone String   @map("customer_phone")
-  customerEmail String   @map("customer_email")
-  reservationDate DateTime @map("reservation_date")
-  reservationTime String @map("reservation_time")
+  orderNumber   String   @unique
+  memberId      Int?
+  productId     Int
+  scheduleId    Int?
+  customerName  String
+  customerPhone String
+  customerEmail String
+  reservationDate DateTime
+  reservationTime String
   adults        Int      @default(0)
   children      Int      @default(0)
   infants       Int      @default(0)
-  totalAmount   Int      @default(0) @map("total_amount")
+  totalAmount   Int      @default(0)
   status        String   @default("PENDING")
-  paymentMethod String?  @map("payment_method")
-  paymentStatus String   @default("PENDING") @map("payment_status")
-  paymentDate   DateTime? @map("payment_date")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  paymentMethod String?
+  paymentStatus String   @default("PENDING")
+  paymentDate   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   member        Member?  @relation(fields: [memberId], references: [id], onDelete: SetNull)
   product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   schedule      ProductSchedule? @relation(fields: [scheduleId], references: [id], onDelete: SetNull)
@@ -194,14 +194,14 @@ model Reservation {
   @@map("reservations")
 }
 
-// 주문 ?�이�?
+// 주문 테이블
 model Order {
   id            Int         @id @default(autoincrement())
   memberId      Int
-  productId     Int      @map("product_id")
+  productId     Int
   totalAmount   Int
   status        OrderStatus @default(PENDING)
-  paymentMethod String?  @map("payment_method")
+  paymentMethod String?
   paymentId     String?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
@@ -212,7 +212,7 @@ model Order {
   @@map("orders")
 }
 
-// 주문 ?�이???�이�?
+// 주문 아이템 테이블
 model OrderItem {
   id          Int     @id @default(autoincrement())
   orderId     Int
@@ -228,7 +228,7 @@ model OrderItem {
   @@map("order_items")
 }
 
-// 게시???�이�?
+// 게시판 테이블
 model Board {
   id          Int    @id @default(autoincrement())
   boardId     String @unique
@@ -243,7 +243,7 @@ model Board {
   @@map("boards")
 }
 
-// 게시글 ?�이�?
+// 게시글 테이블
 model Post {
   id        Int      @id @default(autoincrement())
   boardId   String
@@ -262,7 +262,7 @@ model Post {
   @@map("posts")
 }
 
-// ?��? ?�이�?
+// 댓글 테이블
 model Comment {
   id        Int      @id @default(autoincrement())
   postId    Int
@@ -276,7 +276,7 @@ model Comment {
   @@map("comments")
 }
 
-// 첨�??�일 ?�이�?
+// 첨부파일 테이블
 model Attachment {
   id       Int    @id @default(autoincrement())
   postId   Int
@@ -289,7 +289,7 @@ model Attachment {
   @@map("attachments")
 }
 
-// 감사 로그 ?�이�?
+// 감사 로그 테이블
 model AuditLog {
   id         Int      @id @default(autoincrement())
   memberId   Int?
@@ -307,7 +307,7 @@ model AuditLog {
   @@map("audit_logs")
 }
 
-// 리프?�시 ?�큰 ?�이�?
+// 리프레시 토큰 테이블
 model RefreshToken {
   id        Int      @id @default(autoincrement())
   memberId  Int
@@ -319,7 +319,7 @@ model RefreshToken {
   @@map("refresh_tokens")
 }
 
-// ?�셜 계정 ?�이�?
+// 소셜 계정 테이블
 model Account {
   id                Int     @id @default(autoincrement())
   memberId          Int
@@ -340,7 +340,7 @@ model Account {
   @@map("accounts")
 }
 
-// ?�거?�들
+// 열거형들
 enum Role {
   USER
   EDITOR
