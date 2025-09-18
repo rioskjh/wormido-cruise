@@ -158,7 +158,6 @@ export async function PUT(
         ...(adultCount !== undefined && { adults: adultCount }),
         ...(childCount !== undefined && { children: childCount }),
         ...(infantCount !== undefined && { infants: infantCount }),
-        ...(specialRequests !== undefined && { specialRequests }),
       },
       include: {
         product: {

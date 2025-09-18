@@ -167,7 +167,6 @@ export async function POST(request: NextRequest) {
         totalAmount: totalAmount || 0,
         paymentMethod: paymentMethod || 'CARD',
         status: 'PENDING',
-        specialRequests,
       },
       include: {
         product: {
