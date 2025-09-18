@@ -155,9 +155,9 @@ export async function PUT(
         ...(customerPhone && { customerPhone }),
         ...(customerEmail && { customerEmail }),
         ...(reservationDate && { reservationDate: new Date(reservationDate) }),
-        ...(adultCount !== undefined && { adultCount }),
-        ...(childCount !== undefined && { childCount }),
-        ...(infantCount !== undefined && { infantCount }),
+        ...(adultCount !== undefined && { adults: adultCount }),
+        ...(childCount !== undefined && { children: childCount }),
+        ...(infantCount !== undefined && { infants: infantCount }),
         ...(specialRequests !== undefined && { specialRequests }),
       },
       include: {
