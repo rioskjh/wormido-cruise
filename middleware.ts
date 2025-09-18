@@ -81,7 +81,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/api/admin/:path*',
+    // '/api/admin/:path*' 제거 - 관리자 API는 자체 인증 처리
     '/api/reservations/:path*',
     '/api/orders/:path*',
     '/reservation/:path*',
