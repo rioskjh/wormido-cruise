@@ -240,7 +240,6 @@ export async function DELETE(
       where: { id: reservationId },
       data: {
         status: 'CANCELLED',
-        cancelledAt: new Date(),
       },
     })
 
