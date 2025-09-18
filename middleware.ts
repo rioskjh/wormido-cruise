@@ -4,9 +4,10 @@ import { verifyAccessToken } from '@/lib/auth'
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // API 라우트에서 인증이 필요한 경로들
+  // API 라우트에서 인증이 필요한 경로들 (관리자 로그인 API 제외)
   const protectedApiRoutes = [
-    '/api/admin',
+    '/api/admin/dashboard',
+    '/api/admin/reservations',
     '/api/reservations',
     '/api/orders',
   ]
@@ -58,8 +59,8 @@ export function middleware(request: NextRequest) {
     })
   }
 
-  // 관리자 로그인 페이지는 인증 없이 접근 가능
-  if (pathname === '/admin/login') {
+  // 관리자 로그인 페이지와 API는 인증 없이 접근 가능
+  if (pathname === '/admin/login' || pathname === '/api/admin/auth/login') {
     return NextResponse.next()
   }
 
