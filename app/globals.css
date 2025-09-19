@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Pretendard 폰트 import */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -10,20 +13,26 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 250 100% 20%; /* 보라색 #190a6b */
+    --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 96%;
     --secondary-foreground: 222.2 84% 4.9%;
     --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
+    --accent: 210 100% 50%; /* 파란색 #007aff */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --ring: 250 100% 20%;
     --radius: 0.5rem;
+    
+    /* 디자인 전용 색상 */
+    --design-purple: 250 100% 20%; /* #190a6b */
+    --design-blue: 210 100% 50%; /* #007aff */
+    --design-gray: 0 0% 13%; /* #222222 */
+    --design-gray-light: 0 0% 27%; /* #444444 */
   }
 
   .dark {
@@ -55,5 +64,31 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  }
+}
+
+/* 디자인 전용 유틸리티 클래스 */
+@layer utilities {
+  .font-pretendard {
+    font-family: 'Pretendard', sans-serif;
+  }
+  .text-design-purple {
+    color: hsl(var(--design-purple));
+  }
+  .text-design-blue {
+    color: hsl(var(--design-blue));
+  }
+  .text-design-gray {
+    color: hsl(var(--design-gray));
+  }
+  .text-design-gray-light {
+    color: hsl(var(--design-gray-light));
+  }
+  .bg-design-purple {
+    background-color: hsl(var(--design-purple));
+  }
+  .bg-design-blue {
+    background-color: hsl(var(--design-blue));
   }
 }

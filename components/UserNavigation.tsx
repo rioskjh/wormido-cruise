@@ -88,14 +88,20 @@ export default function UserNavigation() {
 
   if (loading) {
     return (
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                🚢 Wormi Cruise
-              </h1>
-              <p className="text-sm text-gray-600">월미도 크루즈 예약 시스템</p>
+      <header className="bg-white relative w-full">
+        <div className="flex flex-row items-center relative size-full">
+          <div className="box-border content-stretch flex items-center justify-between px-[50px] py-[20px] relative w-full">
+            <div className="h-[46px] overflow-clip relative shrink-0 w-[250px]">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-design-purple rounded-md flex items-center justify-center">
+                  <span className="text-white text-lg">🚢</span>
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-design-gray font-pretendard">
+                    Wormi Cruise
+                  </h1>
+                </div>
+              </div>
             </div>
             <div className="animate-pulse bg-gray-200 h-10 w-32 rounded"></div>
           </div>
@@ -105,74 +111,118 @@ export default function UserNavigation() {
   }
 
   return (
-    <header className="bg-white shadow-sm">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex justify-between items-center">
-          <div>
-            <Link href="/" className="block">
-              <h1 className="text-2xl font-bold text-gray-900">
-                🚢 Wormi Cruise
-              </h1>
-              <p className="text-sm text-gray-600">월미도 크루즈 예약 시스템</p>
+    <header className="bg-white relative w-full">
+      <div className="flex flex-row items-center relative size-full">
+        <div className="box-border content-stretch flex items-center justify-between px-4 md:px-[50px] py-[20px] relative w-full">
+          {/* 로고 */}
+          <div className="h-[46px] overflow-clip relative shrink-0 w-[250px]">
+            <Link href="/" className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-design-purple rounded-md flex items-center justify-center">
+                <span className="text-white text-lg">🚢</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-design-gray font-pretendard">
+                  Wormi Cruise
+                </h1>
+              </div>
             </Link>
           </div>
-          
-          <div className="flex items-center space-x-4">
+
+          {/* 메뉴 - 데스크톱에서만 표시 */}
+          <div className="hidden lg:flex content-stretch font-pretendard gap-[80px] items-start justify-start leading-[0] not-italic relative shrink-0 text-design-gray text-[18px] text-nowrap">
+            <Link href="/" className="relative shrink-0 hover:text-design-blue transition-colors">
+              <p className="leading-[30px] text-nowrap whitespace-pre">상품예약</p>
+            </Link>
+            <Link href="/" className="relative shrink-0 hover:text-design-blue transition-colors">
+              <p className="leading-[30px] text-nowrap whitespace-pre">단체여행</p>
+            </Link>
+            <Link href="/" className="relative shrink-0 hover:text-design-blue transition-colors">
+              <p className="leading-[30px] text-nowrap whitespace-pre">운항정보</p>
+            </Link>
+            <Link href="/" className="relative shrink-0 hover:text-design-blue transition-colors">
+              <p className="leading-[30px] text-nowrap whitespace-pre">고객센터</p>
+            </Link>
+            <Link href="/" className="relative shrink-0 hover:text-design-blue transition-colors">
+              <p className="leading-[30px] text-nowrap whitespace-pre">회사소개</p>
+            </Link>
+          </div>
+
+          {/* 우측 버튼들 */}
+          <div className="content-stretch flex gap-2 md:gap-[30px] items-center justify-start relative shrink-0">
             {user ? (
               // 로그인된 상태
-              <div className="flex items-center space-x-4">
-                <div className="text-sm text-gray-600">
-                  안녕하세요, <span className="font-medium text-gray-900">{user.nickname}</span>님
-                </div>
+              <div className="flex items-center gap-[10px]">
                 <Link 
                   href="/profile" 
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0"
                 >
-                  정보수정
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                  <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
+                    <p className="leading-[20px] whitespace-pre">정보수정</p>
+                  </div>
                 </Link>
-           <Link 
-             href="/cart" 
-             className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100"
-           >
-             장바구니
-           </Link>
-           <Link 
-             href="/reservations" 
-             className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100"
-           >
-             내 예약
-           </Link>
+                <Link 
+                  href="/reservations" 
+                  className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0"
+                >
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                  </div>
+                  <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
+                    <p className="leading-[20px] whitespace-pre">예약조회</p>
+                  </div>
+                </Link>
                 <button
                   onClick={handleLogout}
-                  className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0 hover:text-design-blue transition-colors"
                 >
-                  로그아웃
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                  </div>
+                  <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
+                    <p className="leading-[20px] whitespace-pre">로그아웃</p>
+                  </div>
                 </button>
               </div>
             ) : (
               // 로그인되지 않은 상태
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center gap-[10px]">
                 <Link 
                   href="/login" 
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0"
                 >
-                  로그인
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                  </div>
+                  <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
+                    <p className="leading-[20px] whitespace-pre">로그인</p>
+                  </div>
                 </Link>
                 <Link 
                   href="/register" 
-                  className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0"
                 >
-                  회원가입
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                  </div>
+                  <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
+                    <p className="leading-[20px] whitespace-pre">회원가입</p>
+                  </div>
                 </Link>
               </div>
             )}
-            
-            <Link 
-              href="/admin/login" 
-              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-            >
-              관리자
-            </Link>
           </div>
         </div>
       </div>
