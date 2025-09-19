@@ -71,14 +71,19 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // 로그인된 사용자 확인 (선택사항)
+    // 로그인된 사용자 확인 (선택사항 - 비회원도 예약 가능)
     let memberId = null
     const authHeader = request.headers.get('authorization')
     if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.substring(7)
-      const payload = verifyToken(token)
-      if (payload) {
-        memberId = payload.id
+      try {
+        const token = authHeader.substring(7)
+        const payload = verifyToken(token)
+        if (payload) {
+          memberId = payload.id
+        }
+      } catch (error) {
+        // 토큰이 유효하지 않아도 비회원으로 예약 진행
+        console.log('Invalid token, proceeding as guest')
       }
     }
 
@@ -151,12 +156,12 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    // 로그인된 사용자의 예약 목록 조회
+    // 로그인된 사용자의 예약 목록 조회 (로그인 필수)
     const authHeader = request.headers.get('authorization')
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json({
         ok: false,
-        error: '인증이 필요합니다.',
+        error: '로그인이 필요합니다.',
       }, { status: 401 })
     }
 

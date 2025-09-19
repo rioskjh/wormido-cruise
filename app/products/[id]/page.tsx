@@ -190,7 +190,7 @@ export default function ProductDetailPage() {
       }, {} as Record<string, string>)
     })
 
-    router.push(`/reservation?${queryParams.toString()}`)
+    window.location.href = `/reservation?${queryParams.toString()}`
   }
 
   if (loading) {

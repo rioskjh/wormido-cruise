@@ -8,13 +8,11 @@ export function middleware(request: NextRequest) {
   const protectedApiRoutes = [
     '/api/admin/dashboard',
     '/api/admin/reservations',
-    '/api/reservations',
     '/api/orders',
   ]
 
   // 페이지에서 인증이 필요한 경로들 (관리자 페이지 제외)
   const protectedPageRoutes = [
-    '/reservation',
     '/my-reservations',
   ]
 
@@ -82,9 +80,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // '/api/admin/:path*' 제거 - 관리자 API는 자체 인증 처리
-    '/api/reservations/:path*',
     '/api/orders/:path*',
-    '/reservation/:path*',
     '/my-reservations/:path*',
     // '/admin/:path*' 제거 - 관리자 페이지는 클라이언트 사이드에서 인증 처리
   ],
