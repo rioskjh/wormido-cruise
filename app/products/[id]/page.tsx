@@ -84,25 +84,56 @@ export default function ProductDetailPage() {
     
     let total = 0
     
-    // 기본 가격 계산
-    total += reservationData.adults * product.adultPrice
-    total += reservationData.children * product.childPrice
-    total += reservationData.infants * product.infantPrice
+    // 기본 가격 계산 (상품 기본 가격 + 인원별 가격)
+    total += reservationData.adults * (product.basePrice + product.adultPrice)
+    total += reservationData.children * (product.basePrice + product.childPrice)
+    total += reservationData.infants * (product.basePrice + product.infantPrice)
     
-    // 옵션 가격 추가
+    // 옵션 가격 추가 (선택된 옵션의 가격을 인원 수만큼 곱함)
     if (product.useOptions && product.options) {
       product.options.forEach(option => {
         const selectedValueId = selectedOptions[option.id]
         if (selectedValueId) {
           const selectedValue = option.values.find(v => v.id === selectedValueId)
-          if (selectedValue) {
-            total += selectedValue.price
+          if (selectedValue && selectedValue.price > 0) {
+            // 옵션 가격을 총 인원 수만큼 곱함
+            const totalPersons = reservationData.adults + reservationData.children + reservationData.infants
+            total += selectedValue.price * totalPersons
           }
         }
       })
     }
     
     return total
+  }
+
+  const getSelectedOptionsPrice = () => {
+    if (!product || !product.useOptions || !product.options) return []
+    
+    const optionsPrice: Array<{
+      name: string
+      value: string
+      price: number
+      totalPrice: number
+    }> = []
+    const totalPersons = reservationData.adults + reservationData.children + reservationData.infants
+    
+    product.options.forEach(option => {
+      const selectedValueId = selectedOptions[option.id]
+      if (selectedValueId) {
+        const selectedValue = option.values.find(v => v.id === selectedValueId)
+        if (selectedValue && selectedValue.price > 0) {
+          optionsPrice.push({
+            name: option.name,
+            value: selectedValue.value,
+            price: selectedValue.price,
+            totalPrice: selectedValue.price * totalPersons
+          })
+        }
+      }
+    })
+    
+    return optionsPrice
   }
 
   const handleAddToCart = () => {
@@ -237,23 +268,31 @@ export default function ProductDetailPage() {
                 {/* 가격 정보 */}
                 <div className="bg-gray-50 p-6 rounded-lg">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">가격 정보</h3>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="text-center">
-                      <div className="text-sm text-gray-600 mb-1">대인</div>
-                      <div className="text-xl font-bold text-gray-900">
-                        {product.adultPrice.toLocaleString()}원
+                  <div className="space-y-3">
+                    <div className="text-center p-3 bg-white rounded-lg">
+                      <div className="text-sm text-gray-600 mb-1">기본 가격</div>
+                      <div className="text-lg font-bold text-gray-900">
+                        {product.basePrice.toLocaleString()}원
                       </div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-sm text-gray-600 mb-1">소인</div>
-                      <div className="text-xl font-bold text-gray-900">
-                        {product.childPrice.toLocaleString()}원
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="text-center p-3 bg-white rounded-lg">
+                        <div className="text-sm text-gray-600 mb-1">대인 추가</div>
+                        <div className="text-lg font-bold text-gray-900">
+                          +{product.adultPrice.toLocaleString()}원
+                        </div>
                       </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-sm text-gray-600 mb-1">유아</div>
-                      <div className="text-xl font-bold text-gray-900">
-                        {product.infantPrice.toLocaleString()}원
+                      <div className="text-center p-3 bg-white rounded-lg">
+                        <div className="text-sm text-gray-600 mb-1">소인 추가</div>
+                        <div className="text-lg font-bold text-gray-900">
+                          +{product.childPrice.toLocaleString()}원
+                        </div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg">
+                        <div className="text-sm text-gray-600 mb-1">유아 추가</div>
+                        <div className="text-lg font-bold text-gray-900">
+                          +{product.infantPrice.toLocaleString()}원
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -301,7 +340,7 @@ export default function ProductDetailPage() {
                       >
                         {Array.from({ length: 11 }, (_, i) => (
                           <option key={i} value={i}>
-                            대인 {i}명 {i > 0 && `(+${(i * product.adultPrice).toLocaleString()})`}
+                            대인 {i}명 {i > 0 && `(+${(i * (product.basePrice + product.adultPrice)).toLocaleString()})`}
                           </option>
                         ))}
                       </select>
@@ -318,7 +357,7 @@ export default function ProductDetailPage() {
                       >
                         {Array.from({ length: 11 }, (_, i) => (
                           <option key={i} value={i}>
-                            소인 {i}명 {i > 0 && `(+${(i * product.childPrice).toLocaleString()})`}
+                            소인 {i}명 {i > 0 && `(+${(i * (product.basePrice + product.childPrice)).toLocaleString()})`}
                           </option>
                         ))}
                       </select>
@@ -335,13 +374,32 @@ export default function ProductDetailPage() {
                       >
                         {Array.from({ length: 4 }, (_, i) => (
                           <option key={i} value={i}>
-                            유아 {i}명 {i > 0 && '(0)'}
+                            유아 {i}명 {i > 0 && `(+${(i * (product.basePrice + product.infantPrice)).toLocaleString()})`}
                           </option>
                         ))}
                       </select>
                     </div>
                   </div>
                 </div>
+
+                {/* 선택된 옵션 가격 */}
+                {getSelectedOptionsPrice().length > 0 && (
+                  <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                    <h4 className="text-sm font-semibold text-yellow-800 mb-2">선택된 옵션</h4>
+                    <div className="space-y-1">
+                      {getSelectedOptionsPrice().map((option, index) => (
+                        <div key={index} className="flex justify-between text-sm">
+                          <span className="text-yellow-700">
+                            {option.name}: {option.value}
+                          </span>
+                          <span className="font-medium text-yellow-800">
+                            +{option.totalPrice.toLocaleString()}원
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* 총 가격 */}
                 <div className="bg-blue-50 p-4 rounded-lg">
@@ -409,3 +467,4 @@ export default function ProductDetailPage() {
     </div>
   )
 }
+
