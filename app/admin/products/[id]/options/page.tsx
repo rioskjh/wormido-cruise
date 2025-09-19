@@ -4,8 +4,90 @@ import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { useToast } from '@/contexts/ToastContext'
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import {
+  useSortable,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 export const dynamic = 'force-dynamic'
+
+// SortableItem 컴포넌트
+function SortableItem({ value, option, onEdit, onDelete }: {
+  value: ProductOptionValue
+  option: ProductOption
+  onEdit: (value: ProductOptionValue, option: ProductOption) => void
+  onDelete: (value: ProductOptionValue, option: ProductOption) => void
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: `${option.id}-${value.id}` })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  }
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <div
+            {...attributes}
+            {...listeners}
+            className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 p-1"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
+            </svg>
+          </div>
+          <div>
+            <div className="font-medium text-gray-900">{value.value}</div>
+            <div className="text-sm text-gray-500">+{value.price.toLocaleString()}원</div>
+          </div>
+        </div>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => onEdit(value, option)}
+            className="text-indigo-600 hover:text-indigo-900 text-sm"
+          >
+            수정
+          </button>
+          <button
+            onClick={() => onDelete(value, option)}
+            className="text-red-600 hover:text-red-900 text-sm"
+          >
+            삭제
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 interface Product {
   id: number
@@ -79,6 +161,14 @@ export default function ProductOptionsPage() {
   const { showSuccess, showError } = useToast()
 
   const productId = params.id as string
+
+  // 드래그 앤 드롭 센서 설정
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
 
   // 옵션 값 유효성 검사 함수
   const validateOptionValue = (value: string): { isValid: boolean; error?: string } => {
@@ -587,6 +677,99 @@ export default function ProductOptionsPage() {
     )
   }
 
+  // 드래그 앤 드롭 핸들러
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (!over || active.id === over.id) {
+      return
+    }
+
+    // 옵션 값의 순서를 찾기 위해 active.id와 over.id를 파싱
+    const activeId = active.id as string
+    const overId = over.id as string
+
+    // activeId와 overId에서 옵션 ID와 값 ID를 추출
+    const [activeOptionId, activeValueId] = activeId.split('-')
+    const [overOptionId, overValueId] = overId.split('-')
+
+    if (activeOptionId !== overOptionId) {
+      return // 같은 옵션 내에서만 순서 변경 가능
+    }
+
+    const optionId = parseInt(activeOptionId)
+    const option = options.find(opt => opt.id === optionId)
+    
+    if (!option) return
+
+    const oldIndex = option.values.findIndex(v => v.id === parseInt(activeValueId))
+    const newIndex = option.values.findIndex(v => v.id === parseInt(overValueId))
+
+    if (oldIndex === -1 || newIndex === -1) return
+
+    // 로컬 상태 업데이트
+    const newValues = arrayMove(option.values, oldIndex, newIndex)
+    
+    // sortOrder 업데이트
+    const updatedValues = newValues.map((value, index) => ({
+      ...value,
+      sortOrder: index
+    }))
+
+    // 옵션 상태 업데이트
+    setOptions(prevOptions => 
+      prevOptions.map(opt => 
+        opt.id === optionId 
+          ? { ...opt, values: updatedValues }
+          : opt
+      )
+    )
+
+    // 서버에 순서 변경 요청
+    try {
+      let adminToken = localStorage.getItem('adminToken')
+      
+      if (!adminToken) {
+        router.push('/admin/login')
+        return
+      }
+
+      if (isTokenExpired(adminToken)) {
+        const newToken = await refreshToken()
+        if (newToken) {
+          adminToken = newToken
+        } else {
+          localStorage.removeItem('adminToken')
+          localStorage.removeItem('adminRefreshToken')
+          router.push('/admin/login')
+          return
+        }
+      }
+
+      // 각 값의 sortOrder를 업데이트
+      const updatePromises = updatedValues.map((value, index) => 
+        fetch(`/api/admin/products/${productId}/options/${optionId}/values/${value.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`,
+          },
+          body: JSON.stringify({
+            sortOrder: index
+          }),
+        })
+      )
+
+      await Promise.all(updatePromises)
+      showSuccess('순서 변경 완료', '옵션 값의 순서가 성공적으로 변경되었습니다.')
+    } catch (error) {
+      console.error('순서 변경 에러:', error)
+      showError('순서 변경 실패', '옵션 값 순서 변경 중 오류가 발생했습니다.')
+      // 실패 시 원래 상태로 복원
+      fetchOptions()
+    }
+  }
+
   return (
     <AdminLayout title="상품 옵션 관리" description={`${product.name}의 옵션을 관리할 수 있습니다`}>
       <div className="space-y-6">
@@ -717,42 +900,31 @@ export default function ProductOptionsPage() {
                     {/* 옵션 값 목록 */}
                     {option.values.length > 0 && (
                       <div className="bg-gray-50 rounded-lg p-4">
-                        <h5 className="text-sm font-medium text-gray-700 mb-3">옵션 값</h5>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {option.values.map((value) => (
-                            <div key={value.id} className="bg-white border border-gray-200 rounded-lg p-3">
-                              <div className="flex justify-between items-start">
-                                <div className="flex-1">
-                                  <div className="flex items-center space-x-2">
-                                    <span className="font-medium text-gray-800">{value.value}</span>
-                                    {!value.isActive && (
-                                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                                        비활성
-                                      </span>
-                                    )}
-                                  </div>
-                                  <p className="text-indigo-600 text-sm mt-1">
-                                    +{formatPrice(value.price)}원
-                                  </p>
-                                </div>
-                                <div className="flex space-x-1 ml-2">
-                                  <button
-                                    onClick={() => handleEditValue(value, option)}
-                                    className="text-indigo-600 hover:text-indigo-900 text-xs"
-                                  >
-                                    수정
-                                  </button>
-                                  <button
-                                    onClick={() => handleDeleteValue(value, option)}
-                                    className="text-red-600 hover:text-red-900 text-xs"
-                                  >
-                                    삭제
-                                  </button>
-                                </div>
-                              </div>
+                        <h5 className="text-sm font-medium text-gray-700 mb-3">옵션 값 (드래그로 순서 변경 가능)</h5>
+                        <DndContext
+                          sensors={sensors}
+                          collisionDetection={closestCenter}
+                          onDragEnd={handleDragEnd}
+                        >
+                          <SortableContext
+                            items={option.values.map(v => `${option.id}-${v.id}`)}
+                            strategy={verticalListSortingStrategy}
+                          >
+                            <div className="space-y-3">
+                              {option.values
+                                .sort((a, b) => a.sortOrder - b.sortOrder)
+                                .map((value) => (
+                                <SortableItem
+                                  key={value.id}
+                                  value={value}
+                                  option={option}
+                                  onEdit={handleEditValue}
+                                  onDelete={handleDeleteValue}
+                                />
+                              ))}
                             </div>
-                          ))}
-                        </div>
+                          </SortableContext>
+                        </DndContext>
                       </div>
                     )}
                   </div>
@@ -890,18 +1062,6 @@ export default function ProductOptionsPage() {
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      정렬 순서
-                    </label>
-                    <input
-                      type="number"
-                      value={valueFormData.sortOrder}
-                      onChange={(e) => setValueFormData({ ...valueFormData, sortOrder: parseInt(e.target.value) || 0 })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      min="0"
-                    />
-                  </div>
 
                   <div className="flex items-center">
                     <input
