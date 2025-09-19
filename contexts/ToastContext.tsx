@@ -41,10 +41,17 @@ export function ToastProvider({ children }: ToastProviderProps) {
       onClose: removeToast,
     }
     
-    setToasts((prev) => [...prev, newToast])
+    console.log('ToastContext: showToast 호출됨', { id, toast, newToast })
+    setToasts((prev) => {
+      console.log('ToastContext: 이전 toasts', prev)
+      const updated = [...prev, newToast]
+      console.log('ToastContext: 업데이트된 toasts', updated)
+      return updated
+    })
   }, [removeToast])
 
   const showSuccess = useCallback((title: string, message?: string) => {
+    console.log('ToastContext: showSuccess 호출됨', { title, message })
     showToast({ type: 'success', title, message })
   }, [showToast])
 

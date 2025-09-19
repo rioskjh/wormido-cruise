@@ -221,11 +221,14 @@ export default function AdminCategoriesPage() {
         setIsModalOpen(false)
         fetchCategories() // 목록 새로고침
         if (editingCategory) {
+          console.log('Toast 호출: 카테고리 수정 완료')
           showSuccess('카테고리 수정 완료', '카테고리가 성공적으로 수정되었습니다.')
         } else {
+          console.log('Toast 호출: 카테고리 생성 완료')
           showSuccess('카테고리 생성 완료', '새 카테고리가 성공적으로 생성되었습니다.')
         }
       } else {
+        console.log('Toast 호출: 카테고리 저장 실패', data.error)
         showError('카테고리 저장 실패', data.error || '카테고리 저장에 실패했습니다.')
       }
     } catch (error) {

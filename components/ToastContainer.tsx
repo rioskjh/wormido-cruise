@@ -8,10 +8,14 @@ interface ToastContainerProps {
 }
 
 export default function ToastContainer({ toasts, onClose }: ToastContainerProps) {
+  console.log('ToastContainer: 렌더링됨', { toastsCount: toasts.length, toasts })
+  
   if (toasts.length === 0) {
+    console.log('ToastContainer: toasts가 비어있음, null 반환')
     return null
   }
 
+  console.log('ToastContainer: toasts 렌더링 중', toasts)
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2">
       {toasts.map((toast) => (
