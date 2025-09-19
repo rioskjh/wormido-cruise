@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
+import { useToast } from '@/contexts/ToastContext'
 
 interface Reservation {
   id: number
@@ -34,6 +35,7 @@ export default function AdminReservationsPage() {
   const [error, setError] = useState('')
   const [statusFilter, setStatusFilter] = useState('ALL')
   const router = useRouter()
+  const { showSuccess, showError } = useToast()
 
   // 토큰 만료 확인 함수
   const isTokenExpired = (token: string): boolean => {
@@ -130,11 +132,13 @@ export default function AdminReservationsPage() {
           return
         } else {
           setError(data.error || '예약 목록을 불러오는데 실패했습니다.')
+          showError('예약 목록 로드 실패', data.error || '예약 목록을 불러오는데 실패했습니다.')
         }
       }
     } catch (error) {
       console.error('API 호출 에러:', error)
       setError('예약 목록을 불러오는데 실패했습니다.')
+      showError('예약 목록 로드 실패', '예약 목록을 불러오는데 실패했습니다.')
     } finally {
       setIsLoading(false)
     }
@@ -176,6 +180,7 @@ export default function AdminReservationsPage() {
       if (data.ok) {
         // 목록 새로고침
         fetchReservations()
+        showSuccess('예약 상태 변경 완료', '예약 상태가 성공적으로 변경되었습니다.')
       } else {
         // 토큰 관련 에러인 경우 로그인 페이지로 이동
         if (data.error === 'Unauthorized' || 
@@ -187,11 +192,11 @@ export default function AdminReservationsPage() {
           router.push('/admin/login')
           return
         }
-        alert(data.error || '상태 변경에 실패했습니다.')
+        showError('예약 상태 변경 실패', data.error || '상태 변경에 실패했습니다.')
       }
     } catch (error) {
       console.error('상태 변경 에러:', error)
-      alert('상태 변경 중 오류가 발생했습니다.')
+      showError('예약 상태 변경 실패', '상태 변경 중 오류가 발생했습니다.')
     }
   }
 

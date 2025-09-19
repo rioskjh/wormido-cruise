@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import AdminNavigation from './AdminNavigation'
+import { ToastProvider } from '@/contexts/ToastContext'
 
 interface AdminLayoutProps {
   children: React.ReactNode
@@ -99,27 +100,29 @@ export default function AdminLayout({ children, title, description }: AdminLayou
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* 좌측 네비게이션 */}
-      <AdminNavigation onLogout={handleLogout} />
-      
-      {/* 메인 콘텐츠 영역 */}
-      <div className="flex-1 flex flex-col">
-        {/* 상단 헤더 */}
-        <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="px-6 py-4">
-            <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-            {description && (
-              <p className="text-gray-600 mt-1">{description}</p>
-            )}
-          </div>
-        </header>
+    <ToastProvider>
+      <div className="min-h-screen bg-gray-50 flex">
+        {/* 좌측 네비게이션 */}
+        <AdminNavigation onLogout={handleLogout} />
+        
+        {/* 메인 콘텐츠 영역 */}
+        <div className="flex-1 flex flex-col">
+          {/* 상단 헤더 */}
+          <header className="bg-white shadow-sm border-b border-gray-200">
+            <div className="px-6 py-4">
+              <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+              {description && (
+                <p className="text-gray-600 mt-1">{description}</p>
+              )}
+            </div>
+          </header>
 
-        {/* 메인 콘텐츠 */}
-        <main className="flex-1 p-6">
-          {children}
-        </main>
+          {/* 메인 콘텐츠 */}
+          <main className="flex-1 p-6">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </ToastProvider>
   )
 }

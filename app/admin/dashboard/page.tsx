@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
+import { useToast } from '@/contexts/ToastContext'
 
 interface DashboardStats {
   totalReservations: number
@@ -17,6 +18,7 @@ export default function AdminDashboardPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const router = useRouter()
+  const { showError } = useToast()
 
   // 토큰 만료 확인 함수
   const isTokenExpired = (token: string): boolean => {
@@ -117,12 +119,14 @@ export default function AdminDashboardPage() {
           return
         } else {
           setError(data.error || '데이터를 불러오는데 실패했습니다.')
+          showError('대시보드 데이터 로드 실패', data.error || '데이터를 불러오는데 실패했습니다.')
         }
       }
     } catch (error) {
       console.error('API 호출 에러:', error)
       // 네트워크 에러나 기타 에러인 경우에도 토큰 만료 가능성 체크
       setError('데이터를 불러오는데 실패했습니다.')
+      showError('대시보드 데이터 로드 실패', '데이터를 불러오는데 실패했습니다.')
     } finally {
       setIsLoading(false)
     }

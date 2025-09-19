@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
+import { useToast } from '@/contexts/ToastContext'
 
 interface Category {
   id: number
@@ -38,6 +39,7 @@ export default function AdminCategoriesPage() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
+  const { showSuccess, showError } = useToast()
 
   // 토큰 만료 확인 함수
   const isTokenExpired = (token: string): boolean => {
@@ -126,11 +128,13 @@ export default function AdminCategoriesPage() {
           return
         } else {
           setError(data.error || '카테고리 목록을 불러오는데 실패했습니다.')
+          showError('카테고리 목록 로드 실패', data.error || '카테고리 목록을 불러오는데 실패했습니다.')
         }
       }
     } catch (error) {
       console.error('API 호출 에러:', error)
       setError('카테고리 목록을 불러오는데 실패했습니다.')
+      showError('카테고리 목록 로드 실패', '카테고리 목록을 불러오는데 실패했습니다.')
     } finally {
       setIsLoading(false)
     }
@@ -203,12 +207,17 @@ export default function AdminCategoriesPage() {
       if (data.ok) {
         setIsModalOpen(false)
         fetchCategories() // 목록 새로고침
+        if (editingCategory) {
+          showSuccess('카테고리 수정 완료', '카테고리가 성공적으로 수정되었습니다.')
+        } else {
+          showSuccess('카테고리 생성 완료', '새 카테고리가 성공적으로 생성되었습니다.')
+        }
       } else {
-        alert(data.error || '카테고리 저장에 실패했습니다.')
+        showError('카테고리 저장 실패', data.error || '카테고리 저장에 실패했습니다.')
       }
     } catch (error) {
       console.error('카테고리 저장 에러:', error)
-      alert('카테고리 저장 중 오류가 발생했습니다.')
+      showError('카테고리 저장 실패', '카테고리 저장 중 오류가 발생했습니다.')
     } finally {
       setIsSubmitting(false)
     }
@@ -251,12 +260,13 @@ export default function AdminCategoriesPage() {
 
       if (data.ok) {
         fetchCategories() // 목록 새로고침
+        showSuccess('카테고리 삭제 완료', '카테고리가 성공적으로 삭제되었습니다.')
       } else {
-        alert(data.error || '카테고리 삭제에 실패했습니다.')
+        showError('카테고리 삭제 실패', data.error || '카테고리 삭제에 실패했습니다.')
       }
     } catch (error) {
       console.error('카테고리 삭제 에러:', error)
-      alert('카테고리 삭제 중 오류가 발생했습니다.')
+      showError('카테고리 삭제 실패', '카테고리 삭제 중 오류가 발생했습니다.')
     }
   }
 
