@@ -263,9 +263,6 @@ export default function AdminProductsPage() {
     router.push(`/admin/products/${product.id}/options`)
   }
 
-  const handleManageSchedules = (product: Product) => {
-    router.push(`/admin/products/${product.id}/schedules`)
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -531,20 +528,12 @@ export default function AdminProductsPage() {
                           삭제
                         </button>
                         {product.useOptions && (
-                          <>
-                            <button
-                              onClick={() => handleManageOptions(product)}
-                              className="text-blue-600 hover:text-blue-900"
-                            >
-                              옵션 관리
-                            </button>
-                            <button
-                              onClick={() => handleManageSchedules(product)}
-                              className="text-green-600 hover:text-green-900"
-                            >
-                              스케줄 관리
-                            </button>
-                          </>
+                          <button
+                            onClick={() => handleManageOptions(product)}
+                            className="text-blue-600 hover:text-blue-900"
+                          >
+                            옵션 관리
+                          </button>
                         )}
                       </div>
                     </td>
