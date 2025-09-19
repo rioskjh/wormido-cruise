@@ -49,7 +49,15 @@ export default function AdminCategoriesPage() {
     const toast = useToast()
     showSuccess = toast.showSuccess
     showError = toast.showError
-  } catch {
+    
+    // useToast 훅 디버깅
+    console.log('useToast 훅 상태:', { 
+      showSuccess: typeof showSuccess, 
+      showError: typeof showError,
+      toastObject: toast
+    })
+  } catch (error) {
+    console.warn('useToast 훅을 사용할 수 없습니다:', error)
     showSuccess = () => {} // 빈 함수로 fallback
     showError = () => {} // 빈 함수로 fallback
   }

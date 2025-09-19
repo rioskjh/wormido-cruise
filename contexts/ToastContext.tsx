@@ -52,6 +52,8 @@ export function ToastProvider({ children }: ToastProviderProps) {
 
   const showSuccess = useCallback((title: string, message?: string) => {
     console.log('ToastContext: showSuccess 호출됨', { title, message })
+    console.log('ToastContext: showToast 함수 타입:', typeof showToast)
+    console.log('ToastContext: showToast 함수 내용:', showToast.toString().substring(0, 200) + '...')
     showToast({ type: 'success', title, message })
   }, [showToast])
 
