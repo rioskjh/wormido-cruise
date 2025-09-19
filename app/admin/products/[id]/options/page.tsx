@@ -186,6 +186,12 @@ export default function ProductOptionsPage() {
   }
 
   const handleCreateOption = () => {
+    // 옵션 최대 3개 제한
+    if (options.length >= 3) {
+      showError('옵션 제한', '상품당 최대 3개의 옵션만 등록할 수 있습니다.')
+      return
+    }
+
     setEditingOption(null)
     setOptionFormData({
       name: '',
@@ -506,12 +512,22 @@ export default function ProductOptionsPage() {
         <div className="bg-white rounded-lg shadow">
           <div className="p-6 border-b border-gray-200">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-medium text-gray-800">옵션 목록</h3>
+              <div>
+                <h3 className="text-lg font-medium text-gray-800">옵션 목록</h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  {options.length}/3개 등록됨 (최대 3개까지 등록 가능)
+                </p>
+              </div>
               <button
                 onClick={handleCreateOption}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+                disabled={options.length >= 3}
+                className={`px-4 py-2 rounded-md font-medium ${
+                  options.length >= 3
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                }`}
               >
-                새 옵션 추가
+                {options.length >= 3 ? '옵션 제한' : '새 옵션 추가'}
               </button>
             </div>
           </div>
