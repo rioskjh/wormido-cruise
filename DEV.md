@@ -139,7 +139,7 @@ npx prisma init
 npx prisma migrate dev --name init
 
 # Prisma 클라이언트 생성
-npx prisma generate
+npx prisma generate데
 
 # 시드 데이터 실행 (선택사항)
 npx prisma db seed
