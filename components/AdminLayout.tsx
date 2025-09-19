@@ -99,14 +99,14 @@ export default function AdminLayout({ children, title, description }: AdminLayou
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen bg-gray-50 flex overflow-hidden">
         {/* 좌측 네비게이션 */}
         <AdminNavigation onLogout={handleLogout} />
         
         {/* 메인 콘텐츠 영역 */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col overflow-hidden">
           {/* 상단 헤더 */}
-          <header className="bg-white shadow-sm border-b border-gray-200">
+          <header className="bg-white shadow-sm border-b border-gray-200 flex-shrink-0">
             <div className="px-6 py-4">
               <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
               {description && (
@@ -116,7 +116,7 @@ export default function AdminLayout({ children, title, description }: AdminLayou
           </header>
 
           {/* 메인 콘텐츠 */}
-          <main className="flex-1 p-6">
+          <main className="flex-1 p-6 overflow-y-auto">
             {children}
           </main>
         </div>
