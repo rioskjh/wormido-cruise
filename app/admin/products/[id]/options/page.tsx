@@ -80,6 +80,30 @@ export default function ProductOptionsPage() {
 
   const productId = params.id as string
 
+  // 옵션 값 유효성 검사 함수
+  const validateOptionValue = (value: string): { isValid: boolean; error?: string } => {
+    if (!value || value.trim().length === 0) {
+      return { isValid: false, error: '옵션 값은 비어있을 수 없습니다.' }
+    }
+
+    // 허용된 문자: 한글, 영문, 숫자, 하이픈(-), 언더스코어(_), 공백
+    const allowedPattern = /^[가-힣a-zA-Z0-9\s\-_]+$/
+    
+    if (!allowedPattern.test(value)) {
+      return { 
+        isValid: false, 
+        error: '옵션 값에는 한글, 영문, 숫자, 하이픈(-), 언더스코어(_)만 사용할 수 있습니다.' 
+      }
+    }
+
+    // 길이 제한 (최대 50자)
+    if (value.length > 50) {
+      return { isValid: false, error: '옵션 값은 50자를 초과할 수 없습니다.' }
+    }
+
+    return { isValid: true }
+  }
+
   // 토큰 만료 확인 함수
   const isTokenExpired = (token: string): boolean => {
     try {
@@ -381,6 +405,20 @@ export default function ProductOptionsPage() {
           return
         }
 
+        // 각 값에 대한 유효성 검사
+        const invalidValues: string[] = []
+        for (const value of values) {
+          const validation = validateOptionValue(value)
+          if (!validation.isValid) {
+            invalidValues.push(`${value}: ${validation.error}`)
+          }
+        }
+
+        if (invalidValues.length > 0) {
+          showError('유효성 검사 실패', `다음 옵션 값들이 유효하지 않습니다:\n${invalidValues.join('\n')}`)
+          return
+        }
+
         // 각 값에 대해 API 호출
         const promises = values.map((value, index) => {
           const valueData = {
@@ -419,6 +457,13 @@ export default function ProductOptionsPage() {
         }
       } else {
         // 단일 등록/수정인 경우
+        // 단일 값에 대한 유효성 검사
+        const validation = validateOptionValue(valueFormData.value)
+        if (!validation.isValid) {
+          showError('유효성 검사 실패', validation.error || '옵션 값이 유효하지 않습니다.')
+          return
+        }
+
         const url = editingValue 
           ? `/api/admin/products/${productId}/options/${selectedOption.id}/values/${editingValue.id}`
           : `/api/admin/products/${productId}/options/${selectedOption.id}/values`
@@ -810,7 +855,8 @@ export default function ProductOptionsPage() {
                         rows={6}
                       />
                       <p className="text-xs text-gray-500 mt-1">
-                        각 줄에 하나씩 옵션 값을 입력하세요. 빈 줄은 무시됩니다.
+                        각 줄에 하나씩 옵션 값을 입력하세요. 빈 줄은 무시됩니다.<br/>
+                        <span className="text-red-500">※ 허용 문자: 한글, 영문, 숫자, 하이픈(-), 언더스코어(_)만 사용 가능</span>
                       </p>
                     </div>
                   )}
@@ -826,6 +872,9 @@ export default function ProductOptionsPage() {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       required={!!editingValue || (!bulkValues.trim())}
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                      <span className="text-red-500">※ 허용 문자: 한글, 영문, 숫자, 하이픈(-), 언더스코어(_)만 사용 가능 (최대 50자)</span>
+                    </p>
                   </div>
 
                   <div>
