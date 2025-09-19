@@ -546,7 +546,7 @@ export default function AdminProductsPage() {
 
         {/* 상품 생성/수정 모달 */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
             <div className="relative w-full max-w-2xl bg-white rounded-lg shadow-lg">
               <div className="p-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">
