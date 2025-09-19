@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import AdminNavigation from './AdminNavigation'
-import { ToastProvider } from '@/contexts/ToastContext'
 
 interface AdminLayoutProps {
   children: React.ReactNode
@@ -100,8 +99,7 @@ export default function AdminLayout({ children, title, description }: AdminLayou
   }
 
   return (
-    <ToastProvider>
-      <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex">
         {/* 좌측 네비게이션 */}
         <AdminNavigation onLogout={handleLogout} />
         
@@ -123,6 +121,5 @@ export default function AdminLayout({ children, title, description }: AdminLayou
           </main>
         </div>
       </div>
-    </ToastProvider>
   )
 }

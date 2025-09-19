@@ -42,19 +42,8 @@ export default function AdminCategoriesPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
   
-  // useToast 훅을 조건부로 사용
-  let showSuccess: (title: string, message?: string) => void
-  let showError: (title: string, message?: string) => void
-  
-  try {
-    const toast = useToast()
-    showSuccess = toast.showSuccess
-    showError = toast.showError
-  } catch (error) {
-    console.warn('useToast 훅을 사용할 수 없습니다:', error)
-    showSuccess = () => {}
-    showError = () => {}
-  }
+  // useToast 훅 사용
+  const { showSuccess, showError } = useToast()
 
   // 토큰 만료 확인 함수
   const isTokenExpired = (token: string): boolean => {
