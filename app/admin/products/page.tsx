@@ -544,8 +544,10 @@ export default function AdminProductsPage() {
           </div>
         </div>
 
-        {/* 상품 생성/수정 모달 */}
-        {isModalOpen && (
+      </div>
+
+      {/* 상품 생성/수정 모달 */}
+      {isModalOpen && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
             <div className="relative w-full max-w-lg bg-white rounded-lg shadow-lg my-4">
               <div className="p-6">
@@ -730,7 +732,6 @@ export default function AdminProductsPage() {
             </div>
           </div>
         )}
-      </div>
     </AdminLayout>
   )
 }
