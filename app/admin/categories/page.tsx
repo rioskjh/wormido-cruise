@@ -42,11 +42,19 @@ export default function AdminCategoriesPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
   
-  // useToast 훅을 상태로 관리
-  const [toastFunctions, setToastFunctions] = useState<{
-    showSuccess: (title: string, message?: string) => void
-    showError: (title: string, message?: string) => void
-  } | null>(null)
+  // useToast 훅을 조건부로 사용
+  let showSuccess: (title: string, message?: string) => void
+  let showError: (title: string, message?: string) => void
+  
+  try {
+    const toast = useToast()
+    showSuccess = toast.showSuccess
+    showError = toast.showError
+  } catch (error) {
+    console.warn('useToast 훅을 사용할 수 없습니다:', error)
+    showSuccess = () => {}
+    showError = () => {}
+  }
 
   // 토큰 만료 확인 함수
   const isTokenExpired = (token: string): boolean => {
@@ -89,18 +97,6 @@ export default function AdminCategoriesPage() {
   }
 
   useEffect(() => {
-    // useToast 초기화
-    try {
-      const toast = useToast()
-      setToastFunctions({
-        showSuccess: toast.showSuccess,
-        showError: toast.showError
-      })
-      console.log('useToast 초기화 성공:', toast)
-    } catch (error) {
-      console.warn('useToast 초기화 실패:', error)
-    }
-    
     fetchCategories()
   }, [])
 
@@ -147,17 +143,13 @@ export default function AdminCategoriesPage() {
           return
         } else {
           setError(data.error || '카테고리 목록을 불러오는데 실패했습니다.')
-          if (toastFunctions) {
-            toastFunctions.showError('카테고리 목록 로드 실패', data.error || '카테고리 목록을 불러오는데 실패했습니다.')
-          }
+          showError('카테고리 목록 로드 실패', data.error || '카테고리 목록을 불러오는데 실패했습니다.')
         }
       }
     } catch (error) {
       console.error('API 호출 에러:', error)
       setError('카테고리 목록을 불러오는데 실패했습니다.')
-      if (toastFunctions) {
-        toastFunctions.showError('카테고리 목록 로드 실패', '카테고리 목록을 불러오는데 실패했습니다.')
-      }
+      showError('카테고리 목록 로드 실패', '카테고리 목록을 불러오는데 실패했습니다.')
     } finally {
       setIsLoading(false)
     }
@@ -232,26 +224,18 @@ export default function AdminCategoriesPage() {
         fetchCategories() // 목록 새로고침
         if (editingCategory) {
           console.log('Toast 호출: 카테고리 수정 완료')
-          if (toastFunctions) {
-            toastFunctions.showSuccess('카테고리 수정 완료', '카테고리가 성공적으로 수정되었습니다.')
-          }
+          showSuccess('카테고리 수정 완료', '카테고리가 성공적으로 수정되었습니다.')
         } else {
           console.log('Toast 호출: 카테고리 생성 완료')
-          if (toastFunctions) {
-            toastFunctions.showSuccess('카테고리 생성 완료', '새 카테고리가 성공적으로 생성되었습니다.')
-          }
+          showSuccess('카테고리 생성 완료', '새 카테고리가 성공적으로 생성되었습니다.')
         }
       } else {
         console.log('Toast 호출: 카테고리 저장 실패', data.error)
-        if (toastFunctions) {
-          toastFunctions.showError('카테고리 저장 실패', data.error || '카테고리 저장에 실패했습니다.')
-        }
+        showError('카테고리 저장 실패', data.error || '카테고리 저장에 실패했습니다.')
       }
     } catch (error) {
       console.error('카테고리 저장 에러:', error)
-      if (toastFunctions) {
-        toastFunctions.showError('카테고리 저장 실패', '카테고리 저장 중 오류가 발생했습니다.')
-      }
+      showError('카테고리 저장 실패', '카테고리 저장 중 오류가 발생했습니다.')
     } finally {
       setIsSubmitting(false)
     }
@@ -294,19 +278,13 @@ export default function AdminCategoriesPage() {
 
       if (data.ok) {
         fetchCategories() // 목록 새로고침
-        if (toastFunctions) {
-          toastFunctions.showSuccess('카테고리 삭제 완료', '카테고리가 성공적으로 삭제되었습니다.')
-        }
+        showSuccess('카테고리 삭제 완료', '카테고리가 성공적으로 삭제되었습니다.')
       } else {
-        if (toastFunctions) {
-          toastFunctions.showError('카테고리 삭제 실패', data.error || '카테고리 삭제에 실패했습니다.')
-        }
+        showError('카테고리 삭제 실패', data.error || '카테고리 삭제에 실패했습니다.')
       }
     } catch (error) {
       console.error('카테고리 삭제 에러:', error)
-      if (toastFunctions) {
-        toastFunctions.showError('카테고리 삭제 실패', '카테고리 삭제 중 오류가 발생했습니다.')
-      }
+      showError('카테고리 삭제 실패', '카테고리 삭제 중 오류가 발생했습니다.')
     }
   }
 
