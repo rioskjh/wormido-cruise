@@ -513,7 +513,7 @@ export default function AdminProductsPage() {
                       {formatDate(product.createdAt)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex flex-col space-y-1">
+                      <div className="flex flex-col space-y-2">
                         <div className="flex space-x-2">
                           <button
                             onClick={() => handleEditProduct(product)}
@@ -531,7 +531,7 @@ export default function AdminProductsPage() {
                         {product.useOptions && (
                           <button
                             onClick={() => handleManageOptions(product)}
-                            className="text-blue-600 hover:text-blue-900 text-xs"
+                            className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 text-xs font-medium"
                           >
                             옵션 관리
                           </button>

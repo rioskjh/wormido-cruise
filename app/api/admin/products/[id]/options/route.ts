@@ -8,16 +8,14 @@ export const dynamic = 'force-dynamic'
 
 const createOptionSchema = z.object({
   name: z.string().min(1, '옵션명을 입력해주세요'),
-  description: z.string().optional(),
-  isRequired: z.boolean().default(false),
   sortOrder: z.number().default(0),
+  isActive: z.boolean().default(true),
 })
 
 const updateOptionSchema = z.object({
   name: z.string().min(1, '옵션명을 입력해주세요').optional(),
-  description: z.string().optional(),
-  isRequired: z.boolean().optional(),
   sortOrder: z.number().optional(),
+  isActive: z.boolean().optional(),
 })
 
 // 상품 옵션 목록 조회

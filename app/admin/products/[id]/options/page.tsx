@@ -16,9 +16,8 @@ interface Product {
 interface ProductOption {
   id: number
   name: string
-  description: string | null
-  isRequired: boolean
   sortOrder: number
+  isActive: boolean
   productId: number
   createdAt: string
   updatedAt: string
@@ -41,9 +40,8 @@ interface ProductOptionValue {
 
 interface OptionFormData {
   name: string
-  description: string
-  isRequired: boolean
   sortOrder: number
+  isActive: boolean
 }
 
 interface OptionValueFormData {
@@ -65,9 +63,8 @@ export default function ProductOptionsPage() {
   const [selectedOption, setSelectedOption] = useState<ProductOption | null>(null)
   const [optionFormData, setOptionFormData] = useState<OptionFormData>({
     name: '',
-    description: '',
-    isRequired: false,
-    sortOrder: 0
+    sortOrder: 0,
+    isActive: true
   })
   const [valueFormData, setValueFormData] = useState<OptionValueFormData>({
     value: '',
@@ -192,9 +189,8 @@ export default function ProductOptionsPage() {
     setEditingOption(null)
     setOptionFormData({
       name: '',
-      description: '',
-      isRequired: false,
-      sortOrder: options.length
+      sortOrder: options.length,
+      isActive: true
     })
     setIsOptionModalOpen(true)
   }
@@ -203,9 +199,8 @@ export default function ProductOptionsPage() {
     setEditingOption(option)
     setOptionFormData({
       name: option.name,
-      description: option.description || '',
-      isRequired: option.isRequired,
-      sortOrder: option.sortOrder
+      sortOrder: option.sortOrder,
+      isActive: option.isActive
     })
     setIsOptionModalOpen(true)
   }
@@ -523,8 +518,47 @@ export default function ProductOptionsPage() {
 
           <div className="p-6">
             {options.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                등록된 옵션이 없습니다.
+              <div className="text-center py-12">
+                <div className="mb-6">
+                  <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">옵션이 없습니다</h3>
+                  <p className="text-gray-500 mb-6">
+                    이 상품에 대한 옵션을 설정해보세요.<br />
+                    고객들이 예약할 때 선택할 수 있는 옵션을 추가할 수 있습니다.
+                  </p>
+                  <button
+                    onClick={handleCreateOption}
+                    className="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 font-medium"
+                  >
+                    첫 번째 옵션 추가하기
+                  </button>
+                </div>
+                
+                <div className="border-t border-gray-200 pt-6">
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">옵션 예시</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="font-medium text-gray-800 mb-2">룸 타입</div>
+                      <ul className="space-y-1">
+                        <li>• 일반실 (+0원)</li>
+                        <li>• 바다전망실 (+10,000원)</li>
+                        <li>• VIP룸 (+20,000원)</li>
+                      </ul>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="font-medium text-gray-800 mb-2">식사 옵션</div>
+                      <ul className="space-y-1">
+                        <li>• 식사 없음 (+0원)</li>
+                        <li>• 기본 식사 (+15,000원)</li>
+                        <li>• 프리미엄 식사 (+25,000원)</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="space-y-6">
@@ -534,15 +568,12 @@ export default function ProductOptionsPage() {
                       <div>
                         <h4 className="text-lg font-medium text-gray-800">
                           {option.name}
-                          {option.isRequired && (
-                            <span className="ml-2 text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
-                              필수
+                          {!option.isActive && (
+                            <span className="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                              비활성
                             </span>
                           )}
                         </h4>
-                        {option.description && (
-                          <p className="text-gray-600 text-sm mt-1">{option.description}</p>
-                        )}
                         <p className="text-gray-500 text-sm mt-1">
                           옵션 값 {option._count.values}개
                         </p>
@@ -640,17 +671,6 @@ export default function ProductOptionsPage() {
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      설명
-                    </label>
-                    <textarea
-                      value={optionFormData.description}
-                      onChange={(e) => setOptionFormData({ ...optionFormData, description: e.target.value })}
-                      rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                  </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -668,11 +688,11 @@ export default function ProductOptionsPage() {
                   <div className="flex items-center">
                     <input
                       type="checkbox"
-                      checked={optionFormData.isRequired}
-                      onChange={(e) => setOptionFormData({ ...optionFormData, isRequired: e.target.checked })}
+                      checked={optionFormData.isActive}
+                      onChange={(e) => setOptionFormData({ ...optionFormData, isActive: e.target.checked })}
                       className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
-                    <label className="ml-2 text-sm text-gray-700">필수 옵션</label>
+                    <label className="ml-2 text-sm text-gray-700">활성</label>
                   </div>
 
                   <div className="flex justify-end space-x-3 pt-4">
