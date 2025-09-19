@@ -21,13 +21,21 @@ interface Reservation {
   totalAmount: number
   status: string
   paymentStatus: string
+  paymentMethod: string
+  paymentDate: string
   createdAt: string
   product: {
+    id: number
     name: string
+    category: {
+      name: string
+    }
   }
   member?: {
+    id: number
     username: string
     nickname: string
+    email: string
   }
 }
 
@@ -36,6 +44,14 @@ export default function AdminReservationsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [statusFilter, setStatusFilter] = useState('ALL')
+  const [stats, setStats] = useState({
+    total: 0,
+    pending: 0,
+    confirmed: 0,
+    completed: 0,
+    cancelled: 0,
+    totalRevenue: 0
+  })
   const router = useRouter()
   
   // useToast를 조건부로 사용
@@ -132,7 +148,21 @@ export default function AdminReservationsPage() {
       const data = await response.json()
 
       if (data.ok) {
-        setReservations(data.data)
+        setReservations(data.data.reservations || data.data)
+        
+        // 통계 계산
+        const reservationsData = data.data.reservations || data.data
+        const calculatedStats = {
+          total: reservationsData.length,
+          pending: reservationsData.filter((r: Reservation) => r.status === 'PENDING').length,
+          confirmed: reservationsData.filter((r: Reservation) => r.status === 'CONFIRMED').length,
+          completed: reservationsData.filter((r: Reservation) => r.status === 'COMPLETED').length,
+          cancelled: reservationsData.filter((r: Reservation) => r.status === 'CANCELLED').length,
+          totalRevenue: reservationsData
+            .filter((r: Reservation) => r.paymentStatus === 'COMPLETED')
+            .reduce((sum: number, r: Reservation) => sum + r.totalAmount, 0)
+        }
+        setStats(calculatedStats)
       } else {
         // 토큰 관련 에러인 경우 로그인 페이지로 이동
         if (data.error === 'Unauthorized' || 
@@ -230,6 +260,23 @@ export default function AdminReservationsPage() {
     )
   }
 
+  const getPaymentStatusBadge = (paymentStatus: string) => {
+    const paymentStatusMap = {
+      PENDING: { label: '결제대기', color: 'bg-yellow-100 text-yellow-800' },
+      COMPLETED: { label: '결제완료', color: 'bg-green-100 text-green-800' },
+      FAILED: { label: '결제실패', color: 'bg-red-100 text-red-800' },
+      REFUNDED: { label: '환불완료', color: 'bg-gray-100 text-gray-800' },
+    }
+    
+    const paymentStatusInfo = paymentStatusMap[paymentStatus as keyof typeof paymentStatusMap] || { label: paymentStatus, color: 'bg-gray-100 text-gray-800' }
+    
+    return (
+      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${paymentStatusInfo.color}`}>
+        {paymentStatusInfo.label}
+      </span>
+    )
+  }
+
   if (isLoading) {
     return (
       <AdminLayout title="예약 관리" description="모든 예약 현황을 확인하고 관리할 수 있습니다">
@@ -242,6 +289,81 @@ export default function AdminReservationsPage() {
 
   return (
     <AdminLayout title="예약 관리" description="모든 예약 현황을 확인하고 관리할 수 있습니다">
+      {/* 통계 카드 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">전체</span>
+                </div>
+              </div>
+              <div className="ml-5 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-gray-500 truncate">총 예약</dt>
+                  <dd className="text-lg font-medium text-gray-900">{stats.total}건</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">대기</span>
+                </div>
+              </div>
+              <div className="ml-5 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-gray-500 truncate">대기중</dt>
+                  <dd className="text-lg font-medium text-gray-900">{stats.pending}건</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">확정</span>
+                </div>
+              </div>
+              <div className="ml-5 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-gray-500 truncate">확정</dt>
+                  <dd className="text-lg font-medium text-gray-900">{stats.confirmed}건</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <div className="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">매출</span>
+                </div>
+              </div>
+              <div className="ml-5 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-gray-500 truncate">총 매출</dt>
+                  <dd className="text-lg font-medium text-gray-900">₩{stats.totalRevenue.toLocaleString()}</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* 필터 */}
       <div className="bg-white shadow rounded-lg p-6 mb-6">
         <div className="flex items-center space-x-4">
@@ -278,7 +400,7 @@ export default function AdminReservationsPage() {
                     고객정보
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    상품명
+                    상품정보
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     예약일시
@@ -287,7 +409,7 @@ export default function AdminReservationsPage() {
                     인원
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    금액
+                    결제정보
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     상태
@@ -308,10 +430,18 @@ export default function AdminReservationsPage() {
                         <div className="font-medium">{reservation.customerName}</div>
                         <div className="text-gray-500">{reservation.customerPhone}</div>
                         <div className="text-gray-500">{reservation.customerEmail}</div>
+                        {reservation.member && (
+                          <div className="text-blue-600 text-xs mt-1">
+                            회원: {reservation.member.nickname} ({reservation.member.username})
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {reservation.product.name}
+                      <div>
+                        <div className="font-medium">{reservation.product.name}</div>
+                        <div className="text-gray-500 text-xs">{reservation.product.category.name}</div>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <div>
@@ -320,13 +450,28 @@ export default function AdminReservationsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      성인 {reservation.adults}명, 어린이 {reservation.children}명, 유아 {reservation.infants}명
+                      <div>
+                        <div>성인 {reservation.adults}명</div>
+                        <div>어린이 {reservation.children}명</div>
+                        <div>유아 {reservation.infants}명</div>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      ₩{reservation.totalAmount.toLocaleString()}
+                      <div>
+                        <div className="font-medium">₩{reservation.totalAmount.toLocaleString()}</div>
+                        <div className="text-gray-500 text-xs">{reservation.paymentMethod}</div>
+                        {reservation.paymentDate && (
+                          <div className="text-gray-500 text-xs">
+                            {new Date(reservation.paymentDate).toLocaleDateString()}
+                          </div>
+                        )}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {getStatusBadge(reservation.status)}
+                      <div className="space-y-1">
+                        {getStatusBadge(reservation.status)}
+                        {getPaymentStatusBadge(reservation.paymentStatus)}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <div className="flex space-x-2">

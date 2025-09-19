@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     // 필터 조건 구성
     const where: any = {}
     if (status && status !== 'ALL') {
-      where.paymentStatus = status
+      where.status = status
     }
 
     // 예약 목록 조회
@@ -56,12 +56,18 @@ export async function GET(request: NextRequest) {
             select: {
               id: true,
               name: true,
+              category: {
+                select: {
+                  name: true
+                }
+              }
             }
           },
           member: {
             select: {
               id: true,
               username: true,
+              nickname: true,
               email: true,
             }
           }
