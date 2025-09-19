@@ -1,6 +1,6 @@
 'use client'
 
-import { Toast, ToastProps } from './Toast'
+import Toast, { ToastProps } from './Toast'
 
 interface ToastContainerProps {
   toasts: ToastProps[]

@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { useToast } from '@/contexts/ToastContext'
 
+export const dynamic = 'force-dynamic'
+
 interface DashboardStats {
   totalReservations: number
   pendingReservations: number
@@ -18,7 +20,15 @@ export default function AdminDashboardPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const router = useRouter()
-  const { showError } = useToast()
+  
+  // useToast를 조건부로 사용
+  let showError: (title: string, message?: string) => void
+  try {
+    const toast = useToast()
+    showError = toast.showError
+  } catch {
+    showError = () => {} // 빈 함수로 fallback
+  }
 
   // 토큰 만료 확인 함수
   const isTokenExpired = (token: string): boolean => {

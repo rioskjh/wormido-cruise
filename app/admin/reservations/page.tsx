@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { useToast } from '@/contexts/ToastContext'
 
+export const dynamic = 'force-dynamic'
+
 interface Reservation {
   id: number
   orderNumber: string
@@ -35,7 +37,18 @@ export default function AdminReservationsPage() {
   const [error, setError] = useState('')
   const [statusFilter, setStatusFilter] = useState('ALL')
   const router = useRouter()
-  const { showSuccess, showError } = useToast()
+  
+  // useToast를 조건부로 사용
+  let showSuccess: (title: string, message?: string) => void
+  let showError: (title: string, message?: string) => void
+  try {
+    const toast = useToast()
+    showSuccess = toast.showSuccess
+    showError = toast.showError
+  } catch {
+    showSuccess = () => {} // 빈 함수로 fallback
+    showError = () => {} // 빈 함수로 fallback
+  }
 
   // 토큰 만료 확인 함수
   const isTokenExpired = (token: string): boolean => {
