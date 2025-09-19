@@ -135,6 +135,29 @@ export async function PUT(
       }, { status: 404 })
     }
 
+    // 값이 변경되는 경우 중복 검증
+    if (validatedData.value && validatedData.value !== existingValue.value) {
+      const duplicateValue = await prisma.productOptionValue.findFirst({
+        where: {
+          optionId,
+          value: {
+            equals: validatedData.value,
+            mode: 'insensitive' // 대소문자 구분 없이 검사
+          },
+          id: {
+            not: valueId // 현재 수정 중인 값은 제외
+          }
+        }
+      })
+
+      if (duplicateValue) {
+        return NextResponse.json({
+          ok: false,
+          error: `"${validatedData.value}"는 이미 등록된 옵션 값입니다.`,
+        }, { status: 400 })
+      }
+    }
+
     // 옵션 값 수정
     const value = await prisma.productOptionValue.update({
       where: { id: valueId },

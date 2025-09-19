@@ -171,7 +171,7 @@ export default function ProductOptionsPage() {
   )
 
   // 옵션 값 유효성 검사 함수
-  const validateOptionValue = (value: string): { isValid: boolean; error?: string } => {
+  const validateOptionValue = (value: string, optionId?: number, excludeValueId?: number): { isValid: boolean; error?: string } => {
     if (!value || value.trim().length === 0) {
       return { isValid: false, error: '옵션 값은 비어있을 수 없습니다.' }
     }
@@ -189,6 +189,23 @@ export default function ProductOptionsPage() {
     // 길이 제한 (최대 50자)
     if (value.length > 50) {
       return { isValid: false, error: '옵션 값은 50자를 초과할 수 없습니다.' }
+    }
+
+    // 중복 검증 (같은 옵션 내에서)
+    if (optionId) {
+      const option = options.find(opt => opt.id === optionId)
+      if (option) {
+        const existingValue = option.values.find(val => 
+          val.value.toLowerCase() === value.toLowerCase() && 
+          val.id !== excludeValueId
+        )
+        if (existingValue) {
+          return { 
+            isValid: false, 
+            error: `"${value}"는 이미 등록된 옵션 값입니다.` 
+          }
+        }
+      }
     }
 
     return { isValid: true }
@@ -498,7 +515,7 @@ export default function ProductOptionsPage() {
         // 각 값에 대한 유효성 검사
         const invalidValues: string[] = []
         for (const value of values) {
-          const validation = validateOptionValue(value)
+          const validation = validateOptionValue(value, selectedOption.id)
           if (!validation.isValid) {
             invalidValues.push(`${value}: ${validation.error}`)
           }
@@ -548,7 +565,11 @@ export default function ProductOptionsPage() {
       } else {
         // 단일 등록/수정인 경우
         // 단일 값에 대한 유효성 검사
-        const validation = validateOptionValue(valueFormData.value)
+        const validation = validateOptionValue(
+          valueFormData.value, 
+          selectedOption.id, 
+          editingValue?.id
+        )
         if (!validation.isValid) {
           showError('유효성 검사 실패', validation.error || '옵션 값이 유효하지 않습니다.')
           return

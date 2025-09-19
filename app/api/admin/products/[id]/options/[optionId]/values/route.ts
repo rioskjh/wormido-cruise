@@ -145,6 +145,24 @@ export async function POST(
       }, { status: 404 })
     }
 
+    // 중복 검증 - 같은 옵션에 동일한 값이 있는지 확인
+    const existingValue = await prisma.productOptionValue.findFirst({
+      where: {
+        optionId,
+        value: {
+          equals: validatedData.value,
+          mode: 'insensitive' // 대소문자 구분 없이 검사
+        }
+      }
+    })
+
+    if (existingValue) {
+      return NextResponse.json({
+        ok: false,
+        error: `"${validatedData.value}"는 이미 등록된 옵션 값입니다.`,
+      }, { status: 400 })
+    }
+
     // 옵션 값 생성
     const value = await prisma.productOptionValue.create({
       data: {
