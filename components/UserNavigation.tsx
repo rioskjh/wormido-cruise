@@ -107,9 +107,9 @@ export default function UserNavigation() {
                 </div>
                 <Link 
                   href="/profile" 
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  프로필
+                  정보수정
                 </Link>
                 <Link 
                   href="/reservations" 
