@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import UserNavigation from '@/components/UserNavigation'
 
 interface Product {
   id: number
@@ -45,39 +46,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* 헤더 */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                🚢 Wormi Cruise
-              </h1>
-              <p className="text-sm text-gray-600">월미도 크루즈 예약 시스템</p>
-            </div>
-            <div className="space-x-4">
-              <Link 
-                href="/login" 
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-              >
-                로그인
-              </Link>
-              <Link 
-                href="/register" 
-                className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
-              >
-                회원가입
-              </Link>
-              <Link 
-                href="/admin/login" 
-                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
-              >
-                관리자
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* 네비게이션 */}
+      <UserNavigation />
 
       {/* 메인 콘텐츠 */}
       <div className="container mx-auto px-4 py-8">
