@@ -345,6 +345,8 @@ enum Role {
   USER
   EDITOR
   ADMIN
+
+  @@map("role_type")
 }
 
 enum PersonType {
