@@ -147,13 +147,17 @@ export default function AdminCategoriesPage() {
           return
         } else {
           setError(data.error || '카테고리 목록을 불러오는데 실패했습니다.')
-          showError('카테고리 목록 로드 실패', data.error || '카테고리 목록을 불러오는데 실패했습니다.')
+          if (toastFunctions) {
+            toastFunctions.showError('카테고리 목록 로드 실패', data.error || '카테고리 목록을 불러오는데 실패했습니다.')
+          }
         }
       }
     } catch (error) {
       console.error('API 호출 에러:', error)
       setError('카테고리 목록을 불러오는데 실패했습니다.')
-      showError('카테고리 목록 로드 실패', '카테고리 목록을 불러오는데 실패했습니다.')
+      if (toastFunctions) {
+        toastFunctions.showError('카테고리 목록 로드 실패', '카테고리 목록을 불러오는데 실패했습니다.')
+      }
     } finally {
       setIsLoading(false)
     }
