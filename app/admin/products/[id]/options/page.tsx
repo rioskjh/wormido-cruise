@@ -72,6 +72,7 @@ export default function ProductOptionsPage() {
     isActive: true,
     sortOrder: 0
   })
+  const [bulkValues, setBulkValues] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
   const params = useParams()
@@ -326,6 +327,7 @@ export default function ProductOptionsPage() {
       isActive: true,
       sortOrder: option.values.length
     })
+    setBulkValues('')
     setIsValueModalOpen(true)
   }
 
@@ -367,33 +369,84 @@ export default function ProductOptionsPage() {
         }
       }
 
-      const url = editingValue 
-        ? `/api/admin/products/${productId}/options/${selectedOption.id}/values/${editingValue.id}`
-        : `/api/admin/products/${productId}/options/${selectedOption.id}/values`
-      
-      const method = editingValue ? 'PUT' : 'POST'
+      // 일괄 등록인 경우
+      if (bulkValues.trim() && !editingValue) {
+        const values = bulkValues
+          .split('\n')
+          .map(v => v.trim())
+          .filter(v => v.length > 0)
+        
+        if (values.length === 0) {
+          showError('입력 오류', '유효한 옵션 값을 입력해주세요.')
+          return
+        }
 
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${adminToken}`,
-        },
-        body: JSON.stringify(valueFormData),
-      })
+        // 각 값에 대해 API 호출
+        const promises = values.map((value, index) => {
+          const valueData = {
+            value,
+            price: valueFormData.price,
+            isActive: valueFormData.isActive,
+            sortOrder: selectedOption.values.length + index
+          }
+          
+          return fetch(`/api/admin/products/${productId}/options/${selectedOption.id}/values`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${adminToken}`,
+            },
+            body: JSON.stringify(valueData),
+          })
+        })
 
-      const data = await response.json()
+        const responses = await Promise.all(promises)
+        const results = await Promise.all(responses.map(r => r.json()))
+        
+        const successCount = results.filter(r => r.ok).length
+        const failCount = results.length - successCount
 
-      if (data.ok) {
-        setIsValueModalOpen(false)
-        fetchOptions()
-        if (editingValue) {
-          showSuccess('옵션 값 수정 완료', '옵션 값이 성공적으로 수정되었습니다.')
+        if (successCount > 0) {
+          setIsValueModalOpen(false)
+          fetchOptions()
+          if (failCount > 0) {
+            showSuccess('옵션 값 일괄 등록 완료', `${successCount}개 성공, ${failCount}개 실패`)
+          } else {
+            showSuccess('옵션 값 일괄 등록 완료', `${successCount}개의 옵션 값이 성공적으로 등록되었습니다.`)
+          }
         } else {
-          showSuccess('옵션 값 생성 완료', '새 옵션 값이 성공적으로 생성되었습니다.')
+          showError('옵션 값 등록 실패', '모든 옵션 값 등록에 실패했습니다.')
         }
       } else {
-        showError('옵션 값 저장 실패', data.error || '옵션 값 저장에 실패했습니다.')
+        // 단일 등록/수정인 경우
+        const url = editingValue 
+          ? `/api/admin/products/${productId}/options/${selectedOption.id}/values/${editingValue.id}`
+          : `/api/admin/products/${productId}/options/${selectedOption.id}/values`
+        
+        const method = editingValue ? 'PUT' : 'POST'
+
+        const response = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`,
+          },
+          body: JSON.stringify(valueFormData),
+        })
+
+        const data = await response.json()
+
+        if (data.ok) {
+          setIsValueModalOpen(false)
+          fetchOptions()
+          if (editingValue) {
+            showSuccess('옵션 값 수정 완료', '옵션 값이 성공적으로 수정되었습니다.')
+          } else {
+            showSuccess('옵션 값 생성 완료', '새 옵션 값이 성공적으로 생성되었습니다.')
+          }
+        } else {
+          showError('옵션 값 저장 실패', data.error || '옵션 값 저장에 실패했습니다.')
+        }
       }
     } catch (error) {
       console.error('옵션 값 저장 에러:', error)
@@ -744,16 +797,34 @@ export default function ProductOptionsPage() {
                 <p className="text-sm text-gray-600 mb-4">옵션: {selectedOption.name}</p>
                 
                 <form onSubmit={handleSubmitValue} className="space-y-3">
+                  {!editingValue && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        옵션 값 일괄 등록 (줄바꿈으로 구분)
+                      </label>
+                      <textarea
+                        value={bulkValues}
+                        onChange={(e) => setBulkValues(e.target.value)}
+                        placeholder="예시:&#10;9월 1일&#10;9월 2일&#10;9월 3일&#10;..."
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 h-32 resize-none"
+                        rows={6}
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        각 줄에 하나씩 옵션 값을 입력하세요. 빈 줄은 무시됩니다.
+                      </p>
+                    </div>
+                  )}
+                  
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      옵션 값 *
+                      {editingValue ? '옵션 값 *' : '단일 옵션 값 (일괄 등록과 함께 사용 가능)'}
                     </label>
                     <input
                       type="text"
                       value={valueFormData.value}
                       onChange={(e) => setValueFormData({ ...valueFormData, value: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      required
+                      required={!!editingValue || (!bulkValues.trim())}
                     />
                   </div>
 
@@ -806,7 +877,14 @@ export default function ProductOptionsPage() {
                       disabled={isSubmitting}
                       className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
                     >
-                      {isSubmitting ? '저장 중...' : '저장'}
+                      {isSubmitting 
+                        ? '저장 중...' 
+                        : editingValue 
+                          ? '수정' 
+                          : bulkValues.trim() 
+                            ? '일괄 등록' 
+                            : '저장'
+                      }
                     </button>
                   </div>
                 </form>
