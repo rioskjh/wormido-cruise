@@ -177,12 +177,12 @@ export default function ProductOptionsPage() {
     }
 
     // 허용된 문자: 한글, 영문, 숫자, 하이픈(-), 언더스코어(_), 공백
-    const allowedPattern = /^[가-힣a-zA-Z0-9\s\-_]+$/
+        const allowedPattern = /^[가-힣a-zA-Z0-9\s\-_:]+$/
     
     if (!allowedPattern.test(value)) {
       return { 
         isValid: false, 
-        error: '옵션 값에는 한글, 영문, 숫자, 하이픈(-), 언더스코어(_)만 사용할 수 있습니다.' 
+        error: '옵션 값에는 한글, 영문, 숫자, 하이픈(-), 언더스코어(_), 콜론(:)만 사용할 수 있습니다.' 
       }
     }
 

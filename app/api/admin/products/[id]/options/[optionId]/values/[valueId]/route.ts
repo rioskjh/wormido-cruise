@@ -7,7 +7,10 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 const updateOptionValueSchema = z.object({
-  value: z.string().min(1, '옵션 값을 입력해주세요').optional(),
+  value: z.string()
+    .min(1, '옵션 값을 입력해주세요')
+    .regex(/^[가-힣a-zA-Z0-9\s\-_:]+$/, '옵션 값에는 한글, 영문, 숫자, 하이픈(-), 언더스코어(_), 콜론(:)만 사용할 수 있습니다.')
+    .optional(),
   price: z.number().optional(),
   isActive: z.boolean().optional(),
   sortOrder: z.number().optional(),
