@@ -135,13 +135,28 @@ export default function RegisterPage() {
       const data = await response.json()
 
       if (data.ok) {
-        // 회원가입 성공 시 Toast 알림 표시
-        showSuccess('회원가입 완료!', '회원가입이 성공적으로 완료되었습니다. 로그인해주세요.')
-        
-        // 2초 후 로그인 페이지로 리다이렉트
-        setTimeout(() => {
-          router.push('/login')
-        }, 2000)
+        // 회원가입 성공 시 토큰 저장 및 자동 로그인
+        if (data.data.accessToken) {
+          localStorage.setItem('accessToken', data.data.accessToken)
+          localStorage.setItem('refreshToken', data.data.refreshToken)
+          
+          // 인증 상태 변경 이벤트 발생
+          window.dispatchEvent(new Event('authStateChanged'))
+          
+          showSuccess('회원가입 완료!', '회원가입이 성공적으로 완료되었습니다. 자동으로 로그인되었습니다.')
+          
+          // 2초 후 메인 페이지로 리다이렉트
+          setTimeout(() => {
+            router.push('/')
+          }, 2000)
+        } else {
+          showSuccess('회원가입 완료!', '회원가입이 성공적으로 완료되었습니다. 로그인해주세요.')
+          
+          // 2초 후 로그인 페이지로 리다이렉트
+          setTimeout(() => {
+            router.push('/login')
+          }, 2000)
+        }
       } else {
         const errorMessage = data.error || '회원가입에 실패했습니다.'
         setError(errorMessage)

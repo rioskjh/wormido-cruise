@@ -31,8 +31,11 @@ export default function LoginPage() {
 
       if (data.ok) {
         // 토큰을 localStorage에 저장
-        localStorage.setItem('token', data.data.accessToken)
+        localStorage.setItem('accessToken', data.data.accessToken)
         localStorage.setItem('refreshToken', data.data.refreshToken)
+        
+        // 인증 상태 변경 이벤트 발생
+        window.dispatchEvent(new Event('authStateChanged'))
         
         // 홈페이지로 리다이렉트
         router.push('/')

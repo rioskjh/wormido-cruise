@@ -27,22 +27,40 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { username, email, password, nickname, phone } = registerSchema.parse(body)
 
-    // 중복 확인
-    const existingUser = await prisma.member.findFirst({
+    // 중복 확인 - 모든 고유 필드 검사
+    const existingUsers = await prisma.member.findMany({
       where: {
         OR: [
           { username },
           { email },
+          { phone },
         ],
+      },
+      select: {
+        username: true,
+        email: true,
+        phone: true,
       },
     })
 
-    if (existingUser) {
+    if (existingUsers.length > 0) {
+      const duplicateFields = []
+      
+      // 중복된 필드들 확인
+      const existingUser = existingUsers[0]
+      if (existingUser.username === username) {
+        duplicateFields.push('아이디')
+      }
+      if (existingUser.email === email) {
+        duplicateFields.push('이메일')
+      }
+      if (existingUser.phone === phone) {
+        duplicateFields.push('연락처')
+      }
+
       return NextResponse.json({
         ok: false,
-        error: existingUser.username === username 
-          ? '이미 사용 중인 사용자명입니다.' 
-          : '이미 사용 중인 이메일입니다.',
+        error: `해당 항목을 이미 사용중입니다. [${duplicateFields.join(', ')}]`,
       }, { status: 400 })
     }
 

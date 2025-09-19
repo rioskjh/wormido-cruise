@@ -20,6 +20,22 @@ export default function UserNavigation() {
 
   useEffect(() => {
     checkAuthStatus()
+    
+    // localStorage 변경 감지
+    const handleStorageChange = () => {
+      checkAuthStatus()
+    }
+    
+    // storage 이벤트 리스너 등록 (다른 탭에서의 변경 감지)
+    window.addEventListener('storage', handleStorageChange)
+    
+    // 커스텀 이벤트 리스너 등록 (같은 탭에서의 변경 감지)
+    window.addEventListener('authStateChanged', handleStorageChange)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('authStateChanged', handleStorageChange)
+    }
   }, [])
 
   const checkAuthStatus = async () => {
@@ -59,6 +75,9 @@ export default function UserNavigation() {
       
       setUser(null)
       showSuccess('로그아웃 완료', '성공적으로 로그아웃되었습니다.')
+      
+      // 인증 상태 변경 이벤트 발생
+      window.dispatchEvent(new Event('authStateChanged'))
       
       // 메인 페이지로 리다이렉트
       router.push('/')

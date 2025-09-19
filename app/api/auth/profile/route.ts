@@ -113,6 +113,9 @@ export async function PUT(request: NextRequest) {
       }, { status: 404 })
     }
 
+    // 중복 검증 - 변경하는 필드들만 검사 (ID는 수정 불가)
+    const duplicateFields = []
+    
     // 이메일 중복 검증 (변경하는 경우에만)
     if (validatedData.email && validatedData.email !== currentUser.email) {
       const existingEmail = await prisma.member.findFirst({
@@ -123,10 +126,7 @@ export async function PUT(request: NextRequest) {
       })
 
       if (existingEmail) {
-        return NextResponse.json({
-          ok: false,
-          error: '이미 사용 중인 이메일입니다.',
-        }, { status: 400 })
+        duplicateFields.push('이메일')
       }
     }
 
@@ -140,11 +140,16 @@ export async function PUT(request: NextRequest) {
       })
 
       if (existingPhone) {
-        return NextResponse.json({
-          ok: false,
-          error: '이미 사용 중인 연락처입니다.',
-        }, { status: 400 })
+        duplicateFields.push('연락처')
       }
+    }
+
+    // 중복된 필드가 있으면 오류 반환
+    if (duplicateFields.length > 0) {
+      return NextResponse.json({
+        ok: false,
+        error: `해당 항목을 이미 사용중입니다. [${duplicateFields.join(', ')}]`,
+      }, { status: 400 })
     }
 
     // 업데이트할 데이터 준비

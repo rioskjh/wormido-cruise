@@ -177,6 +177,10 @@ export default function ProfilePage() {
       if (data.ok) {
         showSuccess('프로필 수정 완료', '프로필이 성공적으로 수정되었습니다.')
         setUser(data.data.user)
+        
+        // 인증 상태 변경 이벤트 발생 (네비게이션 업데이트)
+        window.dispatchEvent(new Event('authStateChanged'))
+        
         // 비밀번호 필드 초기화
         setFormData(prev => ({
           ...prev,
