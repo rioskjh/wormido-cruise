@@ -954,175 +954,169 @@ export default function ProductOptionsPage() {
             )}
           </div>
         </div>
-
-        {/* 옵션 생성/수정 모달 */}
-        {isOptionModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
-            <div className="relative w-full max-w-md bg-white rounded-lg shadow-lg my-4">
-              <div className="p-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  {editingOption ? '옵션 수정' : '새 옵션 추가'}
-                </h3>
-                
-                <form onSubmit={handleSubmitOption} className="space-y-3">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      옵션명 *
-                    </label>
-                    <input
-                      type="text"
-                      value={optionFormData.name}
-                      onChange={(e) => setOptionFormData({ ...optionFormData, name: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      required
-                    />
-                  </div>
+      </div>
 
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      정렬 순서
-                    </label>
-                    <input
-                      type="number"
-                      value={optionFormData.sortOrder}
-                      onChange={(e) => setOptionFormData({ ...optionFormData, sortOrder: parseInt(e.target.value) || 0 })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      min="0"
-                    />
-                  </div>
+      {/* 옵션 생성/수정 모달 */}
+      {isOptionModalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+          <div className="relative w-full max-w-md bg-white rounded-lg shadow-lg my-4">
+            <div className="p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                {editingOption ? '옵션 수정' : '새 옵션 추가'}
+              </h3>
+              
+              <form onSubmit={handleSubmitOption} className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    옵션명 *
+                  </label>
+                  <input
+                    type="text"
+                    value={optionFormData.name}
+                    onChange={(e) => setOptionFormData({ ...optionFormData, name: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    required
+                  />
+                </div>
 
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={optionFormData.isActive}
-                      onChange={(e) => setOptionFormData({ ...optionFormData, isActive: e.target.checked })}
-                      className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <label className="ml-2 text-sm text-gray-700">활성</label>
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    정렬 순서
+                  </label>
+                  <input
+                    type="number"
+                    value={optionFormData.sortOrder}
+                    onChange={(e) => setOptionFormData({ ...optionFormData, sortOrder: parseInt(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    min="0"
+                  />
+                </div>
 
-                  <div className="flex justify-end space-x-3 pt-4">
-                    <button
-                      type="button"
-                      onClick={() => setIsOptionModalOpen(false)}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-                    >
-                      취소
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
-                    >
-                      {isSubmitting ? '저장 중...' : '저장'}
-                    </button>
-                  </div>
-                </form>
-              </div>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={optionFormData.isActive}
+                    onChange={(e) => setOptionFormData({ ...optionFormData, isActive: e.target.checked })}
+                    className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label className="ml-2 text-sm text-gray-700">활성</label>
+                </div>
+
+                <div className="flex justify-end space-x-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setIsOptionModalOpen(false)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
+                  >
+                    {isSubmitting ? '저장 중...' : '저장'}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* 옵션 값 생성/수정 모달 */}
-        {isValueModalOpen && selectedOption && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
-            <div className="relative w-full max-w-md bg-white rounded-lg shadow-lg my-4">
-              <div className="p-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  {editingValue ? '옵션 값 수정' : '새 옵션 값 추가'}
-                </h3>
-                <p className="text-sm text-gray-600 mb-4">옵션: {selectedOption.name}</p>
-                
-                <form onSubmit={handleSubmitValue} className="space-y-3">
-                  {!editingValue && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        옵션 값 일괄 등록 (줄바꿈으로 구분)
-                      </label>
-                      <textarea
-                        value={bulkValues}
-                        onChange={(e) => setBulkValues(e.target.value)}
-                        placeholder="예시:&#10;9월 1일&#10;9월 2일&#10;9월 3일&#10;..."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 h-32 resize-none"
-                        rows={6}
-                      />
-                      <p className="text-xs text-gray-500 mt-1">
-                        각 줄에 하나씩 옵션 값을 입력하세요. 빈 줄은 무시됩니다.<br/>
-                        <span className="text-red-500">※ 허용 문자: 한글, 영문, 숫자, 하이픈(-), 언더스코어(_)만 사용 가능</span>
-                      </p>
-                    </div>
-                  )}
-                  
+      {/* 옵션 값 생성/수정 모달 */}
+      {isValueModalOpen && selectedOption && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+          <div className="relative w-full max-w-md bg-white rounded-lg shadow-lg my-4">
+            <div className="p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                {editingValue ? '옵션 값 수정' : '새 옵션 값 추가'}
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">옵션: {selectedOption.name}</p>
+              
+              <form onSubmit={handleSubmitValue} className="space-y-3">
+                {!editingValue && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {editingValue ? '옵션 값 *' : '단일 옵션 값 (일괄 등록과 함께 사용 가능)'}
+                      옵션 값 일괄 등록 (줄바꿈으로 구분)
                     </label>
-                    <input
-                      type="text"
-                      value={valueFormData.value}
-                      onChange={(e) => setValueFormData({ ...valueFormData, value: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      required={!!editingValue || (!bulkValues.trim())}
+                    <textarea
+                      value={bulkValues}
+                      onChange={(e) => setBulkValues(e.target.value)}
+                      placeholder="예시:&#10;9월 1일&#10;9월 2일&#10;9월 3일&#10;..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 h-32 resize-none"
+                      rows={6}
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      <span className="text-red-500">※ 허용 문자: 한글, 영문, 숫자, 하이픈(-), 언더스코어(_)만 사용 가능 (최대 50자)</span>
+                      한글, 영문, 숫자, 하이픈(-), 언더스코어(_)만 사용 가능 (최대 50자)
                     </p>
                   </div>
+                )}
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      추가 가격 (원)
-                    </label>
-                    <input
-                      type="number"
-                      value={valueFormData.price}
-                      onChange={(e) => setValueFormData({ ...valueFormData, price: parseInt(e.target.value) || 0 })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      min="0"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {editingValue ? '옵션 값' : '단일 옵션 값 (일괄 등록과 함께 사용 가능)'} *
+                  </label>
+                  <input
+                    type="text"
+                    value={valueFormData.value}
+                    onChange={(e) => setValueFormData({ ...valueFormData, value: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    required={editingValue ? true : bulkValues.trim() === ''}
+                    placeholder="예: 9월 1일"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    한글, 영문, 숫자, 하이픈(-), 언더스코어(_)만 사용 가능 (최대 50자)
+                  </p>
+                </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    추가 가격
+                  </label>
+                  <input
+                    type="number"
+                    value={valueFormData.price}
+                    onChange={(e) => setValueFormData({ ...valueFormData, price: parseInt(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    min="0"
+                  />
+                </div>
 
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={valueFormData.isActive}
-                      onChange={(e) => setValueFormData({ ...valueFormData, isActive: e.target.checked })}
-                      className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <label className="ml-2 text-sm text-gray-700">활성</label>
-                  </div>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={valueFormData.isActive}
+                    onChange={(e) => setValueFormData({ ...valueFormData, isActive: e.target.checked })}
+                    className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label className="ml-2 text-sm text-gray-700">활성</label>
+                </div>
 
-                  <div className="flex justify-end space-x-3 pt-4">
-                    <button
-                      type="button"
-                      onClick={() => setIsValueModalOpen(false)}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-                    >
-                      취소
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
-                    >
-                      {isSubmitting 
-                        ? '저장 중...' 
-                        : editingValue 
-                          ? '수정' 
-                          : bulkValues.trim() 
-                            ? '일괄 등록' 
-                            : '저장'
-                      }
-                    </button>
-                  </div>
-                </form>
-              </div>
+                <div className="flex justify-end space-x-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setIsValueModalOpen(false)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
+                  >
+                    {isSubmitting ? '저장 중...' : 
+                     editingValue ? '수정' : 
+                     bulkValues.trim() ? '일괄 등록' : '저장'}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </AdminLayout>
   )
 }
