@@ -657,7 +657,7 @@ export default function ProductOptionsPage() {
                   {editingOption ? '옵션 수정' : '새 옵션 추가'}
                 </h3>
                 
-                <form onSubmit={handleSubmitOption} className="space-y-4">
+                <form onSubmit={handleSubmitOption} className="space-y-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       옵션명 *
@@ -727,7 +727,7 @@ export default function ProductOptionsPage() {
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">옵션: {selectedOption.name}</p>
                 
-                <form onSubmit={handleSubmitValue} className="space-y-4">
+                <form onSubmit={handleSubmitValue} className="space-y-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       옵션 값 *

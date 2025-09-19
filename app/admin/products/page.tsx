@@ -552,7 +552,7 @@ export default function AdminProductsPage() {
                   {editingProduct ? '상품 수정' : '새 상품 추가'}
                 </h3>
                 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       상품명 *

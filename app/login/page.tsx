@@ -55,7 +55,7 @@ export default function LoginPage() {
           <p className="text-gray-600">로그인</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
               사용자명

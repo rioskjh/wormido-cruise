@@ -401,7 +401,7 @@ export default function AdminCategoriesPage() {
                 {editingCategory ? '카테고리 수정' : '새 카테고리 추가'}
               </h3>
               
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     카테고리명 *
