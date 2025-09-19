@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 export async function GET(
   request: NextRequest,
@@ -13,32 +14,26 @@ export async function GET(
     if (isNaN(productId)) {
       return NextResponse.json({
         ok: false,
-        error: '올바르지 않은 상품 ID입니다.',
+        error: '유효하지 않은 상품 ID입니다.',
       }, { status: 400 })
     }
 
+    // 상품 정보 조회 (옵션 포함)
     const product = await prisma.product.findUnique({
-      where: { 
-        id: productId,
-        isActive: true,
-      },
+      where: { id: productId },
       include: {
         category: true,
-        personTypePrices: true,
         productOptions: {
+          where: { isActive: true },
+          orderBy: { sortOrder: 'asc' },
           include: {
             values: {
               where: { isActive: true },
-              orderBy: { sortOrder: 'asc' },
-            },
-          },
-          where: { isActive: true },
-          orderBy: { sortOrder: 'asc' },
-        },
-        productSchedules: {
-          where: { isActive: true },
-        },
-      },
+              orderBy: { sortOrder: 'asc' }
+            }
+          }
+        }
+      }
     })
 
     if (!product) {
@@ -48,13 +43,47 @@ export async function GET(
       }, { status: 404 })
     }
 
+    if (!product.isActive) {
+      return NextResponse.json({
+        ok: false,
+        error: '현재 판매하지 않는 상품입니다.',
+      }, { status: 400 })
+    }
+
+    // 응답 데이터 구성
+    const responseData = {
+      product: {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        basePrice: product.basePrice,
+        adultPrice: product.adultPrice,
+        childPrice: product.childPrice,
+        infantPrice: product.infantPrice,
+        maxCapacity: product.maxCapacity,
+        currentBookings: product.currentBookings,
+        useOptions: product.useOptions,
+        category: product.category,
+        options: product.productOptions.map(option => ({
+          id: option.id,
+          name: option.name,
+          values: option.values.map(value => ({
+            id: value.id,
+            value: value.value,
+            price: value.price
+          }))
+        }))
+      }
+    }
+
     return NextResponse.json({
       ok: true,
-      data: { product },
+      data: responseData
     })
 
   } catch (error) {
-    console.error('Product fetch error:', error)
+    console.error('Product detail fetch error:', error)
+    
     return NextResponse.json({
       ok: false,
       error: '상품 정보를 불러오는 중 오류가 발생했습니다.',

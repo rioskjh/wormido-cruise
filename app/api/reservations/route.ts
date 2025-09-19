@@ -3,192 +3,207 @@ import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
-// 예약 목록 조회 (GET)
-export async function GET(request: NextRequest) {
-  try {
-    // 인증 확인
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    if (!token) {
-      return NextResponse.json({
-        ok: false,
-        error: '인증이 필요합니다.',
-      }, { status: 401 })
-    }
-
-    const payload = verifyToken(token)
-    if (!payload) {
-      return NextResponse.json({
-        ok: false,
-        error: '유효하지 않은 토큰입니다.',
-      }, { status: 401 })
-    }
-
-    const { searchParams } = request.nextUrl
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10')
-    const status = searchParams.get('status')
-
-    const skip = (page - 1) * limit
-
-    // 필터 조건 구성
-    const where: any = {
-      memberId: payload.id,
-    }
-
-    if (status) {
-      where.status = status
-    }
-
-    // 예약 목록 조회
-    const [reservations, total] = await Promise.all([
-      prisma.reservation.findMany({
-        where,
-        include: {
-          product: {
-            include: {
-              category: true,
-            },
-          },
-          member: {
-            select: {
-              id: true,
-              username: true,
-              email: true,
-            },
-          },
-        },
-        skip,
-        take: limit,
-        orderBy: { createdAt: 'desc' },
-      }),
-      prisma.reservation.count({ where }),
-    ])
-
-    return NextResponse.json({
-      ok: true,
-      data: {
-        reservations,
-        pagination: {
-          page,
-          limit,
-          total,
-          totalPages: Math.ceil(total / limit),
-        },
-      },
-    })
-
-  } catch (error) {
-    console.error('Reservations fetch error:', error)
-    return NextResponse.json({
-      ok: false,
-      error: '예약 목록을 불러오는 중 오류가 발생했습니다.',
-    }, { status: 500 })
-  }
-}
-
-// 예약 생성 (POST)
 export async function POST(request: NextRequest) {
   try {
-    // 인증 확인
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    if (!token) {
-      return NextResponse.json({
-        ok: false,
-        error: '인증이 필요합니다.',
-      }, { status: 401 })
-    }
-
-    const payload = verifyToken(token)
-    if (!payload) {
-      return NextResponse.json({
-        ok: false,
-        error: '유효하지 않은 토큰입니다.',
-      }, { status: 401 })
-    }
-
     const body = await request.json()
     const {
       productId,
+      adults,
+      children,
+      infants,
       customerName,
       customerPhone,
       customerEmail,
-      reservationDate,
-      adultCount,
-      childCount,
-      infantCount,
       totalAmount,
-      paymentMethod,
-      specialRequests,
+      selectedOptions = {}
     } = body
 
     // 필수 필드 검증
-    if (!productId || !customerName || !customerPhone || !customerEmail || !reservationDate) {
+    if (!productId || !customerName || !customerPhone || !customerEmail || !totalAmount) {
       return NextResponse.json({
         ok: false,
         error: '필수 정보가 누락되었습니다.',
       }, { status: 400 })
     }
 
-    // 상품 존재 확인
+    // 인원 수 검증
+    if (adults < 1) {
+      return NextResponse.json({
+        ok: false,
+        error: '성인 인원은 최소 1명 이상이어야 합니다.',
+      }, { status: 400 })
+    }
+
+    // 상품 존재 및 활성 상태 확인
     const product = await prisma.product.findUnique({
       where: { id: productId },
       include: {
-        personTypePrices: true,
-      },
+        productOptions: {
+          include: {
+            values: true
+          }
+        }
+      }
     })
 
-    if (!product || !product.isActive) {
+    if (!product) {
       return NextResponse.json({
         ok: false,
-        error: '존재하지 않는 상품입니다.',
+        error: '상품을 찾을 수 없습니다.',
       }, { status: 404 })
     }
 
-    // 예약 번호 생성 (YYYYMMDD-XXXXXX 형식)
+    if (!product.isActive) {
+      return NextResponse.json({
+        ok: false,
+        error: '현재 판매하지 않는 상품입니다.',
+      }, { status: 400 })
+    }
+
+    // 수용 가능 인원 확인
+    const totalPersons = adults + children + infants
+    if (product.currentBookings + totalPersons > product.maxCapacity) {
+      return NextResponse.json({
+        ok: false,
+        error: '예약 가능한 인원을 초과했습니다.',
+      }, { status: 400 })
+    }
+
+    // 로그인된 사용자 확인 (선택사항)
+    let memberId = null
+    const authHeader = request.headers.get('authorization')
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7)
+      const payload = verifyToken(token)
+      if (payload) {
+        memberId = payload.id
+      }
+    }
+
+    // 예약 번호 생성 (YYYYMMDD + 랜덤 6자리)
     const today = new Date()
     const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '')
-    const randomNum = Math.floor(Math.random() * 1000000).toString().padStart(6, '0')
-    const orderNumber = `${dateStr}-${randomNum}`
+    const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase()
+    const orderNumber = `WR${dateStr}${randomStr}`
 
-    // 예약 생성
-    const reservation = await prisma.reservation.create({
-      data: {
-        orderNumber,
-        productId,
-        memberId: payload.id,
-        customerName,
-        customerPhone,
-        customerEmail,
-        reservationDate: new Date(reservationDate),
-        reservationTime: '10:00', // 기본값 설정
-        adults: adultCount || 0,
-        children: childCount || 0,
-        infants: infantCount || 0,
-        totalAmount: totalAmount || 0,
-        paymentMethod: paymentMethod || 'CARD',
-        status: 'PENDING',
-      },
-      include: {
-        product: {
-          include: {
-            category: true,
-          },
+    // 트랜잭션으로 예약 생성 및 상품 예약 수 증가
+    const result = await prisma.$transaction(async (tx) => {
+      // 예약 생성
+      const reservation = await tx.reservation.create({
+        data: {
+          orderNumber,
+          memberId,
+          productId,
+          customerName,
+          customerPhone,
+          customerEmail,
+          adults,
+          children,
+          infants,
+          totalAmount,
+          status: 'CONFIRMED', // 테스트 모드이므로 바로 확정
+          paymentStatus: 'COMPLETED', // 테스트 모드이므로 결제 완료
+          paymentMethod: 'TEST_PAYMENT',
+          paymentDate: new Date(),
+          reservationDate: new Date(), // 현재 날짜로 설정
+          reservationTime: '10:00' // 기본 시간 설정
         },
-      },
+        include: {
+          product: {
+            select: {
+              name: true
+            }
+          }
+        }
+      })
+
+      // 상품의 현재 예약 수 증가
+      await tx.product.update({
+        where: { id: productId },
+        data: {
+          currentBookings: {
+            increment: totalPersons
+          }
+        }
+      })
+
+      return reservation
     })
 
     return NextResponse.json({
       ok: true,
-      data: reservation,
-      message: '예약이 성공적으로 생성되었습니다.',
+      data: {
+        reservation: result
+      }
     })
 
   } catch (error) {
     console.error('Reservation creation error:', error)
+    
     return NextResponse.json({
       ok: false,
-      error: '예약 생성 중 오류가 발생했습니다.',
+      error: '예약 처리 중 오류가 발생했습니다.',
+    }, { status: 500 })
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    // 로그인된 사용자의 예약 목록 조회
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({
+        ok: false,
+        error: '인증이 필요합니다.',
+      }, { status: 401 })
+    }
+
+    const token = authHeader.substring(7)
+    const payload = verifyToken(token)
+
+    if (!payload) {
+      return NextResponse.json({
+        ok: false,
+        error: '유효하지 않은 토큰입니다.',
+      }, { status: 401 })
+    }
+
+    const reservations = await prisma.reservation.findMany({
+      where: {
+        memberId: payload.id
+      },
+      include: {
+        product: {
+          select: {
+            name: true,
+            category: {
+              select: {
+                name: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+
+    return NextResponse.json({
+      ok: true,
+      data: {
+        reservations
+      }
+    })
+
+  } catch (error) {
+    console.error('Reservations fetch error:', error)
+    
+    return NextResponse.json({
+      ok: false,
+      error: '예약 목록을 불러오는 중 오류가 발생했습니다.',
     }, { status: 500 })
   }
 }
