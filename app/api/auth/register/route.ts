@@ -6,11 +6,20 @@ import { z } from 'zod'
 export const runtime = 'nodejs'
 
 const registerSchema = z.object({
-  username: z.string().min(3, '사용자명은 최소 3자 이상이어야 합니다'),
+  username: z.string()
+    .min(6, '사용자명은 최소 6자 이상이어야 합니다')
+    .max(20, '사용자명은 최대 20자까지 가능합니다')
+    .regex(/^[a-zA-Z0-9]+$/, '사용자명은 영문과 숫자만 사용할 수 있습니다'),
   email: z.string().email('올바른 이메일 형식이 아닙니다'),
-  password: z.string().min(6, '비밀번호는 최소 6자 이상이어야 합니다'),
+  password: z.string()
+    .min(6, '비밀번호는 최소 6자 이상이어야 합니다')
+    .max(30, '비밀번호는 최대 30자까지 가능합니다')
+    .regex(/^(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).*$/, '비밀번호는 영문과 특수문자를 각각 최소 1자 이상 포함해야 합니다'),
   nickname: z.string().min(1, '닉네임을 입력해주세요'),
-  phone: z.string().optional(),
+  phone: z.string()
+    .min(10, '연락처는 최소 10자리여야 합니다')
+    .max(11, '연락처는 최대 11자리까지 가능합니다')
+    .regex(/^[0-9]+$/, '연락처는 숫자만 입력해주세요'),
 })
 
 export async function POST(request: NextRequest) {

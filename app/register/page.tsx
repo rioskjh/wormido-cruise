@@ -19,10 +19,96 @@ export default function RegisterPage() {
   const router = useRouter()
   const { showSuccess, showError } = useToast()
 
+  // 유효성 검증 함수들
+  const validateUsername = (username: string): string | null => {
+    if (!username || username.trim().length === 0) {
+      return '사용자명을 입력해주세요.'
+    }
+    if (username.length < 6 || username.length > 20) {
+      return '사용자명은 6자리 이상 20자리 이하여야 합니다.'
+    }
+    if (!/^[a-zA-Z0-9]+$/.test(username)) {
+      return '사용자명은 영문과 숫자만 사용할 수 있습니다.'
+    }
+    return null
+  }
+
+  const validateEmail = (email: string): string | null => {
+    if (!email || email.trim().length === 0) {
+      return '이메일을 입력해주세요.'
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return '올바른 이메일 형식이 아닙니다.'
+    }
+    return null
+  }
+
+  const validatePhone = (phone: string): string | null => {
+    if (!phone || phone.trim().length === 0) {
+      return '연락처를 입력해주세요.'
+    }
+    // 숫자만 허용하고 10-11자리
+    const phoneRegex = /^[0-9]{10,11}$/
+    if (!phoneRegex.test(phone)) {
+      return '연락처는 10-11자리 숫자만 입력해주세요.'
+    }
+    return null
+  }
+
+  const validatePassword = (password: string): string | null => {
+    if (!password || password.trim().length === 0) {
+      return '비밀번호를 입력해주세요.'
+    }
+    if (password.length < 6 || password.length > 30) {
+      return '비밀번호는 6자리 이상 30자리 이하여야 합니다.'
+    }
+    // 영문 최소 1자 이상, 특수문자 최소 1자 이상
+    const hasLetter = /[a-zA-Z]/.test(password)
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+    
+    if (!hasLetter) {
+      return '비밀번호는 영문을 최소 1자 이상 포함해야 합니다.'
+    }
+    if (!hasSpecialChar) {
+      return '비밀번호는 특수문자를 최소 1자 이상 포함해야 합니다.'
+    }
+    return null
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
+
+    // 유효성 검증
+    const usernameError = validateUsername(formData.username)
+    if (usernameError) {
+      setError(usernameError)
+      setLoading(false)
+      return
+    }
+
+    const emailError = validateEmail(formData.email)
+    if (emailError) {
+      setError(emailError)
+      setLoading(false)
+      return
+    }
+
+    const phoneError = validatePhone(formData.phone)
+    if (phoneError) {
+      setError(phoneError)
+      setLoading(false)
+      return
+    }
+
+    const passwordError = validatePassword(formData.password)
+    if (passwordError) {
+      setError(passwordError)
+      setLoading(false)
+      return
+    }
 
     // 비밀번호 확인
     if (formData.password !== formData.confirmPassword) {

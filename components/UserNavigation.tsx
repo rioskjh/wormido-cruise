@@ -106,6 +106,12 @@ export default function UserNavigation() {
                   안녕하세요, <span className="font-medium text-gray-900">{user.nickname}</span>님
                 </div>
                 <Link 
+                  href="/profile" 
+                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100"
+                >
+                  프로필
+                </Link>
+                <Link 
                   href="/reservations" 
                   className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100"
                 >
