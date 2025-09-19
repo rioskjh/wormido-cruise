@@ -310,10 +310,10 @@ model AuditLog {
 // 리프?�시 ?�큰 ?�이�?
 model RefreshToken {
   id        Int      @id @default(autoincrement())
-  memberId  Int
+  memberId  Int      @map("member_id")
   token     String   @unique
-  expiresAt DateTime
-  createdAt DateTime @default(now())
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
   member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
 
   @@map("refresh_tokens")
@@ -322,18 +322,18 @@ model RefreshToken {
 // ?�셜 계정 ?�이�?
 model Account {
   id                Int     @id @default(autoincrement())
-  memberId          Int
+  memberId          Int     @map("member_id")
   provider          String
-  providerAccountId String
-  accessToken       String?
-  refreshToken      String?
-  expiresAt         Int?
-  tokenType         String?
+  providerAccountId String  @map("provider_account_id")
+  accessToken       String? @map("access_token")
+  refreshToken      String? @map("refresh_token")
+  expiresAt         Int?    @map("expires_at")
+  tokenType         String? @map("token_type")
   scope             String?
-  idToken           String?
-  sessionState      String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  idToken           String? @map("id_token")
+  sessionState      String? @map("session_state")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
   member            Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
