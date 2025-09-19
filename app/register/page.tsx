@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/contexts/ToastContext'
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
+  const { showSuccess, showError } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -46,13 +48,22 @@ export default function RegisterPage() {
       const data = await response.json()
 
       if (data.ok) {
-        // 회원가입 성공 시 로그인 페이지로 리다이렉트
-        router.push('/login?message=회원가입이 완료되었습니다. 로그인해주세요.')
+        // 회원가입 성공 시 Toast 알림 표시
+        showSuccess('회원가입 완료!', '회원가입이 성공적으로 완료되었습니다. 로그인해주세요.')
+        
+        // 2초 후 로그인 페이지로 리다이렉트
+        setTimeout(() => {
+          router.push('/login')
+        }, 2000)
       } else {
-        setError(data.error || '회원가입에 실패했습니다.')
+        const errorMessage = data.error || '회원가입에 실패했습니다.'
+        setError(errorMessage)
+        showError('회원가입 실패', errorMessage)
       }
     } catch (error) {
-      setError('서버 오류가 발생했습니다.')
+      const errorMessage = '서버 오류가 발생했습니다.'
+      setError(errorMessage)
+      showError('서버 오류', errorMessage)
     } finally {
       setLoading(false)
     }
