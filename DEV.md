@@ -687,6 +687,12 @@ chore: 빌드 프로세스 또는 보조 도구 변경
    - Prisma 스키마와 API 코드 일치성 확보
    - 옵션 데이터가 없어도 정상적으로 페이지 로드
 
+5. **UI 정렬 및 데이터베이스 스키마 수정**
+   - 수정, 삭제, 옵션 관리 버튼을 한 줄로 정렬
+   - ProductOption 및 ProductOptionValue 모델에 @map 속성 추가
+   - snake_case 데이터베이스 컬럼명과 camelCase Prisma 필드명 매핑
+   - Prisma 클라이언트 재생성으로 스키마 동기화
+
 ---
 
 이 가이드를 따라 Wormi Cruise 프로젝트의 개발 환경을 설정하고 배포할 수 있습니다. 추가 질문이나 문제가 있으면 개발팀에 문의해주세요.

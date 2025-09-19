@@ -513,25 +513,23 @@ export default function AdminProductsPage() {
                       {formatDate(product.createdAt)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex flex-col space-y-2">
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleEditProduct(product)}
-                            className="text-indigo-600 hover:text-indigo-900"
-                          >
-                            수정
-                          </button>
-                          <button
-                            onClick={() => handleDeleteProduct(product)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            삭제
-                          </button>
-                        </div>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleEditProduct(product)}
+                          className="text-indigo-600 hover:text-indigo-900"
+                        >
+                          수정
+                        </button>
+                        <button
+                          onClick={() => handleDeleteProduct(product)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          삭제
+                        </button>
                         {product.useOptions && (
                           <button
                             onClick={() => handleManageOptions(product)}
-                            className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 text-xs font-medium"
+                            className="text-blue-600 hover:text-blue-900"
                           >
                             옵션 관리
                           </button>

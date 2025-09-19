@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ê´€ë¦¬ì ?Œì´ë¸?
+// ê´€ë¦¬ì ?ï¿½ì´ï¿½?
 model Admin {
   id          Int      @id @default(autoincrement())
   username    String   @unique
@@ -30,7 +30,7 @@ enum AdminRole {
   EDITOR
 }
 
-// ?Œì› ?Œì´ë¸?
+// ?ï¿½ì› ?ï¿½ì´ï¿½?
 model Member {
   id            Int            @id @default(autoincrement())
   username      String         @unique
@@ -54,7 +54,7 @@ model Member {
   @@map("members")
 }
 
-// ?í’ˆ ì¹´í…Œê³ ë¦¬ ?Œì´ë¸?
+// ?ï¿½í’ˆ ì¹´í…Œê³ ë¦¬ ?ï¿½ì´ï¿½?
 model ProductCategory {
   id          Int       @id @default(autoincrement())
   name        String
@@ -68,7 +68,7 @@ model ProductCategory {
   @@map("product_categories")
 }
 
-// ?í’ˆ ?Œì´ë¸?
+// ?ï¿½í’ˆ ?ï¿½ì´ï¿½?
 model Product {
   id            Int      @id @default(autoincrement())
   name          String
@@ -97,7 +97,7 @@ model Product {
   @@map("products")
 }
 
-// ?¸ì› ?€?…ë³„ ê°€ê²??Œì´ë¸?
+// ?ï¿½ì› ?ï¿½?ï¿½ë³„ ê°€ï¿½??ï¿½ì´ï¿½?
 model PersonTypePrice {
   id        Int        @id @default(autoincrement())
   productId Int        @map("product_id")
@@ -110,32 +110,32 @@ model PersonTypePrice {
   @@map("person_type_prices")
 }
 
-// ?í’ˆ ?µì…˜ ?Œì´ë¸?
+// ?ï¿½í’ˆ ?ï¿½ì…˜ ?ï¿½ì´ï¿½?
 model ProductOption {
   id        Int      @id @default(autoincrement())
   productId Int        @map("product_id")
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   name      String
-  sortOrder Int      @default(0)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   values    ProductOptionValue[]
 
   @@map("product_options")
 }
 
-// ?í’ˆ ?µì…˜ ê°??Œì´ë¸?
+// ?ï¿½í’ˆ ?ï¿½ì…˜ ï¿½??ï¿½ì´ï¿½?
 model ProductOptionValue {
   id        Int           @id @default(autoincrement())
-  optionId  Int
+  optionId  Int           @map("option_id")
   option    ProductOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
   value     String
   price     Int           @default(0)
-  sortOrder Int           @default(0)
-  isActive  Boolean       @default(true)
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  sortOrder Int           @default(0) @map("sort_order")
+  isActive  Boolean       @default(true) @map("is_active")
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @updatedAt @map("updated_at")
   option1Schedules ProductSchedule[] @relation("Option1Schedules")
   option2Schedules ProductSchedule[] @relation("Option2Schedules")
   option3Schedules ProductSchedule[] @relation("Option3Schedules")
@@ -143,7 +143,7 @@ model ProductOptionValue {
   @@map("product_option_values")
 }
 
-// ?í’ˆ ?¤ì?ì¤??Œì´ë¸?
+// ?ï¿½í’ˆ ?ï¿½ï¿½?ï¿½??ï¿½ì´ï¿½?
 model ProductSchedule {
   id              Int      @id @default(autoincrement())
   productId       Int
@@ -165,7 +165,7 @@ model ProductSchedule {
   @@map("product_schedules")
 }
 
-// ?ˆì•½ ?Œì´ë¸?
+// ?ï¿½ì•½ ?ï¿½ì´ï¿½?
 model Reservation {
   id            Int      @id @default(autoincrement())
   orderNumber   String   @unique @map("order_number")
@@ -194,7 +194,7 @@ model Reservation {
   @@map("reservations")
 }
 
-// ì£¼ë¬¸ ?Œì´ë¸?
+// ì£¼ë¬¸ ?ï¿½ì´ï¿½?
 model Order {
   id            Int         @id @default(autoincrement())
   memberId      Int
@@ -212,7 +212,7 @@ model Order {
   @@map("orders")
 }
 
-// ì£¼ë¬¸ ?„ì´???Œì´ë¸?
+// ì£¼ë¬¸ ?ï¿½ì´???ï¿½ì´ï¿½?
 model OrderItem {
   id          Int     @id @default(autoincrement())
   orderId     Int
@@ -228,7 +228,7 @@ model OrderItem {
   @@map("order_items")
 }
 
-// ê²Œì‹œ???Œì´ë¸?
+// ê²Œì‹œ???ï¿½ì´ï¿½?
 model Board {
   id          Int    @id @default(autoincrement())
   boardId     String @unique
@@ -243,7 +243,7 @@ model Board {
   @@map("boards")
 }
 
-// ê²Œì‹œê¸€ ?Œì´ë¸?
+// ê²Œì‹œê¸€ ?ï¿½ì´ï¿½?
 model Post {
   id        Int      @id @default(autoincrement())
   boardId   String
@@ -262,7 +262,7 @@ model Post {
   @@map("posts")
 }
 
-// ?“ê? ?Œì´ë¸?
+// ?ï¿½ï¿½? ?ï¿½ì´ï¿½?
 model Comment {
   id        Int      @id @default(autoincrement())
   postId    Int
@@ -276,7 +276,7 @@ model Comment {
   @@map("comments")
 }
 
-// ì²¨ë??Œì¼ ?Œì´ë¸?
+// ì²¨ï¿½??ï¿½ì¼ ?ï¿½ì´ï¿½?
 model Attachment {
   id       Int    @id @default(autoincrement())
   postId   Int
@@ -289,7 +289,7 @@ model Attachment {
   @@map("attachments")
 }
 
-// ê°ì‚¬ ë¡œê·¸ ?Œì´ë¸?
+// ê°ì‚¬ ë¡œê·¸ ?ï¿½ì´ï¿½?
 model AuditLog {
   id         Int      @id @default(autoincrement())
   memberId   Int?
@@ -307,7 +307,7 @@ model AuditLog {
   @@map("audit_logs")
 }
 
-// ë¦¬í”„?ˆì‹œ ? í° ?Œì´ë¸?
+// ë¦¬í”„?ï¿½ì‹œ ?ï¿½í° ?ï¿½ì´ï¿½?
 model RefreshToken {
   id        Int      @id @default(autoincrement())
   memberId  Int
@@ -319,7 +319,7 @@ model RefreshToken {
   @@map("refresh_tokens")
 }
 
-// ?Œì…œ ê³„ì • ?Œì´ë¸?
+// ?ï¿½ì…œ ê³„ì • ?ï¿½ì´ï¿½?
 model Account {
   id                Int     @id @default(autoincrement())
   memberId          Int
@@ -340,7 +340,7 @@ model Account {
   @@map("accounts")
 }
 
-// ?´ê±°?•ë“¤
+// ?ï¿½ê±°?ï¿½ë“¤
 enum Role {
   USER
   EDITOR
