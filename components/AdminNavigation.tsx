@@ -56,7 +56,7 @@ export default function AdminNavigation({ onLogout }: AdminNavigationProps) {
   }
 
   return (
-    <div className={`bg-gray-900 text-white transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
+    <div className={`bg-gray-900 text-white transition-all duration-300 flex flex-col h-full ${isCollapsed ? 'w-16' : 'w-64'}`}>
       {/* 헤더 */}
       <div className="flex items-center justify-between p-4 border-b border-gray-700">
         {!isCollapsed && (
@@ -74,7 +74,7 @@ export default function AdminNavigation({ onLogout }: AdminNavigationProps) {
       </div>
 
       {/* 네비게이션 메뉴 */}
-      <nav className="mt-4">
+      <nav className="mt-4 flex-1">
         <ul className="space-y-1 px-2">
           {navigationItems.map((item) => (
             <li key={item.name}>
@@ -95,7 +95,7 @@ export default function AdminNavigation({ onLogout }: AdminNavigationProps) {
       </nav>
 
       {/* 하단 사용자 정보 및 로그아웃 */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700">
+      <div className="p-4 border-t border-gray-700">
         {!isCollapsed && (
           <div className="mb-3">
             <p className="text-sm font-medium text-white">관리자</p>
