@@ -38,7 +38,7 @@ export default function RegisterPage() {
           username: formData.username,
           email: formData.email,
           password: formData.password,
-          name: formData.name,
+          nickname: formData.name, // name을 nickname으로 전송
           phone: formData.phone,
         }),
       })
