@@ -17,7 +17,7 @@ export default function ToastContainer({ toasts, onClose }: ToastContainerProps)
 
   console.log('ToastContainer: toasts 렌더링 중', toasts)
   return (
-    <div className="fixed top-4 right-4 z-[9999] space-y-2" style={{ zIndex: 9999 }}>
+    <div className="fixed top-4 right-4 z-[9999] space-y-3 max-w-sm" style={{ zIndex: 9999 }}>
       {toasts.map((toast) => (
         <Toast
           key={toast.id}

@@ -51,19 +51,19 @@ export default function Toast({ id, type, title, message, duration = 5000, onClo
   }
 
   return (
-    <div className={`max-w-sm w-full border rounded-lg shadow-lg pointer-events-auto ${getColorClasses()}`}>
+    <div className={`min-w-80 max-w-md w-auto border rounded-lg shadow-lg pointer-events-auto ${getColorClasses()}`}>
       <div className="p-4">
-        <div className="flex items-start">
+        <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
             <span className="text-lg">{getIcon()}</span>
           </div>
-          <div className="ml-3 w-0 flex-1">
-            <p className="text-sm font-medium">{title}</p>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-gray-900 break-words">{title}</p>
             {message && (
-              <p className="mt-1 text-sm opacity-90">{message}</p>
+              <p className="mt-1 text-sm text-gray-700 break-words">{message}</p>
             )}
           </div>
-          <div className="ml-4 flex-shrink-0 flex">
+          <div className="flex-shrink-0">
             <button
               onClick={() => onClose(id)}
               className="inline-flex text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition ease-in-out duration-150"
