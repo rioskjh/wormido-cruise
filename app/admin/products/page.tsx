@@ -259,6 +259,10 @@ export default function AdminProductsPage() {
     setIsModalOpen(true)
   }
 
+  const handleManageOptions = (product: Product) => {
+    router.push(`/admin/products/${product.id}/options`)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -479,6 +483,11 @@ export default function AdminProductsPage() {
                             {product.description}
                           </div>
                         )}
+                        {product.useOptions && (
+                          <div className="text-xs text-blue-600 mt-1">
+                            옵션 사용
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -503,19 +512,31 @@ export default function AdminProductsPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {formatDate(product.createdAt)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                      <button
-                        onClick={() => handleEditProduct(product)}
-                        className="text-indigo-600 hover:text-indigo-900"
-                      >
-                        수정
-                      </button>
-                      <button
-                        onClick={() => handleDeleteProduct(product)}
-                        className="text-red-600 hover:text-red-900"
-                      >
-                        삭제
-                      </button>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex flex-col space-y-1">
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => handleEditProduct(product)}
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            수정
+                          </button>
+                          <button
+                            onClick={() => handleDeleteProduct(product)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            삭제
+                          </button>
+                        </div>
+                        {product.useOptions && (
+                          <button
+                            onClick={() => handleManageOptions(product)}
+                            className="text-blue-600 hover:text-blue-900 text-xs"
+                          >
+                            옵션 관리
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

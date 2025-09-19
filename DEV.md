@@ -619,6 +619,53 @@ chore: 빌드 프로세스 또는 보조 도구 변경
 - 관리자 권한 세분화
 - 시스템 로그 및 감사 기능
 
+## 2024-12-19: 상품 옵션 관리 시스템 구현
+
+### 구현된 기능
+1. **상품 목록에 옵션 관리 버튼 추가**
+   - `useOptions`가 true인 상품에만 "옵션 관리" 버튼 표시
+   - 상품 목록에서 옵션 사용 여부 표시
+
+2. **상품 옵션 관리 API 구현**
+   - `GET /api/admin/products/[id]/options` - 옵션 목록 조회
+   - `POST /api/admin/products/[id]/options` - 옵션 생성
+   - `GET /api/admin/products/[id]/options/[optionId]` - 개별 옵션 조회
+   - `PUT /api/admin/products/[id]/options/[optionId]` - 옵션 수정
+   - `DELETE /api/admin/products/[id]/options/[optionId]` - 옵션 삭제
+
+3. **옵션 값 관리 API 구현**
+   - `GET /api/admin/products/[id]/options/[optionId]/values` - 옵션 값 목록 조회
+   - `POST /api/admin/products/[id]/options/[optionId]/values` - 옵션 값 생성
+   - `GET /api/admin/products/[id]/options/[optionId]/values/[valueId]` - 개별 옵션 값 조회
+   - `PUT /api/admin/products/[id]/options/[optionId]/values/[valueId]` - 옵션 값 수정
+   - `DELETE /api/admin/products/[id]/options/[optionId]/values/[valueId]` - 옵션 값 삭제
+
+4. **상품 옵션 설정 페이지 구현**
+   - `/admin/products/[id]/options` - 옵션 관리 페이지
+   - 옵션 생성/수정/삭제 기능
+   - 옵션 값 생성/수정/삭제 기능
+   - Toast 알림 시스템 연동
+
+### 데이터베이스 스키마
+- `ProductOption` 모델: 옵션 정보 (name, description, isRequired, sortOrder)
+- `ProductOptionValue` 모델: 옵션 값 정보 (value, price, isActive, sortOrder)
+- Cascade 삭제: 옵션 삭제 시 관련 옵션 값들도 함께 삭제
+
+### 주요 특징
+- 관리자 인증 필수
+- 옵션 사용 상품만 옵션 관리 가능
+- 필수/선택 옵션 구분
+- 옵션 값별 추가 가격 설정
+- 정렬 순서 관리
+- 활성/비활성 상태 관리
+- Toast 알림으로 사용자 피드백
+
+### 사용법
+1. 상품 관리에서 "옵션 사용" 체크박스 활성화
+2. 상품 목록에서 "옵션 관리" 버튼 클릭
+3. 옵션 생성 및 옵션 값 추가
+4. 예약 시 고객이 옵션 선택 가능
+
 ---
 
 이 가이드를 따라 Wormi Cruise 프로젝트의 개발 환경을 설정하고 배포할 수 있습니다. 추가 질문이나 문제가 있으면 개발팀에 문의해주세요.
