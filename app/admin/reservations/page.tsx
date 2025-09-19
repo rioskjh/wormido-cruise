@@ -34,6 +34,46 @@ export default function AdminReservationsPage() {
   const [statusFilter, setStatusFilter] = useState('ALL')
   const router = useRouter()
 
+  // 토큰 만료 확인 함수
+  const isTokenExpired = (token: string): boolean => {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      const currentTime = Math.floor(Date.now() / 1000)
+      return payload.exp < currentTime
+    } catch {
+      return true // 토큰 파싱 실패 시 만료된 것으로 간주
+    }
+  }
+
+  // 토큰 갱신 함수
+  const refreshToken = async (): Promise<string | null> => {
+    try {
+      const refreshTokenValue = localStorage.getItem('adminRefreshToken')
+      if (!refreshTokenValue) {
+        return null
+      }
+
+      const response = await fetch('/api/auth/refresh', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refreshToken: refreshTokenValue }),
+      })
+
+      const data = await response.json()
+      if (data.ok) {
+        localStorage.setItem('adminToken', data.data.accessToken)
+        localStorage.setItem('adminRefreshToken', data.data.refreshToken)
+        return data.data.accessToken
+      }
+      return null
+    } catch (error) {
+      console.error('토큰 갱신 실패:', error)
+      return null
+    }
+  }
+
   useEffect(() => {
     // 관리자 인증 확인
     const adminToken = localStorage.getItem('adminToken')
@@ -42,12 +82,50 @@ export default function AdminReservationsPage() {
       return
     }
 
-    fetchReservations()
+    // 토큰 만료 확인
+    if (isTokenExpired(adminToken)) {
+      console.log('토큰이 만료되어 갱신을 시도합니다.')
+      refreshToken().then(newToken => {
+        if (newToken) {
+          console.log('토큰 갱신 성공')
+          fetchReservations()
+        } else {
+          // 토큰 갱신 실패 시 로그인 페이지로 이동
+          localStorage.removeItem('adminToken')
+          localStorage.removeItem('adminRefreshToken')
+          router.push('/admin/login')
+        }
+      })
+    } else {
+      fetchReservations()
+    }
   }, [router, statusFilter])
 
   const fetchReservations = async () => {
     try {
-      const adminToken = localStorage.getItem('adminToken')
+      let adminToken = localStorage.getItem('adminToken')
+      
+      if (!adminToken) {
+        router.push('/admin/login')
+        return
+      }
+
+      // 토큰 만료 확인 및 갱신
+      if (isTokenExpired(adminToken)) {
+        console.log('토큰이 만료되어 갱신을 시도합니다.')
+        const newToken = await refreshToken()
+        if (newToken) {
+          adminToken = newToken
+          console.log('토큰 갱신 성공')
+        } else {
+          // 토큰 갱신 실패 시 로그인 페이지로 이동
+          localStorage.removeItem('adminToken')
+          localStorage.removeItem('adminRefreshToken')
+          router.push('/admin/login')
+          return
+        }
+      }
+
       const url = statusFilter === 'ALL' 
         ? '/api/admin/reservations'
         : `/api/admin/reservations?status=${statusFilter}`
@@ -63,13 +141,21 @@ export default function AdminReservationsPage() {
       if (data.ok) {
         setReservations(data.data)
       } else {
-        if (data.error === 'Unauthorized') {
+        // 토큰 관련 에러인 경우 로그인 페이지로 이동
+        if (data.error === 'Unauthorized' || 
+            data.error === '토큰 검증 실패' || 
+            data.error === '유효하지 않은 토큰입니다.' ||
+            response.status === 401) {
+          localStorage.removeItem('adminToken')
+          localStorage.removeItem('adminRefreshToken')
           router.push('/admin/login')
+          return
         } else {
           setError(data.error || '예약 목록을 불러오는데 실패했습니다.')
         }
       }
     } catch (error) {
+      console.error('API 호출 에러:', error)
       setError('예약 목록을 불러오는데 실패했습니다.')
     } finally {
       setIsLoading(false)
@@ -78,7 +164,26 @@ export default function AdminReservationsPage() {
 
   const updateReservationStatus = async (id: number, status: string) => {
     try {
-      const adminToken = localStorage.getItem('adminToken')
+      let adminToken = localStorage.getItem('adminToken')
+      
+      if (!adminToken) {
+        router.push('/admin/login')
+        return
+      }
+
+      // 토큰 만료 확인 및 갱신
+      if (isTokenExpired(adminToken)) {
+        const newToken = await refreshToken()
+        if (newToken) {
+          adminToken = newToken
+        } else {
+          localStorage.removeItem('adminToken')
+          localStorage.removeItem('adminRefreshToken')
+          router.push('/admin/login')
+          return
+        }
+      }
+
       const response = await fetch(`/api/admin/reservations/${id}`, {
         method: 'PUT',
         headers: {
@@ -94,9 +199,20 @@ export default function AdminReservationsPage() {
         // 목록 새로고침
         fetchReservations()
       } else {
+        // 토큰 관련 에러인 경우 로그인 페이지로 이동
+        if (data.error === 'Unauthorized' || 
+            data.error === '토큰 검증 실패' || 
+            data.error === '유효하지 않은 토큰입니다.' ||
+            response.status === 401) {
+          localStorage.removeItem('adminToken')
+          localStorage.removeItem('adminRefreshToken')
+          router.push('/admin/login')
+          return
+        }
         alert(data.error || '상태 변경에 실패했습니다.')
       }
     } catch (error) {
+      console.error('상태 변경 에러:', error)
       alert('상태 변경 중 오류가 발생했습니다.')
     }
   }

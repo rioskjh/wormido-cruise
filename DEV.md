@@ -430,6 +430,87 @@ chore: 빌드 프로세스 또는 보조 도구 변경
 
 ---
 
+## 🚀 최근 개발 진행사항 (2025-01-18)
+
+### 관리자 시스템 구현 및 배포 문제 해결
+
+#### 1. 관리자 시스템 분리 구현
+- **관리자 로그인 페이지**: `/admin/login` 별도 구현
+- **관리자 대시보드**: `/admin/dashboard` 구현
+- **관리자 예약 관리**: `/admin/reservations` 구현
+- **관리자 전용 API**: `/api/admin/auth/login`, `/api/admin/dashboard/stats` 등 구현
+
+#### 2. Prisma 스키마 동기화 문제 해결
+- **문제**: Supabase 데이터베이스의 snake_case 컬럼명과 Prisma의 camelCase 필드명 불일치
+- **해결**: 모든 모델에 `@map` 속성 추가하여 데이터베이스 스키마와 완전 동기화
+- **수정된 모델들**:
+  - `Member`: `createdAt` → `@map("created_at")`, `updatedAt` → `@map("updated_at")`
+  - `Admin`: `isActive` → `@map("is_active")`, `lastLoginAt` → `@map("last_login_at")` 등
+  - `ProductCategory`, `Product`, `Reservation`, `PersonTypePrice` 모델 전체 매핑 완료
+
+#### 3. 관리자 로그인 307 리다이렉트 문제 해결
+- **문제**: 관리자 로그인 후 대시보드로 이동 시 307 Temporary Redirect 발생
+- **원인**: 미들웨어에서 관리자 페이지를 보호 대상에 포함하여 서버 사이드 인증 처리
+- **해결**:
+  - 미들웨어에서 관리자 페이지(`/admin/dashboard`, `/admin/reservations`) 제외
+  - 관리자 페이지는 클라이언트 사이드에서 인증 처리하도록 변경
+  - `config.matcher`에서 `/admin/:path*` 제거
+
+#### 4. 관리자 토큰 검증 401 에러 해결
+- **문제**: "유효하지 않은 토큰입니다" 에러로 대시보드 API 호출 실패
+- **원인 분석 과정**:
+  1. JWT_SECRET 불일치 의심 → Vercel 환경변수 확인 (정상)
+  2. 토큰 만료 의심 → 토큰 만료 시간 확인 (정상)
+  3. 토큰 형식 문제 의심 → JWT 토큰에 공백 포함 발견
+  4. 미들웨어 문제 발견 → Vercel 로그에서 "Middleware: Unauthorized 401" 확인
+- **최종 해결**:
+  - 미들웨어의 `config.matcher`에서 `/api/admin/:path*` 제거
+  - 관리자 API는 자체 인증 처리하도록 수정
+  - JWT 토큰 생성 시 공백 제거 로직 추가
+
+#### 5. 기술적 개선사항
+- **JWT 토큰 관리**:
+  - Access Token: 15분 만료
+  - Refresh Token: 7일 만료
+  - HttpOnly 쿠키와 localStorage 이중 저장
+- **인증 방식**:
+  - 일반 사용자: 미들웨어 + 쿠키 기반 인증
+  - 관리자: 클라이언트 사이드 + Authorization 헤더 기반 인증
+- **에러 처리**:
+  - 상세한 에러 로깅 추가
+  - 토큰 검증 실패와 권한 부족 구분
+
+#### 6. 배포 및 테스트
+- **Vercel 배포**: 성공적으로 배포 완료
+- **관리자 계정**: `admin` / `admin123` (해싱된 비밀번호로 DB 저장)
+- **테스트 결과**:
+  - ✅ 관리자 로그인 성공
+  - ✅ 대시보드 페이지 접근 성공
+  - ✅ API 호출 정상화
+  - ✅ 307 리다이렉트 문제 해결
+  - ✅ 401 토큰 검증 에러 해결
+
+#### 7. 현재 상태
+- **관리자 시스템**: 완전 구현 및 정상 작동
+- **일반 사용자 시스템**: 기존 기능 유지
+- **데이터베이스**: Prisma 스키마와 Supabase 완전 동기화
+- **배포 환경**: Vercel에서 안정적으로 운영 중
+
+### 🔧 해결된 주요 이슈들
+1. **PrismaClientKnownRequestError**: 데이터베이스 컬럼명 불일치
+2. **307 Temporary Redirect**: 미들웨어 인증 처리 문제
+3. **401 Unauthorized**: 미들웨어가 관리자 API 차단 문제
+4. **JWT 토큰 검증 실패**: 토큰 형식 및 미들웨어 라우팅 문제
+
+### 📝 다음 개발 계획
+- 관리자 예약 관리 기능 완성
+- 상품 관리 기능 구현
+- 회원 관리 기능 구현
+- 결제 시스템 연동
+- 모바일 반응형 최적화
+
+---
+
 이 가이드를 따라 Wormi Cruise 프로젝트의 개발 환경을 설정하고 배포할 수 있습니다. 추가 질문이나 문제가 있으면 개발팀에 문의해주세요.
 
 ```
