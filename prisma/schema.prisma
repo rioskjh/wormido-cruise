@@ -197,14 +197,14 @@ model Reservation {
 // 주문 ?�이�?
 model Order {
   id            Int         @id @default(autoincrement())
-  memberId      Int
-  productId     Int      @map("product_id")
-  totalAmount   Int
+  memberId      Int         @map("member_id")
+  productId     Int         @map("product_id")
+  totalAmount   Int         @map("total_amount")
   status        OrderStatus @default(PENDING)
-  paymentMethod String?  @map("payment_method")
-  paymentId     String?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  paymentMethod String?     @map("payment_method")
+  paymentId     String?     @map("payment_id")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
   member        Member      @relation(fields: [memberId], references: [id])
   product       Product     @relation(fields: [productId], references: [id])
   items         OrderItem[]
@@ -215,13 +215,13 @@ model Order {
 // 주문 ?�이???�이�?
 model OrderItem {
   id          Int     @id @default(autoincrement())
-  orderId     Int
-  productId   Int
-  adultCount  Int     @default(0)
-  childCount  Int     @default(0)
-  infantCount Int     @default(0)
+  orderId     Int     @map("order_id")
+  productId   Int     @map("product_id")
+  adultCount  Int     @default(0) @map("adult_count")
+  childCount  Int     @default(0) @map("child_count")
+  infantCount Int     @default(0) @map("infant_count")
   subtotal    Int
-  createdAt   DateTime @default(now())
+  createdAt   DateTime @default(now()) @map("created_at")
   order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product     Product @relation(fields: [productId], references: [id])
 
