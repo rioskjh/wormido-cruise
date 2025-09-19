@@ -10,11 +10,14 @@ interface ReservationData {
   adults: number
   children: number
   infants: number
+  totalPrice: number
+  selectedOptions: {[key: number]: number}
+}
+
+interface CustomerInfo {
   customerName: string
   customerPhone: string
   customerEmail: string
-  totalPrice: number
-  selectedOptions: {[key: number]: number}
 }
 
 function ReservationContent() {
@@ -23,6 +26,11 @@ function ReservationContent() {
   const { showError, showSuccess } = useToast()
   const [loading, setLoading] = useState(false)
   const [reservationData, setReservationData] = useState<ReservationData | null>(null)
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
+    customerName: '',
+    customerPhone: '',
+    customerEmail: ''
+  })
 
   useEffect(() => {
     // URL 파라미터에서 예약 데이터 추출
@@ -30,12 +38,9 @@ function ReservationContent() {
     const adults = searchParams.get('adults')
     const children = searchParams.get('children')
     const infants = searchParams.get('infants')
-    const customerName = searchParams.get('customerName')
-    const customerPhone = searchParams.get('customerPhone')
-    const customerEmail = searchParams.get('customerEmail')
     const totalPrice = searchParams.get('totalPrice')
 
-    if (!productId || !adults || !children || !infants || !customerName || !customerPhone || !customerEmail || !totalPrice) {
+    if (!productId || !adults || !children || !infants || !totalPrice) {
       showError('예약 오류', '예약 정보가 올바르지 않습니다.')
       router.push('/')
       return
@@ -55,9 +60,6 @@ function ReservationContent() {
       adults: parseInt(adults),
       children: parseInt(children),
       infants: parseInt(infants),
-      customerName,
-      customerPhone,
-      customerEmail,
       totalPrice: parseInt(totalPrice),
       selectedOptions
     })
@@ -65,6 +67,20 @@ function ReservationContent() {
 
   const handlePayment = async () => {
     if (!reservationData) return
+
+    // 예약자 정보 검증
+    if (!customerInfo.customerName.trim()) {
+      showError('입력 오류', '예약자명을 입력해주세요.')
+      return
+    }
+    if (!customerInfo.customerPhone.trim()) {
+      showError('입력 오류', '연락처를 입력해주세요.')
+      return
+    }
+    if (!customerInfo.customerEmail.trim()) {
+      showError('입력 오류', '이메일을 입력해주세요.')
+      return
+    }
 
     setLoading(true)
 
@@ -82,9 +98,9 @@ function ReservationContent() {
           adults: reservationData.adults,
           children: reservationData.children,
           infants: reservationData.infants,
-          customerName: reservationData.customerName,
-          customerPhone: reservationData.customerPhone,
-          customerEmail: reservationData.customerEmail,
+          customerName: customerInfo.customerName,
+          customerPhone: customerInfo.customerPhone,
+          customerEmail: customerInfo.customerEmail,
           totalAmount: reservationData.totalPrice,
           selectedOptions: reservationData.selectedOptions
         })
@@ -122,101 +138,142 @@ function ReservationContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gray-50">
       <UserNavigation />
       
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="text-center mb-6">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">예약 확인</h1>
-              <p className="text-gray-600">예약 정보를 확인하고 결제를 진행해주세요.</p>
-            </div>
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">예약하기</h1>
+            <p className="text-gray-600">예약자 정보를 입력하고 결제를 진행해주세요.</p>
+          </div>
 
-            {/* 예약 정보 요약 */}
-            <div className="space-y-4 mb-6">
-              <div className="border-b pb-4">
-                <h2 className="text-lg font-semibold text-gray-900 mb-3">예약자 정보</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <span className="text-gray-600">예약자명:</span>
-                    <span className="ml-2 font-medium">{reservationData.customerName}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">연락처:</span>
-                    <span className="ml-2 font-medium">{reservationData.customerPhone}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">이메일:</span>
-                    <span className="ml-2 font-medium">{reservationData.customerEmail}</span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* 좌측: 예약 정보 요약 */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">예약 정보</h2>
+              
+              <div className="space-y-4">
+                <div className="border-b pb-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">인원 정보</h3>
+                  <div className="grid grid-cols-3 gap-4 text-sm">
+                    <div className="text-center">
+                      <div className="text-gray-600">대인</div>
+                      <div className="font-medium">{reservationData.adults}명</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-gray-600">소인</div>
+                      <div className="font-medium">{reservationData.children}명</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-gray-600">유아</div>
+                      <div className="font-medium">{reservationData.infants}명</div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="border-b pb-4">
-                <h2 className="text-lg font-semibold text-gray-900 mb-3">인원 정보</h2>
-                <div className="grid grid-cols-3 gap-4 text-sm">
-                  <div className="text-center">
-                    <div className="text-gray-600">성인</div>
-                    <div className="font-medium">{reservationData.adults}명</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-gray-600">어린이</div>
-                    <div className="font-medium">{reservationData.children}명</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-gray-600">유아</div>
-                    <div className="font-medium">{reservationData.infants}명</div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-3">결제 정보</h2>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="flex justify-between items-center">
-                    <span className="text-lg font-medium">총 결제 금액</span>
-                    <span className="text-2xl font-bold text-blue-600">
-                      {reservationData.totalPrice.toLocaleString()}원
-                    </span>
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">결제 정보</h3>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-medium">총 결제 금액</span>
+                      <span className="text-2xl font-bold text-blue-600">
+                        {reservationData.totalPrice.toLocaleString()}원
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* 결제 안내 */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <div className="flex items-start">
-                <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
+            {/* 우측: 예약자 정보 입력 */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">예약자 정보</h2>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    예약자명 <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={customerInfo.customerName}
+                    onChange={(e) => setCustomerInfo(prev => ({
+                      ...prev,
+                      customerName: e.target.value
+                    }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="예약자명을 입력하세요"
+                  />
                 </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-blue-800">결제 안내</h3>
-                  <div className="mt-2 text-sm text-blue-700">
-                    <p>현재는 테스트 모드로 실제 결제 없이 예약이 완료됩니다.</p>
-                    <p>예약 완료 후 이메일로 예약 확인서가 발송됩니다.</p>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    연락처 <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    value={customerInfo.customerPhone}
+                    onChange={(e) => setCustomerInfo(prev => ({
+                      ...prev,
+                      customerPhone: e.target.value
+                    }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="연락처를 입력하세요"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    이메일 <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={customerInfo.customerEmail}
+                    onChange={(e) => setCustomerInfo(prev => ({
+                      ...prev,
+                      customerEmail: e.target.value
+                    }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="이메일을 입력하세요"
+                  />
+                </div>
+              </div>
+
+              {/* 결제 안내 */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-blue-800">결제 안내</h3>
+                    <div className="mt-2 text-sm text-blue-700">
+                      <p>현재는 테스트 모드로 실제 결제 없이 예약이 완료됩니다.</p>
+                      <p>예약 완료 후 이메일로 예약 확인서가 발송됩니다.</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* 결제 버튼 */}
-            <div className="flex space-x-4">
-              <button
-                onClick={() => router.back()}
-                className="flex-1 bg-gray-600 text-white py-3 px-6 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-              >
-                이전으로
-              </button>
-              <button
-                onClick={handlePayment}
-                disabled={loading}
-                className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-              >
-                {loading ? '처리 중...' : '예약 완료'}
-              </button>
+              {/* 결제 버튼 */}
+              <div className="flex space-x-4 mt-6">
+                <button
+                  onClick={() => router.back()}
+                  className="flex-1 bg-gray-600 text-white py-3 px-6 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                >
+                  이전으로
+                </button>
+                <button
+                  onClick={handlePayment}
+                  disabled={loading}
+                  className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                >
+                  {loading ? '처리 중...' : '예약 완료'}
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -37,7 +37,7 @@ interface ProductOptionValue {
 export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const { showError } = useToast()
+  const { showError, showSuccess } = useToast()
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedOptions, setSelectedOptions] = useState<{[key: number]: number}>({})
@@ -45,9 +45,6 @@ export default function ProductDetailPage() {
     adults: 1,
     children: 0,
     infants: 0,
-    customerName: '',
-    customerPhone: '',
-    customerEmail: '',
   })
 
   useEffect(() => {
@@ -108,21 +105,37 @@ export default function ProductDetailPage() {
     return total
   }
 
-  const handleReservation = () => {
-    // 필수 정보 검증
-    if (!reservationData.customerName.trim()) {
-      showError('입력 오류', '예약자명을 입력해주세요.')
-      return
-    }
-    if (!reservationData.customerPhone.trim()) {
-      showError('입력 오류', '연락처를 입력해주세요.')
-      return
-    }
-    if (!reservationData.customerEmail.trim()) {
-      showError('입력 오류', '이메일을 입력해주세요.')
-      return
+  const handleAddToCart = () => {
+    // 옵션이 있는 상품인 경우 옵션 선택 검증
+    if (product?.useOptions && product.options) {
+      for (const option of product.options) {
+        if (!selectedOptions[option.id]) {
+          showError('옵션 선택 오류', `${option.name}을(를) 선택해주세요.`)
+          return
+        }
+      }
     }
 
+    // 장바구니에 추가 (로컬 스토리지 사용)
+    const cartItem = {
+      productId: product!.id,
+      productName: product!.name,
+      adults: reservationData.adults,
+      children: reservationData.children,
+      infants: reservationData.infants,
+      selectedOptions,
+      totalPrice: calculateTotalPrice(),
+      addedAt: new Date().toISOString()
+    }
+
+    const existingCart = JSON.parse(localStorage.getItem('cart') || '[]')
+    existingCart.push(cartItem)
+    localStorage.setItem('cart', JSON.stringify(existingCart))
+
+    showSuccess('장바구니 추가', '상품이 장바구니에 추가되었습니다.')
+  }
+
+  const handleDirectReservation = () => {
     // 옵션이 있는 상품인 경우 옵션 선택 검증
     if (product?.useOptions && product.options) {
       for (const option of product.options) {
@@ -139,9 +152,6 @@ export default function ProductDetailPage() {
       adults: reservationData.adults.toString(),
       children: reservationData.children.toString(),
       infants: reservationData.infants.toString(),
-      customerName: reservationData.customerName,
-      customerPhone: reservationData.customerPhone,
-      customerEmail: reservationData.customerEmail,
       totalPrice: calculateTotalPrice().toString(),
       ...Object.keys(selectedOptions).reduce((acc, key) => {
         acc[`option_${key}`] = selectedOptions[parseInt(key)].toString()
@@ -180,233 +190,219 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gray-50">
       <UserNavigation />
       
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* 상품 정보 */}
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded">
-                {product.category.name}
-              </span>
-              <span className="text-sm text-gray-500">
-                최대 {product.maxCapacity}명 | 현재 예약 {product.currentBookings}명
-              </span>
-            </div>
-            
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
-            <p className="text-gray-600 mb-6">{product.description}</p>
-            
-            {/* 가격 정보 */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <div className="text-sm text-gray-600">성인</div>
-                <div className="text-lg font-semibold text-gray-900">
-                  {product.adultPrice.toLocaleString()}원
-                </div>
-              </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <div className="text-sm text-gray-600">어린이</div>
-                <div className="text-lg font-semibold text-gray-900">
-                  {product.childPrice.toLocaleString()}원
-                </div>
-              </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <div className="text-sm text-gray-600">유아</div>
-                <div className="text-lg font-semibold text-gray-900">
-                  {product.infantPrice.toLocaleString()}원
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 옵션 선택 */}
-          {product.useOptions && product.options && product.options.length > 0 && (
-            <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">옵션 선택</h2>
-              {product.options.map((option) => (
-                <div key={option.id} className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {option.name}
-                  </label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {option.values.map((value) => (
-                      <button
-                        key={value.id}
-                        onClick={() => handleOptionChange(option.id, value.id)}
-                        className={`p-3 text-left border rounded-lg transition-colors ${
-                          selectedOptions[option.id] === value.id
-                            ? 'border-blue-500 bg-blue-50 text-blue-700'
-                            : 'border-gray-300 hover:border-gray-400'
-                        }`}
-                      >
-                        <div className="font-medium">{value.value}</div>
-                        {value.price > 0 && (
-                          <div className="text-sm text-gray-600">
-                            +{value.price.toLocaleString()}원
-                          </div>
-                        )}
-                      </button>
-                    ))}
+        <div className="max-w-6xl mx-auto">
+          {/* 상품 정보 섹션 */}
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+              {/* 좌측: 상품 이미지 */}
+              <div className="space-y-4">
+                <div className="aspect-square bg-gradient-to-br from-blue-100 to-indigo-200 rounded-lg flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-24 h-24 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-600">상품 이미지</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+                
+                {/* 관련 상품 */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-2">관련 상품</h3>
+                  <p className="text-sm text-gray-500">등록된 상품이 없습니다.</p>
+                </div>
+              </div>
 
-          {/* 예약 정보 입력 */}
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">예약 정보</h2>
-            
-            {/* 인원 수 선택 */}
-            <div className="mb-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-3">인원 수</h3>
-              <div className="grid grid-cols-3 gap-4">
+              {/* 우측: 상품 정보 */}
+              <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">성인</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={reservationData.adults}
-                    onChange={(e) => setReservationData(prev => ({
-                      ...prev,
-                      adults: Math.max(0, parseInt(e.target.value) || 0)
-                    }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded">
+                      {product.category.name}
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      최대 {product.maxCapacity}명 | 현재 예약 {product.currentBookings}명
+                    </span>
+                  </div>
+                  
+                  <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
+                  <p className="text-gray-600 text-lg leading-relaxed">{product.description}</p>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">어린이</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={reservationData.children}
-                    onChange={(e) => setReservationData(prev => ({
-                      ...prev,
-                      children: Math.max(0, parseInt(e.target.value) || 0)
-                    }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">유아</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={reservationData.infants}
-                    onChange={(e) => setReservationData(prev => ({
-                      ...prev,
-                      infants: Math.max(0, parseInt(e.target.value) || 0)
-                    }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-            </div>
 
-            {/* 예약자 정보 */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">예약자명</label>
-                <input
-                  type="text"
-                  value={reservationData.customerName}
-                  onChange={(e) => setReservationData(prev => ({
-                    ...prev,
-                    customerName: e.target.value
-                  }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="예약자명을 입력하세요"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">연락처</label>
-                <input
-                  type="tel"
-                  value={reservationData.customerPhone}
-                  onChange={(e) => setReservationData(prev => ({
-                    ...prev,
-                    customerPhone: e.target.value
-                  }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="연락처를 입력하세요"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-                <input
-                  type="email"
-                  value={reservationData.customerEmail}
-                  onChange={(e) => setReservationData(prev => ({
-                    ...prev,
-                    customerEmail: e.target.value
-                  }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="이메일을 입력하세요"
-                />
+                {/* 가격 정보 */}
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">가격 정보</h3>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="text-center">
+                      <div className="text-sm text-gray-600 mb-1">대인</div>
+                      <div className="text-xl font-bold text-gray-900">
+                        {product.adultPrice.toLocaleString()}원
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm text-gray-600 mb-1">소인</div>
+                      <div className="text-xl font-bold text-gray-900">
+                        {product.childPrice.toLocaleString()}원
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm text-gray-600 mb-1">유아</div>
+                      <div className="text-xl font-bold text-gray-900">
+                        {product.infantPrice.toLocaleString()}원
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 옵션 선택 */}
+                {product.useOptions && product.options && product.options.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">옵션 선택</h3>
+                    {product.options.map((option) => (
+                      <div key={option.id} className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          {option.name} <span className="text-red-500">*</span>
+                        </label>
+                        <select
+                          value={selectedOptions[option.id] || ''}
+                          onChange={(e) => handleOptionChange(option.id, parseInt(e.target.value))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">선택하세요</option>
+                          {option.values.map((value) => (
+                            <option key={value.id} value={value.id}>
+                              {value.value} {value.price > 0 && `(+${value.price.toLocaleString()}원)`}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* 인원 수 선택 */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">인원 선택</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-700">대인</span>
+                      <select
+                        value={reservationData.adults}
+                        onChange={(e) => setReservationData(prev => ({
+                          ...prev,
+                          adults: parseInt(e.target.value)
+                        }))}
+                        className="px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        {Array.from({ length: 11 }, (_, i) => (
+                          <option key={i} value={i}>
+                            대인 {i}명 {i > 0 && `(+${(i * product.adultPrice).toLocaleString()})`}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-700">소인</span>
+                      <select
+                        value={reservationData.children}
+                        onChange={(e) => setReservationData(prev => ({
+                          ...prev,
+                          children: parseInt(e.target.value)
+                        }))}
+                        className="px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        {Array.from({ length: 11 }, (_, i) => (
+                          <option key={i} value={i}>
+                            소인 {i}명 {i > 0 && `(+${(i * product.childPrice).toLocaleString()})`}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-700">유아(48개월 미만)</span>
+                      <select
+                        value={reservationData.infants}
+                        onChange={(e) => setReservationData(prev => ({
+                          ...prev,
+                          infants: parseInt(e.target.value)
+                        }))}
+                        className="px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        {Array.from({ length: 4 }, (_, i) => (
+                          <option key={i} value={i}>
+                            유아 {i}명 {i > 0 && '(0)'}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 총 가격 */}
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-semibold text-gray-900">총 가격</span>
+                    <span className="text-2xl font-bold text-blue-600">
+                      {calculateTotalPrice().toLocaleString()}원
+                    </span>
+                  </div>
+                </div>
+
+                {/* 액션 버튼 */}
+                <div className="flex space-x-4">
+                  <button
+                    onClick={handleAddToCart}
+                    className="flex-1 bg-gray-600 text-white py-3 px-6 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 font-medium"
+                  >
+                    장바구니
+                  </button>
+                  <button
+                    onClick={handleDirectReservation}
+                    className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  >
+                    바로구매
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* 예약 요약 및 결제 버튼 */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">예약 요약</h2>
+          {/* 상품 상세 정보 */}
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">상품 상세 정보</h2>
             
-            <div className="space-y-2 mb-4">
-              <div className="flex justify-between">
-                <span>성인 {reservationData.adults}명</span>
-                <span>{(reservationData.adults * product.adultPrice).toLocaleString()}원</span>
-              </div>
-              {reservationData.children > 0 && (
-                <div className="flex justify-between">
-                  <span>어린이 {reservationData.children}명</span>
-                  <span>{(reservationData.children * product.childPrice).toLocaleString()}원</span>
-                </div>
-              )}
-              {reservationData.infants > 0 && (
-                <div className="flex justify-between">
-                  <span>유아 {reservationData.infants}명</span>
-                  <span>{(reservationData.infants * product.infantPrice).toLocaleString()}원</span>
-                </div>
-              )}
-              
-              {/* 옵션 가격 */}
-              {product.useOptions && product.options && Object.keys(selectedOptions).length > 0 && (
-                <>
-                  {product.options.map((option) => {
-                    const selectedValueId = selectedOptions[option.id]
-                    if (selectedValueId) {
-                      const selectedValue = option.values.find(v => v.id === selectedValueId)
-                      if (selectedValue && selectedValue.price > 0) {
-                        return (
-                          <div key={option.id} className="flex justify-between">
-                            <span>{option.name}: {selectedValue.value}</span>
-                            <span>+{selectedValue.price.toLocaleString()}원</span>
-                          </div>
-                        )
-                      }
-                    }
-                    return null
-                  })}
-                </>
-              )}
-            </div>
-            
-            <div className="border-t pt-4">
-              <div className="flex justify-between text-lg font-semibold">
-                <span>총 결제 금액</span>
-                <span className="text-blue-600">{calculateTotalPrice().toLocaleString()}원</span>
+            <div className="prose max-w-none">
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">이용 안내</h3>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• 운항시간은 기상 및 기타사정에 의해 변경이 될 수도 있습니다.</li>
+                  <li>• 예약 취소는 이용일 1일 전까지 가능합니다.</li>
+                  <li>• 안전을 위해 임산부, 고령자, 심장질환자는 이용에 제한이 있을 수 있습니다.</li>
+                  <li>• 기상 악화 시 운항이 취소될 수 있으며, 이 경우 전액 환불됩니다.</li>
+                </ul>
               </div>
             </div>
-            
-            <button
-              onClick={handleReservation}
-              className="w-full mt-6 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-medium"
-            >
-              예약하기
-            </button>
+          </div>
+
+          {/* 상품 리뷰 */}
+          <div className="bg-white rounded-lg shadow-lg p-8 mt-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">상품 리뷰</h2>
+            <div className="text-center py-8">
+              <p className="text-gray-500">등록된 게시글이 없습니다.</p>
+            </div>
+          </div>
+
+          {/* 상품 문의 */}
+          <div className="bg-white rounded-lg shadow-lg p-8 mt-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">상품 문의</h2>
+            <div className="text-center py-8">
+              <p className="text-gray-500">등록된 게시글이 없습니다.</p>
+            </div>
           </div>
         </div>
       </div>

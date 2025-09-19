@@ -130,12 +130,18 @@ export default function UserNavigation() {
                 >
                   정보수정
                 </Link>
-                <Link 
-                  href="/reservations" 
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100"
-                >
-                  내 예약
-                </Link>
+           <Link 
+             href="/cart" 
+             className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100"
+           >
+             장바구니
+           </Link>
+           <Link 
+             href="/reservations" 
+             className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100"
+           >
+             내 예약
+           </Link>
                 <button
                   onClick={handleLogout}
                   className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
