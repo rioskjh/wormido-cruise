@@ -526,9 +526,9 @@ export default function AdminProductsPage() {
 
         {/* 상품 생성/수정 모달 */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
-              <div className="mt-3">
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+            <div className="relative w-full max-w-2xl bg-white rounded-lg shadow-lg">
+              <div className="p-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">
                   {editingProduct ? '상품 수정' : '새 상품 추가'}
                 </h3>
