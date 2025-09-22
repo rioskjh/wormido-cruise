@@ -18,6 +18,12 @@ interface Product {
   category: {
     name: string
   }
+  images: {
+    id: number
+    fileName: string
+    filePath: string
+    sortOrder: number
+  }[]
 }
 
 export default function Home() {
@@ -141,22 +147,18 @@ export default function Home() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product, index) => {
-              // 상품별로 다른 이미지 사용 (순환)
-              const imageFiles = [
-                '0279006e5653701283e6e34a07b609333312b52a.png',
-                '09c1bd11238a733b8f09486ba072e8a3bf87d111.png',
-                '123e23c7049f18c38b90ead8db500019bfbf1de1.png',
-                '124957c67163c9992faae5d791090facaefe107b.png',
-                '126c3b41b2f5ef7dcb92743e4b07612b9343c994.png'
-              ]
-              const imageFile = imageFiles[index % imageFiles.length]
+              // 업로드된 이미지가 있으면 사용, 없으면 기본 이미지 사용
+              const hasUploadedImage = product.images && product.images.length > 0
+              const imageSrc = hasUploadedImage 
+                ? product.images[0].filePath 
+                : `/images/0279006e5653701283e6e34a07b609333312b52a.png`
               
               return (
                 <div key={product.id} className="bg-white rounded-[10px] shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                   {/* 상품 이미지 영역 */}
                   <div className="h-[200px] relative">
                     <Image
-                      src={`/images/${imageFile}`}
+                      src={imageSrc}
                       alt={product.name}
                       fill
                       className="object-cover"

@@ -70,6 +70,11 @@ export async function GET(request: NextRequest) {
         include: {
           category: true,
           personTypePrices: true,
+          images: {
+            where: { isActive: true },
+            orderBy: { sortOrder: 'asc' },
+            take: 1, // 첫 번째 이미지만 가져오기
+          },
           _count: {
             select: {
               reservations: true,
