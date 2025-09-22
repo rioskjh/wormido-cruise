@@ -41,13 +41,11 @@ export default function Home() {
       const data = await response.json()
       
       if (data.ok) {
-        console.log('상품 데이터:', data.data.products)
         setProducts(data.data.products)
       } else {
         setError('상품을 불러오는 중 오류가 발생했습니다.')
       }
     } catch (error) {
-      console.error('상품 조회 에러:', error)
       setError('서버 오류가 발생했습니다.')
     } finally {
       setLoading(false)
@@ -147,7 +145,7 @@ export default function Home() {
             {error}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="flex flex-col md:flex-row md:flex-wrap gap-[30px] items-start justify-start md:justify-center">
             {products.map((product, index) => {
               // 업로드된 이미지가 있으면 사용, 없으면 기본 이미지 사용
               const hasUploadedImage = product.images && product.images.length > 0
@@ -155,23 +153,17 @@ export default function Home() {
                 ? product.images[0].filePath 
                 : `/images/0279006e5653701283e6e34a07b609333312b52a.png`
               
-              console.log(`상품 ${product.id} 이미지:`, {
-                hasUploadedImage,
-                imageSrc,
-                images: product.images
-              })
-              
               return (
-                <div key={product.id} className="bg-white rounded-[10px] shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                <div key={product.id} className="content-stretch flex flex-col items-center justify-start relative shrink-0 w-full md:w-[380px]">
                   {/* 상품 이미지 영역 */}
-                  <div className="h-[200px] relative">
+                  <div className="relative rounded-tl-[10px] rounded-tr-[10px] shrink-0 w-full h-[250px]">
                     <Image
                       src={imageSrc}
                       alt={product.name}
                       fill
-                      className="object-cover"
+                      className="object-cover rounded-tl-[10px] rounded-tr-[10px]"
                     />
-                    <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                    <div className="absolute inset-0 bg-black bg-opacity-10 rounded-tl-[10px] rounded-tr-[10px]"></div>
                     <div className="absolute top-4 left-4">
                       <span className="bg-design-purple text-white text-xs font-medium px-3 py-1 rounded-full font-pretendard">
                         {product.category.name}
@@ -184,38 +176,50 @@ export default function Home() {
                     </div>
                   </div>
                 
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-design-gray mb-3 font-pretendard">
-                    {product.name}
-                  </h3>
-                  
-                  <p className="text-design-gray-light mb-6 line-clamp-2 font-pretendard text-sm leading-relaxed">
-                    {product.description}
-                  </p>
-                  
-                  <div className="space-y-3 mb-6">
-                    <div className="flex justify-between items-center">
-                      <span className="text-design-gray font-pretendard text-sm">성인</span>
-                      <span className="font-semibold text-design-gray font-pretendard">{product.adultPrice.toLocaleString()}원</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-design-gray font-pretendard text-sm">어린이</span>
-                      <span className="font-semibold text-design-gray font-pretendard">{product.childPrice.toLocaleString()}원</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-design-gray font-pretendard text-sm">유아</span>
-                      <span className="font-semibold text-design-gray font-pretendard">{product.infantPrice.toLocaleString()}원</span>
+                  {/* 상품 정보 영역 */}
+                  <div className="relative rounded-bl-[10px] rounded-br-[10px] shrink-0 w-full">
+                    <div className="absolute border border-[#dddddd] border-solid inset-0 pointer-events-none rounded-bl-[10px] rounded-br-[10px]"></div>
+                    <div className="flex flex-col items-center relative size-full">
+                      <div className="box-border content-stretch flex flex-col gap-[30px] items-center justify-start px-[20px] py-[30px] relative w-full">
+                        {/* 상품 제목 */}
+                        <div className="content-stretch flex flex-col gap-[10px] items-center justify-start relative shrink-0 w-full">
+                          <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[20px] text-center">
+                            <p className="leading-[30px] whitespace-pre">{product.name}</p>
+                          </div>
+                          <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#666666] text-[14px] text-center">
+                            <p className="leading-[22px] line-clamp-2">{product.description}</p>
+                          </div>
+                        </div>
+                        
+                        {/* 가격 정보 */}
+                        <div className="content-stretch flex flex-col gap-[15px] items-center justify-start relative shrink-0 w-full">
+                          <div className="flex justify-between items-center w-full">
+                            <span className="font-['Pretendard:Medium',_sans-serif] text-[#222222] text-[16px]">성인</span>
+                            <span className="font-['Pretendard:Bold',_sans-serif] text-[#222222] text-[16px]">{product.adultPrice.toLocaleString()}원</span>
+                          </div>
+                          <div className="flex justify-between items-center w-full">
+                            <span className="font-['Pretendard:Medium',_sans-serif] text-[#222222] text-[16px]">어린이</span>
+                            <span className="font-['Pretendard:Bold',_sans-serif] text-[#222222] text-[16px]">{product.childPrice.toLocaleString()}원</span>
+                          </div>
+                          <div className="flex justify-between items-center w-full">
+                            <span className="font-['Pretendard:Medium',_sans-serif] text-[#222222] text-[16px]">유아</span>
+                            <span className="font-['Pretendard:Bold',_sans-serif] text-[#222222] text-[16px]">{product.infantPrice.toLocaleString()}원</span>
+                          </div>
+                        </div>
+                        
+                        {/* 예약 버튼 */}
+                        <Link 
+                          href={`/products/${product.id}`}
+                          className="box-border content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[4px] shrink-0 w-full bg-design-blue hover:bg-blue-600 transition-colors duration-200"
+                        >
+                          <div className="font-['Pretendard:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[17px] text-center text-nowrap text-white">
+                            <p className="leading-[30px] whitespace-pre">예약하기</p>
+                          </div>
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                  
-                  <Link 
-                    href={`/products/${product.id}`}
-                    className="block w-full bg-design-blue text-white py-3 px-4 rounded-[10px] hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-design-blue focus:ring-offset-2 text-center font-pretendard font-medium transition-colors duration-200"
-                  >
-                    예약하기
-                  </Link>
                 </div>
-              </div>
               )
             })}
           </div>
