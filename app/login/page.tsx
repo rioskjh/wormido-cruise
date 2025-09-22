@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import UserNavigation from '@/components/UserNavigation'
+import Footer from '@/components/Footer'
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -118,6 +119,9 @@ export default function LoginPage() {
         </div>
       </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

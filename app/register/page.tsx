@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/contexts/ToastContext'
 import UserNavigation from '@/components/UserNavigation'
+import Footer from '@/components/Footer'
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -296,6 +297,9 @@ export default function RegisterPage() {
         </div>
       </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

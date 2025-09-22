@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import UserNavigation from '@/components/UserNavigation'
+import Footer from '@/components/Footer'
 import { useToast } from '@/contexts/ToastContext'
 
 interface Product {
@@ -464,6 +465,9 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

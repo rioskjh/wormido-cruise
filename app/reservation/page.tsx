@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import UserNavigation from '@/components/UserNavigation'
+import Footer from '@/components/Footer'
 import { useToast } from '@/contexts/ToastContext'
 
 interface ReservationData {
@@ -278,6 +279,9 @@ function ReservationContent() {
           </div>
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }
