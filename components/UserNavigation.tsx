@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/contexts/ToastContext'
 
@@ -109,18 +110,18 @@ export default function UserNavigation() {
     return (
       <header className="bg-white relative w-full">
         <div className="flex flex-row items-center relative size-full">
-          <div className="box-border content-stretch flex items-center justify-between px-[50px] py-[20px] relative w-full">
+          <div className="box-border content-stretch flex items-center justify-between px-4 md:px-[50px] py-[20px] relative w-full">
             <div className="h-[46px] overflow-clip relative shrink-0 w-[250px]">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-design-purple rounded-md flex items-center justify-center">
-                  <span className="text-white text-lg">🚢</span>
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-design-gray font-pretendard">
-                    Wormi Cruise
-                  </h1>
-                </div>
-              </div>
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/images/logo.png"
+                  alt="월미도 해양관광"
+                  width={200}
+                  height={46}
+                  className="h-full w-auto object-contain"
+                  priority
+                />
+              </Link>
             </div>
             <div className="animate-pulse bg-gray-200 h-10 w-32 rounded"></div>
           </div>
@@ -135,15 +136,15 @@ export default function UserNavigation() {
         <div className="box-border content-stretch flex items-center justify-between px-4 md:px-[50px] py-[20px] relative w-full">
           {/* 로고 */}
           <div className="h-[46px] overflow-clip relative shrink-0 w-[250px]">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-design-purple rounded-md flex items-center justify-center">
-                <span className="text-white text-lg">🚢</span>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-design-gray font-pretendard">
-                  Wormi Cruise
-                </h1>
-              </div>
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/images/logo.png"
+                alt="월미도 해양관광"
+                width={200}
+                height={46}
+                className="h-full w-auto object-contain"
+                priority
+              />
             </Link>
           </div>
 
