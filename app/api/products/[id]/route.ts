@@ -18,11 +18,14 @@ export async function GET(
       }, { status: 400 })
     }
 
-    // 상품 정보 조회 (옵션 포함)
+    // 상품 정보 조회 (옵션 및 이미지 포함)
     const product = await prisma.product.findUnique({
       where: { id: productId },
       include: {
         category: true,
+        images: {
+          orderBy: { sortOrder: 'asc' }
+        },
         productOptions: {
           where: { isActive: true },
           orderBy: { sortOrder: 'asc' },
@@ -64,6 +67,12 @@ export async function GET(
         currentBookings: product.currentBookings,
         useOptions: product.useOptions,
         category: product.category,
+        images: product.images.map(image => ({
+          id: image.id,
+          fileName: image.fileName,
+          filePath: image.filePath,
+          sortOrder: image.sortOrder
+        })),
         options: product.productOptions.map(option => ({
           id: option.id,
           name: option.name,

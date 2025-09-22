@@ -21,6 +21,12 @@ interface Product {
   category: {
     name: string
   }
+  images: {
+    id: number
+    fileName: string
+    filePath: string
+    sortOrder: number
+  }[]
   options?: ProductOption[]
 }
 
@@ -235,7 +241,9 @@ export default function ProductDetailPage() {
               <div className="space-y-4">
                 <div className="aspect-square rounded-lg overflow-hidden">
                   <Image
-                    src="/images/0279006e5653701283e6e34a07b609333312b52a.png"
+                    src={product.images && product.images.length > 0 
+                      ? product.images[0].filePath 
+                      : "/images/0279006e5653701283e6e34a07b609333312b52a.png"}
                     alt={product.name}
                     width={400}
                     height={400}
