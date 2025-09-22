@@ -63,7 +63,7 @@ export default function Home() {
               {/* 크루즈 이미지 - 모바일에서는 숨김 */}
               <div className="hidden md:block [grid-area:1_/_1] h-[703px] ml-[260px] mt-0 w-[1250px] rounded-lg overflow-hidden">
                 <Image
-                  src="/images/0279006e5653701283e6e34a07b609333312b52a.png"
+                  src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
                   alt="월미도 크루즈"
                   width={1250}
                   height={703}
@@ -224,15 +224,37 @@ export default function Home() {
       </div>
 
       {/* 배너 섹션 */}
-      <section className="w-full py-16 bg-gradient-to-r from-design-purple to-design-blue">
-        <div className="container mx-auto px-4">
+      <section className="w-full py-16 relative overflow-hidden">
+        {/* 배경 이미지 */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/554419256e070f67b901bd627c66e2442e2f9b89.png"
+            alt="배너 배경"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 font-pretendard">
               특별한 크루즈 경험을 시작하세요
             </h2>
-            <p className="text-lg md:text-xl mb-8 font-pretendard opacity-90">
+            <p className="text-lg md:text-xl mb-6 font-pretendard opacity-90">
               월미도의 아름다운 바다와 함께하는 잊지 못할 추억을 만들어보세요
             </p>
+            
+            {/* 단체여행 안내 */}
+            <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-6 mb-8 max-w-2xl mx-auto">
+              <h3 className="text-xl md:text-2xl font-bold mb-2 font-pretendard">
+                단체여행은 맞춤형 패키지로 편리하게
+              </h3>
+              <p className="text-sm md:text-base opacity-90 font-pretendard">
+                기업 연수, 가족 모임, 친구 모임 등 다양한 단체 여행을 위한 특별한 패키지를 제공합니다
+              </p>
+            </div>
+            
             <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
