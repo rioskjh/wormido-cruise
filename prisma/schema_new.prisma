@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// 관리자 ?�이�?
+// 관리자 모델
 model Admin {
   id          Int      @id @default(autoincrement())
   username    String   @unique
@@ -30,7 +30,7 @@ enum AdminRole {
   EDITOR
 }
 
-// ?�원 ?�이�?
+// 회원 모델
 model Member {
   id            Int            @id @default(autoincrement())
   username      String         @unique
@@ -54,7 +54,7 @@ model Member {
   @@map("members")
 }
 
-// ?�품 카테고리 ?�이�?
+// 상품 카테고리 모델
 model ProductCategory {
   id          Int       @id @default(autoincrement())
   name        String
@@ -68,7 +68,7 @@ model ProductCategory {
   @@map("product_categories")
 }
 
-// ?�품 ?�이�?
+// 상품 모델
 model Product {
   id            Int      @id @default(autoincrement())
   name          String
@@ -98,7 +98,23 @@ model Product {
   @@map("products")
 }
 
-// ?�원 ?�?�별 가�??�이�?
+// 상품 이미지 모델
+model ProductImage {
+  id        Int      @id @default(autoincrement())
+  productId Int      @map("product_id")
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  fileName  String   @map("file_name")
+  filePath  String   @map("file_path")
+  fileSize  Int      @map("file_size")
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("product_images")
+}
+
+// 인원 타입별 가격 모델
 model PersonTypePrice {
   id        Int        @id @default(autoincrement())
   productId Int        @map("product_id")
@@ -111,7 +127,7 @@ model PersonTypePrice {
   @@map("person_type_prices")
 }
 
-// ?�품 ?�션 ?�이�?
+// 상품 옵션 모델
 model ProductOption {
   id        Int      @id @default(autoincrement())
   productId Int        @map("product_id")
@@ -126,7 +142,7 @@ model ProductOption {
   @@map("product_options")
 }
 
-// ?�품 ?�션 �??�이�?
+// 상품 옵션 값 모델
 model ProductOptionValue {
   id        Int           @id @default(autoincrement())
   optionId  Int           @map("option_id")
@@ -144,7 +160,7 @@ model ProductOptionValue {
   @@map("product_option_values")
 }
 
-// ?�품 ?��?�??�이�?
+// 상품 스케줄 모델
 model ProductSchedule {
   id              Int      @id @default(autoincrement())
   productId       Int
@@ -166,7 +182,7 @@ model ProductSchedule {
   @@map("product_schedules")
 }
 
-// ?�약 ?�이�?
+// 예약 모델
 model Reservation {
   id            Int      @id @default(autoincrement())
   orderNumber   String   @unique @map("order_number")
@@ -195,7 +211,7 @@ model Reservation {
   @@map("reservations")
 }
 
-// 주문 ?�이�?
+// 주문 모델
 model Order {
   id            Int         @id @default(autoincrement())
   memberId      Int         @map("member_id")
@@ -213,7 +229,7 @@ model Order {
   @@map("orders")
 }
 
-// 주문 ?�이???�이�?
+// 주문 아이템 모델
 model OrderItem {
   id          Int     @id @default(autoincrement())
   orderId     Int     @map("order_id")
@@ -229,7 +245,7 @@ model OrderItem {
   @@map("order_items")
 }
 
-// 게시???�이�?
+// 게시판 모델
 model Board {
   id          Int    @id @default(autoincrement())
   boardId     String @unique
@@ -244,7 +260,7 @@ model Board {
   @@map("boards")
 }
 
-// 게시글 ?�이�?
+// 게시글 모델
 model Post {
   id        Int      @id @default(autoincrement())
   boardId   String
@@ -263,7 +279,7 @@ model Post {
   @@map("posts")
 }
 
-// ?��? ?�이�?
+// 댓글 모델
 model Comment {
   id        Int      @id @default(autoincrement())
   postId    Int
@@ -277,7 +293,7 @@ model Comment {
   @@map("comments")
 }
 
-// 첨�??�일 ?�이�?
+// 첨부파일 모델
 model Attachment {
   id       Int    @id @default(autoincrement())
   postId   Int
@@ -290,7 +306,7 @@ model Attachment {
   @@map("attachments")
 }
 
-// 감사 로그 ?�이�?
+// 감사 로그 모델
 model AuditLog {
   id         Int      @id @default(autoincrement())
   memberId   Int?
@@ -308,7 +324,7 @@ model AuditLog {
   @@map("audit_logs")
 }
 
-// 리프?�시 ?�큰 ?�이�?
+// 리프레시 토큰 모델
 model RefreshToken {
   id        Int      @id @default(autoincrement())
   memberId  Int      @map("member_id")
@@ -320,7 +336,7 @@ model RefreshToken {
   @@map("refresh_tokens")
 }
 
-// ?�셜 계정 ?�이�?
+// 소셜 계정 모델
 model Account {
   id                Int     @id @default(autoincrement())
   memberId          Int     @map("member_id")
@@ -341,7 +357,7 @@ model Account {
   @@map("accounts")
 }
 
-// ?�거?�들
+// 열거형들
 enum Role {
   USER
   EDITOR
@@ -361,20 +377,4 @@ enum OrderStatus {
   CONFIRMED
   CANCELLED
   COMPLETED
-}
-
-// 상품 이미지 모델
-model ProductImage {
-  id        Int      @id @default(autoincrement())
-  productId Int      @map("product_id")
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  fileName  String   @map("file_name")
-  filePath  String   @map("file_path")
-  fileSize  Int      @map("file_size")
-  sortOrder Int      @default(0) @map("sort_order")
-  isActive  Boolean  @default(true) @map("is_active")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("product_images")
 }

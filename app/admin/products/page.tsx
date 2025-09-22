@@ -52,6 +52,18 @@ interface ProductFormData {
   endDate: string
 }
 
+interface ProductImage {
+  id: number
+  productId: number
+  fileName: string
+  filePath: string
+  fileSize: number
+  sortOrder: number
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<ProductCategory[]>([])
@@ -76,6 +88,9 @@ export default function AdminProductsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('')
+  const [productImages, setProductImages] = useState<ProductImage[]>([])
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+  const [isUploadingImages, setIsUploadingImages] = useState(false)
   const router = useRouter()
   const { showSuccess, showError } = useToast()
 
@@ -237,10 +252,12 @@ export default function AdminProductsPage() {
       startDate: '',
       endDate: '',
     })
+    setProductImages([])
+    setUploadedFiles([])
     setIsModalOpen(true)
   }
 
-  const handleEditProduct = (product: Product) => {
+  const handleEditProduct = async (product: Product) => {
     setEditingProduct(product)
     setFormData({
       name: product.name,
@@ -256,11 +273,168 @@ export default function AdminProductsPage() {
       startDate: product.startDate ? product.startDate.split('T')[0] : '',
       endDate: product.endDate ? product.endDate.split('T')[0] : '',
     })
+    setUploadedFiles([])
+    
+    // 기존 이미지 로드
+    await fetchProductImages(product.id)
     setIsModalOpen(true)
   }
 
   const handleManageOptions = (product: Product) => {
     router.push(`/admin/products/${product.id}/options`)
+  }
+
+  // 상품 이미지 목록 조회
+  const fetchProductImages = async (productId: number) => {
+    try {
+      let adminToken = localStorage.getItem('adminToken')
+      
+      if (!adminToken) return
+
+      if (isTokenExpired(adminToken)) {
+        const newToken = await refreshToken()
+        if (newToken) {
+          adminToken = newToken
+        } else {
+          return
+        }
+      }
+
+      const response = await fetch(`/api/admin/products/${productId}/images`, {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`,
+        },
+      })
+
+      const data = await response.json()
+
+      if (data.ok) {
+        setProductImages(data.data)
+      }
+    } catch (error) {
+      console.error('이미지 목록 로드 에러:', error)
+    }
+  }
+
+  // 파일 선택 핸들러
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    const totalFiles = uploadedFiles.length + files.length
+    
+    if (totalFiles > 5) {
+      showError('파일 업로드 제한', '최대 5개의 이미지만 업로드할 수 있습니다.')
+      return
+    }
+
+    // 파일 타입 검증
+    const invalidFiles = files.filter(file => !file.type.startsWith('image/'))
+    if (invalidFiles.length > 0) {
+      showError('파일 타입 오류', '이미지 파일만 업로드할 수 있습니다.')
+      return
+    }
+
+    // 파일 크기 검증 (5MB 제한)
+    const oversizedFiles = files.filter(file => file.size > 5 * 1024 * 1024)
+    if (oversizedFiles.length > 0) {
+      showError('파일 크기 오류', '파일 크기는 5MB를 초과할 수 없습니다.')
+      return
+    }
+
+    setUploadedFiles(prev => [...prev, ...files])
+  }
+
+  // 파일 제거 핸들러
+  const handleRemoveFile = (index: number) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index))
+  }
+
+  // 이미지 삭제 핸들러
+  const handleDeleteImage = async (imageId: number) => {
+    if (!editingProduct) return
+
+    try {
+      let adminToken = localStorage.getItem('adminToken')
+      
+      if (!adminToken) return
+
+      if (isTokenExpired(adminToken)) {
+        const newToken = await refreshToken()
+        if (newToken) {
+          adminToken = newToken
+        } else {
+          return
+        }
+      }
+
+      const response = await fetch(`/api/admin/products/${editingProduct.id}/images/${imageId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${adminToken}`,
+        },
+      })
+
+      const data = await response.json()
+
+      if (data.ok) {
+        setProductImages(prev => prev.filter(img => img.id !== imageId))
+        showSuccess('이미지 삭제 완료', '이미지가 성공적으로 삭제되었습니다.')
+      } else {
+        showError('이미지 삭제 실패', data.error || '이미지 삭제에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('이미지 삭제 에러:', error)
+      showError('이미지 삭제 실패', '이미지 삭제 중 오류가 발생했습니다.')
+    }
+  }
+
+  // 이미지 업로드 핸들러
+  const handleUploadImages = async (productId: number) => {
+    if (uploadedFiles.length === 0) return
+
+    setIsUploadingImages(true)
+
+    try {
+      let adminToken = localStorage.getItem('adminToken')
+      
+      if (!adminToken) return
+
+      if (isTokenExpired(adminToken)) {
+        const newToken = await refreshToken()
+        if (newToken) {
+          adminToken = newToken
+        } else {
+          return
+        }
+      }
+
+      const formData = new FormData()
+      uploadedFiles.forEach(file => {
+        formData.append('images', file)
+      })
+
+      const response = await fetch(`/api/admin/products/${productId}/images`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${adminToken}`,
+        },
+        body: formData,
+      })
+
+      const data = await response.json()
+
+      if (data.ok) {
+        setProductImages(prev => [...prev, ...data.data])
+        setUploadedFiles([])
+        showSuccess('이미지 업로드 완료', data.message)
+      } else {
+        showError('이미지 업로드 실패', data.error || '이미지 업로드에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('이미지 업로드 에러:', error)
+      showError('이미지 업로드 실패', '이미지 업로드 중 오류가 발생했습니다.')
+    } finally {
+      setIsUploadingImages(false)
+    }
   }
 
 
@@ -306,6 +480,13 @@ export default function AdminProductsPage() {
       const data = await response.json()
 
       if (data.ok) {
+        const productId = data.data.id || editingProduct?.id
+        
+        // 새 상품인 경우 이미지 업로드
+        if (!editingProduct && uploadedFiles.length > 0 && productId) {
+          await handleUploadImages(productId)
+        }
+        
         setIsModalOpen(false)
         fetchProducts()
         if (editingProduct) {
@@ -709,6 +890,81 @@ export default function AdminProductsPage() {
                       />
                       <span className="ml-2 text-sm text-gray-700">옵션 사용</span>
                     </label>
+                  </div>
+
+                  {/* 이미지 업로드 섹션 */}
+                  <div className="border-t pt-4">
+                    <h4 className="text-sm font-medium text-gray-700 mb-3">상품 이미지</h4>
+                    
+                    {/* 파일 선택 */}
+                    <div className="mb-4">
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        최대 5개, 각 파일 5MB 이하, JPG/PNG/GIF 형식
+                      </p>
+                    </div>
+
+                    {/* 선택된 파일 목록 */}
+                    {uploadedFiles.length > 0 && (
+                      <div className="mb-4">
+                        <h5 className="text-sm font-medium text-gray-700 mb-2">업로드할 파일:</h5>
+                        <div className="space-y-2">
+                          {uploadedFiles.map((file, index) => (
+                            <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                              <span className="text-sm text-gray-700">{file.name}</span>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveFile(index)}
+                                className="text-red-600 hover:text-red-800 text-sm"
+                              >
+                                제거
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 기존 이미지 목록 (수정 모드) */}
+                    {editingProduct && productImages.length > 0 && (
+                      <div className="mb-4">
+                        <h5 className="text-sm font-medium text-gray-700 mb-2">기존 이미지:</h5>
+                        <div className="grid grid-cols-2 gap-2">
+                          {productImages.map((image) => (
+                            <div key={image.id} className="relative bg-gray-50 p-2 rounded">
+                              <div className="text-sm text-gray-700 truncate">{image.fileName}</div>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteImage(image.id)}
+                                className="absolute top-1 right-1 text-red-600 hover:text-red-800 text-xs"
+                              >
+                                삭제
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 수정 모드에서 새 이미지 업로드 버튼 */}
+                    {editingProduct && uploadedFiles.length > 0 && (
+                      <div className="mb-4">
+                        <button
+                          type="button"
+                          onClick={() => editingProduct && handleUploadImages(editingProduct.id)}
+                          disabled={isUploadingImages}
+                          className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 text-sm"
+                        >
+                          {isUploadingImages ? '업로드 중...' : `${uploadedFiles.length}개 이미지 업로드`}
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex justify-end space-x-3 pt-4">
