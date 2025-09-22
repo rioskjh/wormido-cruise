@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import AdminNavigation from '@/components/AdminNavigation'
+import AdminLayout from '@/components/AdminLayout'
 import { useToast } from '@/contexts/ToastContext'
 
 interface SiteSetting {
@@ -18,45 +17,20 @@ export default function SettingsPage() {
   const [settings, setSettings] = useState<SiteSetting[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const router = useRouter()
   const { showError, showSuccess } = useToast()
 
   useEffect(() => {
-    checkAuth()
     loadSettings()
   }, [])
 
-  const checkAuth = async () => {
+  const loadSettings = async () => {
     try {
       const token = localStorage.getItem('adminToken')
-      if (!token) {
-        router.push('/admin/login')
-        return
-      }
-
-      const response = await fetch('/api/admin/auth/me', {
+      const response = await fetch('/api/admin/settings', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
-
-      if (!response.ok) {
-        localStorage.removeItem('adminToken')
-        router.push('/admin/login')
-      }
-    } catch (error) {
-      router.push('/admin/login')
-    }
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken')
-    router.push('/admin/login')
-  }
-
-  const loadSettings = async () => {
-    try {
-      const response = await fetch('/api/admin/settings')
       const data = await response.json()
       
       if (data.ok) {
@@ -113,29 +87,18 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <AdminNavigation onLogout={handleLogout} />
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p className="mt-2 text-gray-600">설정을 불러오는 중...</p>
-          </div>
+      <AdminLayout title="사이트 설정 관리" description="사이트 제목, SEO 정보, 푸터 정보 등을 관리할 수 있습니다.">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <p className="mt-2 text-gray-600">설정을 불러오는 중...</p>
         </div>
-      </div>
+      </AdminLayout>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <AdminNavigation onLogout={handleLogout} />
-      
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* 헤더 */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">사이트 설정 관리</h1>
-            <p className="text-gray-600">사이트 제목, SEO 정보, 푸터 정보 등을 관리할 수 있습니다.</p>
-          </div>
+    <AdminLayout title="사이트 설정 관리" description="사이트 제목, SEO 정보, 푸터 정보 등을 관리할 수 있습니다.">
+      <div className="max-w-4xl mx-auto">
 
           {/* 설정 폼 */}
           <div className="bg-white rounded-lg shadow-lg p-6">
@@ -178,7 +141,6 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </AdminLayout>
   )
 }
