@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
 
@@ -60,7 +61,16 @@ export default function Home() {
             {/* 메인 콘텐츠 */}
             <div className="relative w-full flex flex-col md:grid md:grid-cols-[max-content] md:grid-rows-[max-content] md:inline-grid leading-[0] place-items-start shrink-0">
               {/* 크루즈 이미지 - 모바일에서는 숨김 */}
-              <div className="hidden md:block [grid-area:1_/_1] bg-[position:0%_0%,_50%_50%] bg-size-[auto,cover] h-[703px] ml-[260px] mt-0 w-[1250px] bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg" />
+              <div className="hidden md:block [grid-area:1_/_1] h-[703px] ml-[260px] mt-0 w-[1250px] rounded-lg overflow-hidden">
+                <Image
+                  src="/images/0279006e5653701283e6e34a07b609333312b52a.png"
+                  alt="월미도 크루즈"
+                  width={1250}
+                  height={703}
+                  className="w-full h-full object-cover"
+                  priority
+                />
+              </div>
               
               {/* 텍스트 오버레이 */}
               <div className="[grid-area:1_/_1] box-border content-stretch flex flex-col gap-8 md:gap-[150px] items-center md:items-start justify-center ml-0 mt-0 md:mt-[220.5px] relative px-4 md:px-0">
@@ -130,22 +140,39 @@ export default function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product) => (
-              <div key={product.id} className="bg-white rounded-[10px] shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-                {/* 상품 이미지 영역 */}
-                <div className="h-[200px] bg-gradient-to-br from-blue-400 to-blue-600 relative">
-                  <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-design-purple text-white text-xs font-medium px-3 py-1 rounded-full font-pretendard">
-                      {product.category.name}
-                    </span>
+            {products.map((product, index) => {
+              // 상품별로 다른 이미지 사용 (순환)
+              const imageFiles = [
+                '0279006e5653701283e6e34a07b609333312b52a.png',
+                '09c1bd11238a733b8f09486ba072e8a3bf87d111.png',
+                '123e23c7049f18c38b90ead8db500019bfbf1de1.png',
+                '124957c67163c9992faae5d791090facaefe107b.png',
+                '126c3b41b2f5ef7dcb92743e4b07612b9343c994.png'
+              ]
+              const imageFile = imageFiles[index % imageFiles.length]
+              
+              return (
+                <div key={product.id} className="bg-white rounded-[10px] shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                  {/* 상품 이미지 영역 */}
+                  <div className="h-[200px] relative">
+                    <Image
+                      src={`/images/${imageFile}`}
+                      alt={product.name}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                    <div className="absolute top-4 left-4">
+                      <span className="bg-design-purple text-white text-xs font-medium px-3 py-1 rounded-full font-pretendard">
+                        {product.category.name}
+                      </span>
+                    </div>
+                    <div className="absolute bottom-4 right-4">
+                      <span className="bg-white bg-opacity-90 text-design-gray text-xs font-medium px-2 py-1 rounded font-pretendard">
+                        최대 {product.maxCapacity}명
+                      </span>
+                    </div>
                   </div>
-                  <div className="absolute bottom-4 right-4">
-                    <span className="bg-white bg-opacity-90 text-design-gray text-xs font-medium px-2 py-1 rounded font-pretendard">
-                      최대 {product.maxCapacity}명
-                    </span>
-                  </div>
-                </div>
                 
                 <div className="p-6">
                   <h3 className="text-xl font-semibold text-design-gray mb-3 font-pretendard">
@@ -179,7 +206,8 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         )}
 
