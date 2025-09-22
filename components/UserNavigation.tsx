@@ -168,10 +168,12 @@ export default function UserNavigation() {
 
           {/* 우측 버튼들 */}
           <div className="content-stretch flex gap-2 md:gap-[30px] items-center justify-start relative shrink-0">
-            {/* 장바구니 버튼 */}
+            {/* 장바구니 버튼 - 디버깅용 */}
             <button
               onClick={handleCartClick}
-              className="relative flex items-center gap-2 hover:text-design-blue transition-colors border border-gray-300 px-2 py-1 rounded"
+              className="relative flex items-center gap-2 hover:text-design-blue transition-colors border-4 border-red-500 px-4 py-3 rounded bg-yellow-200 text-black font-bold"
+              style={{ zIndex: 9999, minWidth: '120px' }}
+              id="cart-button-debug"
             >
               <div className="w-5 h-5 flex items-center justify-center">
                 <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
