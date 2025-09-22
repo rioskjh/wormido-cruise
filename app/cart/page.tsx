@@ -19,6 +19,14 @@ interface CartItem {
   addedAt: string
 }
 
+interface GroupedCartItem {
+  productId: number
+  productName: string
+  items: CartItem[]
+  totalPrice: number
+  totalPersons: number
+}
+
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -41,6 +49,30 @@ export default function CartPage() {
     }
   }
 
+  const groupCartItems = (items: CartItem[]): GroupedCartItem[] => {
+    const grouped = items.reduce((acc, item) => {
+      const key = `${item.productId}-${JSON.stringify(item.selectedOptions)}`
+      
+      if (!acc[key]) {
+        acc[key] = {
+          productId: item.productId,
+          productName: item.productName,
+          items: [],
+          totalPrice: 0,
+          totalPersons: 0
+        }
+      }
+      
+      acc[key].items.push(item)
+      acc[key].totalPrice += item.totalPrice
+      acc[key].totalPersons += item.adults + item.children + item.infants
+      
+      return acc
+    }, {} as Record<string, GroupedCartItem>)
+    
+    return Object.values(grouped)
+  }
+
   const removeCartItem = (index: number) => {
     try {
       const newCart = cartItems.filter((_, i) => i !== index)
@@ -51,6 +83,36 @@ export default function CartPage() {
       window.dispatchEvent(new Event('cartUpdated'))
       
       showSuccess('상품 삭제', '상품이 장바구니에서 제거되었습니다.')
+    } catch (error) {
+      showError('삭제 실패', '상품 삭제 중 오류가 발생했습니다.')
+    }
+  }
+
+  const removeGroupedCartItem = (groupedItem: GroupedCartItem) => {
+    try {
+      // 그룹에 속한 모든 아이템의 인덱스를 찾아서 제거
+      const indicesToRemove = new Set<number>()
+      
+      groupedItem.items.forEach(groupItem => {
+        cartItems.forEach((cartItem, index) => {
+          if (cartItem.productId === groupItem.productId && 
+              JSON.stringify(cartItem.selectedOptions) === JSON.stringify(groupItem.selectedOptions) &&
+              cartItem.adults === groupItem.adults &&
+              cartItem.children === groupItem.children &&
+              cartItem.infants === groupItem.infants) {
+            indicesToRemove.add(index)
+          }
+        })
+      })
+      
+      const newCart = cartItems.filter((_, index) => !indicesToRemove.has(index))
+      localStorage.setItem('cart', JSON.stringify(newCart))
+      setCartItems(newCart)
+      
+      // 장바구니 업데이트 이벤트 발생
+      window.dispatchEvent(new Event('cartUpdated'))
+      
+      showSuccess('상품 삭제', '선택한 상품이 장바구니에서 제거되었습니다.')
     } catch (error) {
       showError('삭제 실패', '상품 삭제 중 오류가 발생했습니다.')
     }
@@ -72,6 +134,18 @@ export default function CartPage() {
 
   const calculateTotalPrice = () => {
     return cartItems.reduce((total, item) => total + item.totalPrice, 0)
+  }
+
+  const getOptionDisplayText = (selectedOptions: {[key: number]: number}) => {
+    if (Object.keys(selectedOptions).length === 0) {
+      return '기본 옵션'
+    }
+    
+    // 실제로는 API에서 옵션 정보를 가져와야 하지만, 
+    // 현재는 간단하게 표시
+    return Object.entries(selectedOptions)
+      .map(([optionId, valueId]) => `옵션 ${optionId}: ${valueId}`)
+      .join(', ')
   }
 
   const handleCheckout = () => {
@@ -147,50 +221,62 @@ export default function CartPage() {
               </Link>
             </div>
           ) : (
-            // 장바구니 아이템들
+            // 장바구니 아이템들 (그룹화된 형태)
             <div className="space-y-6">
-              {cartItems.map((item, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                  <div className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-design-gray font-pretendard mb-2">
-                          {item.productName}
+              {groupCartItems(cartItems).map((groupedItem, groupIndex) => (
+                <div key={groupIndex} className="bg-white rounded-lg shadow-lg overflow-hidden">
+                  {/* 상품 그룹 헤더 */}
+                  <div className="bg-gray-50 px-6 py-4 border-b">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-xl font-semibold text-design-gray font-pretendard">
+                          {groupedItem.productName}
                         </h3>
-                        
-                        <div className="space-y-2 mb-4">
-                          <div className="flex items-center gap-4 text-sm text-design-gray-light font-pretendard">
-                            <span>성인: {item.adults}명</span>
-                            <span>어린이: {item.children}명</span>
-                            <span>유아: {item.infants}명</span>
+                        <p className="text-sm text-design-gray-light font-pretendard mt-1">
+                          총 {groupedItem.totalPersons}명 • {groupedItem.items.length}개 항목
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-design-gray font-pretendard">
+                          {groupedItem.totalPrice.toLocaleString()}원
+                        </div>
+                        <button
+                          onClick={() => removeGroupedCartItem(groupedItem)}
+                          className="text-sm text-red-500 hover:text-red-700 font-pretendard mt-1"
+                        >
+                          전체 삭제
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* 그룹 내 개별 아이템들 */}
+                  <div className="p-6">
+                    <div className="space-y-4">
+                      {groupedItem.items.map((item, itemIndex) => (
+                        <div key={itemIndex} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-4 text-sm text-design-gray-light font-pretendard mb-2">
+                              <span>성인: {item.adults}명</span>
+                              <span>어린이: {item.children}명</span>
+                              <span>유아: {item.infants}명</span>
+                            </div>
+                            
+                            <div className="text-sm text-design-gray font-pretendard">
+                              <span className="font-medium">옵션: </span>
+                              <span className="text-design-gray-light">
+                                {getOptionDisplayText(item.selectedOptions)}
+                              </span>
+                            </div>
                           </div>
                           
-                          {Object.keys(item.selectedOptions).length > 0 && (
-                            <div className="text-sm text-design-gray-light font-pretendard">
-                              <span>선택된 옵션: </span>
-                              {Object.entries(item.selectedOptions).map(([optionId, valueId]) => (
-                                <span key={optionId} className="mr-2">
-                                  옵션 {optionId}: {valueId}
-                                </span>
-                              ))}
+                          <div className="text-right">
+                            <div className="text-lg font-bold text-design-gray font-pretendard">
+                              {item.totalPrice.toLocaleString()}원
                             </div>
-                          )}
+                          </div>
                         </div>
-                        
-                        <div className="text-lg font-bold text-design-gray font-pretendard">
-                          {item.totalPrice.toLocaleString()}원
-                        </div>
-                      </div>
-                      
-                      <button
-                        onClick={() => removeCartItem(index)}
-                        className="ml-4 p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                        title="상품 삭제"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
+                      ))}
                     </div>
                   </div>
                 </div>
