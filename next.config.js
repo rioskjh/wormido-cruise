@@ -5,6 +5,14 @@ const nextConfig = {
   },
   images: {
     domains: ['localhost'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.public.blob.vercel-storage.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
   // 성능 최적화
   swcMinify: true,

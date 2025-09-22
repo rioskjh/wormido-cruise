@@ -41,11 +41,13 @@ export default function Home() {
       const data = await response.json()
       
       if (data.ok) {
+        console.log('상품 데이터:', data.data.products)
         setProducts(data.data.products)
       } else {
         setError('상품을 불러오는 중 오류가 발생했습니다.')
       }
     } catch (error) {
+      console.error('상품 조회 에러:', error)
       setError('서버 오류가 발생했습니다.')
     } finally {
       setLoading(false)
@@ -152,6 +154,12 @@ export default function Home() {
               const imageSrc = hasUploadedImage 
                 ? product.images[0].filePath 
                 : `/images/0279006e5653701283e6e34a07b609333312b52a.png`
+              
+              console.log(`상품 ${product.id} 이미지:`, {
+                hasUploadedImage,
+                imageSrc,
+                images: product.images
+              })
               
               return (
                 <div key={product.id} className="bg-white rounded-[10px] shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-300">
