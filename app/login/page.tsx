@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
 
-export default function LoginPage() {
+function LoginContent() {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -126,5 +126,23 @@ export default function LoginPage() {
       {/* Footer */}
       <Footer />
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <UserNavigation />
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <p className="mt-2 text-gray-600">로딩 중...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   )
 }
