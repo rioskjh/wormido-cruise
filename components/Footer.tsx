@@ -1,8 +1,51 @@
 'use client'
 
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
+
+interface SiteSettings {
+  [key: string]: string
+}
 
 export default function Footer() {
+  const [settings, setSettings] = useState<SiteSettings>({})
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    loadSettings()
+  }, [])
+
+  const loadSettings = async () => {
+    try {
+      const response = await fetch('/api/settings')
+      const data = await response.json()
+      
+      if (data.ok) {
+        const settingsMap: SiteSettings = {}
+        data.data.settings.forEach((setting: any) => {
+          settingsMap[setting.key] = setting.value
+        })
+        setSettings(settingsMap)
+      }
+    } catch (error) {
+      console.error('Failed to load settings:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <footer className="bg-design-gray text-white">
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+            <p className="mt-2 text-sm text-gray-300">로딩 중...</p>
+          </div>
+        </div>
+      </footer>
+    )
+  }
   return (
     <footer className="bg-design-gray text-white">
       <div className="container mx-auto px-4 py-12">
@@ -14,13 +57,12 @@ export default function Footer() {
                 <span className="text-white text-lg">🚢</span>
               </div>
               <div>
-                <h3 className="text-xl font-bold font-pretendard">Wormi Cruise</h3>
+                <h3 className="text-xl font-bold font-pretendard">{settings.site_title || 'Wormi Cruise'}</h3>
                 <p className="text-sm text-gray-300 font-pretendard">월미도 해양관광</p>
               </div>
             </div>
             <p className="text-sm text-gray-300 font-pretendard leading-relaxed">
-              아름다운 월미도 바다에서 특별한 크루즈 경험을 제공합니다. 
-              안전하고 편안한 여행을 위해 최선을 다하겠습니다.
+              {settings.site_description || '아름다운 월미도 바다에서 특별한 크루즈 경험을 제공합니다. 안전하고 편안한 여행을 위해 최선을 다하겠습니다.'}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-300 hover:text-white transition-colors">
@@ -79,12 +121,12 @@ export default function Footer() {
             <div className="space-y-3">
               <div>
                 <p className="text-sm font-medium font-pretendard">전화 문의</p>
-                <p className="text-sm text-gray-300 font-pretendard">032-123-4567</p>
-                <p className="text-xs text-gray-400 font-pretendard">평일 09:00 - 18:00</p>
+                <p className="text-sm text-gray-300 font-pretendard">{settings.customer_center_phone || '032-123-4567'}</p>
+                <p className="text-xs text-gray-400 font-pretendard">{settings.customer_center_hours || '평일 09:00 - 18:00'}</p>
               </div>
               <div>
                 <p className="text-sm font-medium font-pretendard">이메일</p>
-                <p className="text-sm text-gray-300 font-pretendard">info@wormicruise.com</p>
+                <p className="text-sm text-gray-300 font-pretendard">{settings.customer_center_email || 'info@wormicruise.com'}</p>
               </div>
               <div>
                 <p className="text-sm font-medium font-pretendard">카카오톡</p>
@@ -97,11 +139,11 @@ export default function Footer() {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold font-pretendard">회사 정보</h4>
             <div className="space-y-2 text-sm text-gray-300 font-pretendard">
-              <p>상호: 월미도해양관광(주)</p>
-              <p>대표: 김크루즈</p>
-              <p>사업자등록번호: 123-45-67890</p>
-              <p>주소: 인천광역시 중구 월미문화로 81</p>
-              <p>통신판매업신고: 제2024-인천중구-1234호</p>
+              <p>상호: {settings.company_name || '월미도해양관광(주)'}</p>
+              <p>대표: {settings.company_ceo || '김크루즈'}</p>
+              <p>사업자등록번호: {settings.company_registration || '123-45-67890'}</p>
+              <p>주소: {settings.company_address || '인천광역시 중구 월미문화로 81'}</p>
+              <p>통신판매업신고: {settings.company_telecom || '제2024-인천중구-1234호'}</p>
             </div>
           </div>
         </div>

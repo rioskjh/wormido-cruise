@@ -42,3 +42,29 @@ export function verifyRefreshToken(token: string): TokenPayload | null {
 
 // verifyToken은 verifyAccessToken의 별칭
 export const verifyToken = verifyAccessToken
+
+// 관리자 토큰 검증 (NextRequest에서 Authorization 헤더 추출)
+export async function verifyAdminToken(request: Request): Promise<{ ok: boolean; error?: string; payload?: TokenPayload }> {
+  try {
+    const authHeader = request.headers.get('authorization')
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return { ok: false, error: '인증 토큰이 필요합니다.' }
+    }
+
+    const token = authHeader.substring(7)
+    const payload = verifyAccessToken(token)
+    
+    if (!payload) {
+      return { ok: false, error: '유효하지 않은 토큰입니다.' }
+    }
+
+    if (payload.role !== 'ADMIN') {
+      return { ok: false, error: '관리자 권한이 필요합니다.' }
+    }
+
+    return { ok: true, payload }
+  } catch (error) {
+    return { ok: false, error: '토큰 검증 중 오류가 발생했습니다.' }
+  }
+}

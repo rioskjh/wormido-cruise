@@ -2,12 +2,30 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { ToastProvider } from '@/contexts/ToastContext'
+import { getSiteMetadata } from '@/lib/metadata'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: 'Wormi Cruise - 월미도 크루즈 예약 시스템',
-  description: '아름다운 월미도 바다를 즐기는 크루즈 투어 예약 시스템',
+export async function generateMetadata(): Promise<Metadata> {
+  const metadata = await getSiteMetadata()
+  
+  return {
+    title: metadata.title,
+    description: metadata.description,
+    keywords: metadata.keywords,
+    authors: [{ name: metadata.author }],
+    openGraph: {
+      title: metadata.title,
+      description: metadata.description,
+      type: 'website',
+      locale: 'ko_KR',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: metadata.title,
+      description: metadata.description,
+    },
+  }
 }
 
 export default function RootLayout({
