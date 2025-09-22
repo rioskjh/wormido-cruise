@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyAccessToken } from '@/lib/auth'
-import { z } from 'zod'
+import { put } from '@vercel/blob'
 
 // 상품 이미지 목록 조회
 export async function GET(
@@ -107,16 +107,21 @@ export async function POST(
       }
 
       // 파일명 생성 (타임스탬프 + 원본 파일명)
-      const timestamp = Date.now()
+      const timestamp = Date.now() + i
       const fileName = `${timestamp}_${file.name}`
-      const filePath = `/uploads/products/${fileName}`
+      const blobPath = `products/${productId}/${fileName}`
 
-      // 실제 파일 저장은 나중에 구현 (현재는 DB에만 저장)
+      // Vercel Blob에 파일 업로드
+      const blob = await put(blobPath, file, {
+        access: 'public',
+      })
+
+      // DB에 이미지 정보 저장
       const image = await prisma.productImage.create({
         data: {
           productId,
           fileName: file.name,
-          filePath,
+          filePath: blob.url, // Vercel Blob URL 저장
           fileSize: file.size,
           sortOrder: currentImageCount + i,
           isActive: true
