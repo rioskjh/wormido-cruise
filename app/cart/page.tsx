@@ -30,6 +30,7 @@ interface GroupedCartItem {
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [optionTexts, setOptionTexts] = useState<{[key: string]: string}>({})
   const router = useRouter()
   const { showError, showSuccess } = useToast()
 
@@ -37,16 +38,61 @@ export default function CartPage() {
     loadCartItems()
   }, [])
 
-  const loadCartItems = () => {
+  const loadCartItems = async () => {
     try {
       const cart = JSON.parse(localStorage.getItem('cart') || '[]')
       setCartItems(cart)
+      
+      // 옵션 텍스트 미리 로드
+      await loadOptionTexts(cart)
     } catch (error) {
       console.error('Cart load error:', error)
       setCartItems([])
     } finally {
       setLoading(false)
     }
+  }
+
+  const loadOptionTexts = async (items: CartItem[]) => {
+    const texts: {[key: string]: string} = {}
+    
+    // 각 상품별로 옵션 텍스트 로드
+    const productIds = [...new Set(items.map(item => item.productId))]
+    
+    for (const productId of productIds) {
+      try {
+        const response = await fetch(`/api/products/${productId}`)
+        const data = await response.json()
+        
+        if (data.ok && data.data.product.options) {
+          const options = data.data.product.options
+          
+          // 해당 상품의 모든 아이템에 대해 옵션 텍스트 생성
+          items
+            .filter(item => item.productId === productId)
+            .forEach(item => {
+              const key = `${item.productId}-${JSON.stringify(item.selectedOptions)}`
+              if (Object.keys(item.selectedOptions).length === 0) {
+                texts[key] = '기본 옵션'
+              } else {
+                const optionTexts = Object.entries(item.selectedOptions).map(([optionId, valueId]) => {
+                  const option = options.find((opt: any) => opt.id === parseInt(optionId))
+                  if (option) {
+                    const value = option.values.find((val: any) => val.id === valueId)
+                    return value ? `${option.name}: ${value.value}` : `옵션 ${optionId}: ${valueId}`
+                  }
+                  return `옵션 ${optionId}: ${valueId}`
+                })
+                texts[key] = optionTexts.join(', ')
+              }
+            })
+        }
+      } catch (error) {
+        console.error(`상품 ${productId} 옵션 정보 로드 실패:`, error)
+      }
+    }
+    
+    setOptionTexts(texts)
   }
 
   const groupCartItems = (items: CartItem[]): GroupedCartItem[] => {
@@ -136,17 +182,6 @@ export default function CartPage() {
     return cartItems.reduce((total, item) => total + item.totalPrice, 0)
   }
 
-  const getOptionDisplayText = (selectedOptions: {[key: number]: number}) => {
-    if (Object.keys(selectedOptions).length === 0) {
-      return '기본 옵션'
-    }
-    
-    // 실제로는 API에서 옵션 정보를 가져와야 하지만, 
-    // 현재는 간단하게 표시
-    return Object.entries(selectedOptions)
-      .map(([optionId, valueId]) => `옵션 ${optionId}: ${valueId}`)
-      .join(', ')
-  }
 
   const handleCheckout = () => {
     // 로그인 상태 확인
@@ -265,7 +300,7 @@ export default function CartPage() {
                             <div className="text-sm text-design-gray font-pretendard">
                               <span className="font-medium">옵션: </span>
                               <span className="text-design-gray-light">
-                                {getOptionDisplayText(item.selectedOptions)}
+                                {optionTexts[`${item.productId}-${JSON.stringify(item.selectedOptions)}`] || '기본 옵션'}
                               </span>
                             </div>
                           </div>
