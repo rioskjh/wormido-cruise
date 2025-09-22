@@ -34,36 +34,60 @@ function ReservationContent() {
   })
 
   useEffect(() => {
-    // URL 파라미터에서 예약 데이터 추출
-    const productId = searchParams.get('productId')
-    const adults = searchParams.get('adults')
-    const children = searchParams.get('children')
-    const infants = searchParams.get('infants')
-    const totalPrice = searchParams.get('totalPrice')
-
-    if (!productId || !adults || !children || !infants || !totalPrice) {
-      showError('예약 오류', '예약 정보가 올바르지 않습니다.')
-      router.push('/')
-      return
-    }
-
-    // 선택된 옵션들 추출
-    const selectedOptions: {[key: number]: number} = {}
-    searchParams.forEach((value, key) => {
-      if (key.startsWith('option_')) {
-        const optionId = parseInt(key.replace('option_', ''))
-        selectedOptions[optionId] = parseInt(value)
+    // 장바구니 아이템이 있는지 확인
+    const cartItems = searchParams.get('cartItems')
+    
+    if (cartItems) {
+      // 장바구니에서 온 경우
+      try {
+        const items = JSON.parse(cartItems)
+        // 첫 번째 아이템을 사용 (나중에 여러 아이템 처리 가능)
+        const firstItem = items[0]
+        setReservationData({
+          productId: firstItem.productId,
+          adults: firstItem.adults,
+          children: firstItem.children,
+          infants: firstItem.infants,
+          totalPrice: firstItem.totalPrice,
+          selectedOptions: firstItem.selectedOptions
+        })
+      } catch (error) {
+        showError('예약 오류', '장바구니 정보가 올바르지 않습니다.')
+        router.push('/cart')
+        return
       }
-    })
+    } else {
+      // URL 파라미터에서 예약 데이터 추출
+      const productId = searchParams.get('productId')
+      const adults = searchParams.get('adults')
+      const children = searchParams.get('children')
+      const infants = searchParams.get('infants')
+      const totalPrice = searchParams.get('totalPrice')
 
-    setReservationData({
-      productId: parseInt(productId),
-      adults: parseInt(adults),
-      children: parseInt(children),
-      infants: parseInt(infants),
-      totalPrice: parseInt(totalPrice),
-      selectedOptions
-    })
+      if (!productId || !adults || !children || !infants || !totalPrice) {
+        showError('예약 오류', '예약 정보가 올바르지 않습니다.')
+        router.push('/')
+        return
+      }
+
+      // 선택된 옵션들 추출
+      const selectedOptions: {[key: number]: number} = {}
+      searchParams.forEach((value, key) => {
+        if (key.startsWith('option_')) {
+          const optionId = parseInt(key.replace('option_', ''))
+          selectedOptions[optionId] = parseInt(value)
+        }
+      })
+
+      setReservationData({
+        productId: parseInt(productId),
+        adults: parseInt(adults),
+        children: parseInt(children),
+        infants: parseInt(infants),
+        totalPrice: parseInt(totalPrice),
+        selectedOptions
+      })
+    }
   }, [searchParams, router, showError])
 
   const handlePayment = async () => {
@@ -110,6 +134,25 @@ function ReservationContent() {
       const data = await response.json()
 
       if (data.ok) {
+        // 장바구니에서 온 예약인 경우 장바구니 비우기
+        const cartItems = searchParams.get('cartItems')
+        if (cartItems) {
+          try {
+            const items = JSON.parse(cartItems)
+            const currentCart = JSON.parse(localStorage.getItem('cart') || '[]')
+            // 예약된 아이템들을 장바구니에서 제거
+            const updatedCart = currentCart.filter((_: any, index: number) => 
+              !items.some((item: any) => item.index === index)
+            )
+            localStorage.setItem('cart', JSON.stringify(updatedCart))
+            
+            // 장바구니 업데이트 이벤트 발생
+            window.dispatchEvent(new Event('cartUpdated'))
+          } catch (error) {
+            console.error('Cart update error:', error)
+          }
+        }
+        
         showSuccess('예약 완료!', '예약이 성공적으로 완료되었습니다.')
         
         // 예약 완료 페이지로 이동

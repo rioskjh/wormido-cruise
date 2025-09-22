@@ -15,15 +15,18 @@ interface User {
 export default function UserNavigation() {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const [cartItemCount, setCartItemCount] = useState(0)
   const router = useRouter()
   const { showSuccess } = useToast()
 
   useEffect(() => {
     checkAuthStatus()
+    updateCartItemCount()
     
     // localStorage 변경 감지
     const handleStorageChange = () => {
       checkAuthStatus()
+      updateCartItemCount()
     }
     
     // storage 이벤트 리스너 등록 (다른 탭에서의 변경 감지)
@@ -31,10 +34,12 @@ export default function UserNavigation() {
     
     // 커스텀 이벤트 리스너 등록 (같은 탭에서의 변경 감지)
     window.addEventListener('authStateChanged', handleStorageChange)
+    window.addEventListener('cartUpdated', updateCartItemCount)
     
     return () => {
       window.removeEventListener('storage', handleStorageChange)
       window.removeEventListener('authStateChanged', handleStorageChange)
+      window.removeEventListener('cartUpdated', updateCartItemCount)
     }
   }, [])
 
@@ -65,6 +70,20 @@ export default function UserNavigation() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const updateCartItemCount = () => {
+    try {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]')
+      setCartItemCount(cart.length)
+    } catch (error) {
+      setCartItemCount(0)
+    }
+  }
+
+  const handleCartClick = () => {
+    // 장바구니 페이지로 이동 (로그인 상태와 관계없이 접근 가능)
+    router.push('/cart')
   }
 
   const handleLogout = async () => {
@@ -149,6 +168,26 @@ export default function UserNavigation() {
 
           {/* 우측 버튼들 */}
           <div className="content-stretch flex gap-2 md:gap-[30px] items-center justify-start relative shrink-0">
+            {/* 장바구니 버튼 */}
+            <button
+              onClick={handleCartClick}
+              className="relative content-stretch flex gap-[10px] items-center justify-start relative shrink-0 hover:text-design-blue transition-colors"
+            >
+              <div className="w-5 h-5 flex items-center justify-center">
+                <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+                </svg>
+              </div>
+              <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
+                <p className="leading-[20px] whitespace-pre">장바구니</p>
+              </div>
+              {cartItemCount > 0 && (
+                <div className="absolute -top-2 -right-2 bg-design-purple text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-pretendard font-medium">
+                  {cartItemCount}
+                </div>
+              )}
+            </button>
+
             {user ? (
               // 로그인된 상태
               <div className="flex items-center gap-[10px]">

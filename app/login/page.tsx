@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
 
@@ -13,6 +13,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const returnUrl = searchParams.get('returnUrl')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -38,8 +40,9 @@ export default function LoginPage() {
         // 인증 상태 변경 이벤트 발생
         window.dispatchEvent(new Event('authStateChanged'))
         
-        // 홈페이지로 리다이렉트
-        router.push('/')
+        // returnUrl이 있으면 해당 페이지로, 없으면 홈페이지로 리다이렉트
+        const redirectUrl = returnUrl ? decodeURIComponent(returnUrl) : '/'
+        router.push(redirectUrl)
       } else {
         setError(data.error || '로그인에 실패했습니다.')
       }

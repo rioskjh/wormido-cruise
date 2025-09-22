@@ -171,6 +171,9 @@ export default function ProductDetailPage() {
     existingCart.push(cartItem)
     localStorage.setItem('cart', JSON.stringify(existingCart))
 
+    // 장바구니 업데이트 이벤트 발생
+    window.dispatchEvent(new Event('cartUpdated'))
+
     showSuccess('장바구니 추가', '상품이 장바구니에 추가되었습니다.')
   }
 
