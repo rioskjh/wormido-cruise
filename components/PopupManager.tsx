@@ -8,8 +8,8 @@ interface Popup {
   title: string
   content: string
   type: 'INFO' | 'WARNING' | 'SUCCESS' | 'ERROR' | 'PROMOTION' | 'NOTICE'
-  position: 'TOP_LEFT' | 'TOP_CENTER' | 'TOP_RIGHT' | 'CENTER_LEFT' | 'CENTER' | 'CENTER_RIGHT' | 'BOTTOM_LEFT' | 'BOTTOM_CENTER' | 'BOTTOM_RIGHT'
-  size: 'SMALL' | 'MEDIUM' | 'LARGE' | 'CUSTOM'
+  position: 'CENTER' | 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT' | 'TOP_LEFT' | 'TOP_RIGHT' | 'BOTTOM_LEFT' | 'BOTTOM_RIGHT'
+  size: 'SMALL' | 'MEDIUM' | 'LARGE' | 'FULLSCREEN'
   isActive: boolean
   startDate?: string
   endDate?: string
@@ -54,30 +54,31 @@ export default function PopupManager() {
 
   const getPositionClasses = (position: Popup['position']) => {
     const positions = {
-      TOP_LEFT: 'top-4 left-4',
-      TOP_CENTER: 'top-4 left-1/2 transform -translate-x-1/2',
-      TOP_RIGHT: 'top-4 right-4',
-      CENTER_LEFT: 'top-1/2 left-4 transform -translate-y-1/2',
       CENTER: 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
-      CENTER_RIGHT: 'top-1/2 right-4 transform -translate-y-1/2',
+      TOP: 'top-4 left-1/2 transform -translate-x-1/2',
+      BOTTOM: 'bottom-4 left-1/2 transform -translate-x-1/2',
+      LEFT: 'top-1/2 left-4 transform -translate-y-1/2',
+      RIGHT: 'top-1/2 right-4 transform -translate-y-1/2',
+      TOP_LEFT: 'top-4 left-4',
+      TOP_RIGHT: 'top-4 right-4',
       BOTTOM_LEFT: 'bottom-4 left-4',
-      BOTTOM_CENTER: 'bottom-4 left-1/2 transform -translate-x-1/2',
       BOTTOM_RIGHT: 'bottom-4 right-4'
     }
     return positions[position]
   }
 
   const getSizeClasses = (size: Popup['size'], width?: number, height?: number) => {
-    if (size === 'CUSTOM' && width && height) {
-      return { width: `${width}px`, height: `${height}px` }
+    if (size === 'FULLSCREEN') {
+      return { className: 'w-full h-full max-w-none max-h-none', width: undefined, height: undefined }
     }
 
     const sizes = {
       SMALL: 'w-80 max-w-sm',
       MEDIUM: 'w-96 max-w-md',
-      LARGE: 'w-[32rem] max-w-lg'
+      LARGE: 'w-[32rem] max-w-lg',
+      FULLSCREEN: 'w-full h-full max-w-none max-h-none'
     }
-    return { className: sizes[size] }
+    return { className: sizes[size], width: width ? `${width}px` : undefined, height: height ? `${height}px` : undefined }
   }
 
   const getTypeIcon = (type: Popup['type']) => {

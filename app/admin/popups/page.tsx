@@ -439,7 +439,7 @@ export default function PopupsPage() {
                           <option value="SMALL">작음</option>
                           <option value="MEDIUM">보통</option>
                           <option value="LARGE">큼</option>
-                          <option value="CUSTOM">사용자 정의</option>
+                          <option value="FULLSCREEN">전체화면</option>
                         </select>
                       </div>
 
@@ -554,7 +554,7 @@ export default function PopupsPage() {
                       </div>
                     </div>
 
-                    {formData.size === 'CUSTOM' && (
+                    {formData.size === 'FULLSCREEN' && (
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700">너비 (px)</label>

@@ -9,8 +9,8 @@ const popupSchema = z.object({
   title: z.string().min(1, '제목을 입력해주세요'),
   content: z.string().min(1, '내용을 입력해주세요'),
   type: z.enum(['INFO', 'WARNING', 'SUCCESS', 'ERROR', 'PROMOTION', 'NOTICE']),
-  position: z.enum(['TOP_LEFT', 'TOP_CENTER', 'TOP_RIGHT', 'CENTER_LEFT', 'CENTER', 'CENTER_RIGHT', 'BOTTOM_LEFT', 'BOTTOM_CENTER', 'BOTTOM_RIGHT']),
-  size: z.enum(['SMALL', 'MEDIUM', 'LARGE', 'CUSTOM']),
+  position: z.enum(['CENTER', 'TOP', 'BOTTOM', 'LEFT', 'RIGHT', 'TOP_LEFT', 'TOP_RIGHT', 'BOTTOM_LEFT', 'BOTTOM_RIGHT']),
+  size: z.enum(['SMALL', 'MEDIUM', 'LARGE', 'FULLSCREEN']),
   isActive: z.boolean(),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
@@ -34,7 +34,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ ok: false, error: '인증 토큰이 필요합니다.' }, { status: 401 })
     }
 
-    const admin = await verifyAdminToken(token)
+    const mockRequest = new NextRequest('http://localhost', {
+      headers: { authorization: `Bearer ${token}` }
+    })
+    const admin = await verifyAdminToken(mockRequest)
     if (!admin) {
       return NextResponse.json({ ok: false, error: '유효하지 않은 토큰입니다.' }, { status: 401 })
     }
@@ -65,7 +68,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: '인증 토큰이 필요합니다.' }, { status: 401 })
     }
 
-    const admin = await verifyAdminToken(token)
+    const mockRequest = new NextRequest('http://localhost', {
+      headers: { authorization: `Bearer ${token}` }
+    })
+    const admin = await verifyAdminToken(mockRequest)
     if (!admin) {
       return NextResponse.json({ ok: false, error: '유효하지 않은 토큰입니다.' }, { status: 401 })
     }

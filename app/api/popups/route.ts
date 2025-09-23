@@ -15,17 +15,25 @@ export async function GET(request: NextRequest) {
     const popups = await prisma.popup.findMany({
       where: {
         isActive: true,
-        OR: [
-          { startDate: null },
-          { startDate: { lte: now } }
-        ],
-        OR: [
-          { endDate: null },
-          { endDate: { gte: now } }
-        ],
-        OR: [
-          { maxShow: null },
-          { showCount: { lt: prisma.popup.fields.maxShow } }
+        AND: [
+          {
+            OR: [
+              { startDate: null },
+              { startDate: { lte: now } }
+            ]
+          },
+          {
+            OR: [
+              { endDate: null },
+              { endDate: { gte: now } }
+            ]
+          },
+          {
+            OR: [
+              { maxShow: null },
+              { showCount: { lt: prisma.popup.fields.maxShow } }
+            ]
+          }
         ]
       },
       orderBy: { zIndex: 'asc' }
