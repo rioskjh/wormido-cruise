@@ -12,6 +12,10 @@ const loginSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // 임시 디버깅: 환경변수 확인
+    console.log('DATABASE_URL 설정됨:', !!process.env.DATABASE_URL)
+    console.log('NODE_ENV:', process.env.NODE_ENV)
+    
     const body = await request.json()
     const { username, password } = loginSchema.parse(body)
 
