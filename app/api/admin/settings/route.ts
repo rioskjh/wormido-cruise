@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyAdminToken } from '@/lib/auth'
+import { verifyToken } from '@/lib/auth'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -9,12 +9,22 @@ export const dynamic = 'force-dynamic'
 export async function GET(request: NextRequest) {
   try {
     // 관리자 인증 확인
-    const authResult = await verifyAdminToken(request)
-    if (!authResult.ok) {
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json({
         ok: false,
-        error: authResult.error
+        error: '인증 토큰이 필요합니다.',
       }, { status: 401 })
+    }
+
+    const token = authHeader.substring(7)
+    const payload = verifyToken(token)
+    
+    if (!payload || (payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN' && payload.role !== 'EDITOR')) {
+      return NextResponse.json({
+        ok: false,
+        error: '관리자 권한이 필요합니다.',
+      }, { status: 403 })
     }
 
     // 모든 설정 조회
@@ -45,12 +55,22 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     // 관리자 인증 확인
-    const authResult = await verifyAdminToken(request)
-    if (!authResult.ok) {
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json({
         ok: false,
-        error: authResult.error
+        error: '인증 토큰이 필요합니다.',
       }, { status: 401 })
+    }
+
+    const token = authHeader.substring(7)
+    const payload = verifyToken(token)
+    
+    if (!payload || (payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN' && payload.role !== 'EDITOR')) {
+      return NextResponse.json({
+        ok: false,
+        error: '관리자 권한이 필요합니다.',
+      }, { status: 403 })
     }
 
     const { settings } = await request.json()

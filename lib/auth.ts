@@ -59,8 +59,11 @@ export async function verifyAdminToken(request: Request): Promise<{ ok: boolean;
       return { ok: false, error: '유효하지 않은 토큰입니다.' }
     }
 
-    if (payload.role !== 'ADMIN') {
-      return { ok: false, error: '관리자 권한이 필요합니다.' }
+    // 디버깅: 실제 role 값 확인
+    console.log('Admin token payload:', payload)
+
+    if (payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN' && payload.role !== 'EDITOR') {
+      return { ok: false, error: `관리자 권한이 필요합니다. 현재 권한: ${payload.role}` }
     }
 
     return { ok: true, payload }
