@@ -1,4 +1,4 @@
-스에쿼리를를import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyPassword, generateAccessToken, generateRefreshToken } from '@/lib/auth'
 import { z } from 'zod'
