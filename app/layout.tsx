@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { ToastProvider } from '@/contexts/ToastContext'
 import { getSiteMetadata } from '@/lib/metadata'
+import PopupManager from '@/components/PopupManager'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -38,6 +39,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ToastProvider>
           {children}
+          <PopupManager />
         </ToastProvider>
       </body>
     </html>

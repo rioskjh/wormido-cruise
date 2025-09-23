@@ -44,6 +44,12 @@ export default function AdminNavigation({ onLogout }: AdminNavigationProps) {
       current: pathname === '/admin/members'
     },
     {
+      name: '팝업 관리',
+      href: '/admin/popups',
+      icon: '💬',
+      current: pathname === '/admin/popups'
+    },
+    {
       name: '설정',
       href: '/admin/settings',
       icon: '⚙️',

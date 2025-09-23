@@ -392,3 +392,62 @@ model SiteSettings {
 
   @@map("site_settings")
 }
+
+// 팝업 모델
+model Popup {
+  id              Int          @id @default(autoincrement())
+  title           String
+  content         String
+  type            PopupType    @default(INFO)
+  position        PopupPosition @default(CENTER)
+  size            PopupSize    @default(MEDIUM)
+  isActive        Boolean      @default(true) @map("is_active")
+  startDate       DateTime?    @map("start_date")
+  endDate         DateTime?    @map("end_date")
+  showCount       Int          @default(0) @map("show_count")
+  maxShow         Int?         @map("max_show")
+  targetPages     String?      @map("target_pages")
+  excludePages    String?      @map("exclude_pages")
+  width           Int?
+  height          Int?
+  backgroundColor String?      @map("background_color")
+  textColor       String?      @map("text_color")
+  borderColor     String?      @map("border_color")
+  borderRadius    Int?         @map("border_radius")
+  zIndex          Int          @default(1000) @map("z_index")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  @@map("popups")
+}
+
+// 팝업 타입 열거형
+enum PopupType {
+  INFO
+  WARNING
+  SUCCESS
+  ERROR
+  PROMOTION
+  NOTICE
+}
+
+// 팝업 위치 열거형
+enum PopupPosition {
+  CENTER
+  TOP
+  BOTTOM
+  LEFT
+  RIGHT
+  TOP_LEFT
+  TOP_RIGHT
+  BOTTOM_LEFT
+  BOTTOM_RIGHT
+}
+
+// 팝업 크기 열거형
+enum PopupSize {
+  SMALL
+  MEDIUM
+  LARGE
+  FULLSCREEN
+}
