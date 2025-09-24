@@ -33,9 +33,16 @@ export default function PopupManager() {
   const [loading, setLoading] = useState(true)
   const pathname = usePathname()
 
+  // 관리자 페이지에서는 팝업을 표시하지 않음
+  const isAdminPage = pathname.startsWith('/admin')
+
   useEffect(() => {
-    loadPopups()
-  }, [pathname])
+    if (!isAdminPage) {
+      loadPopups()
+    } else {
+      setLoading(false)
+    }
+  }, [pathname, isAdminPage])
 
   const loadPopups = async () => {
     try {
