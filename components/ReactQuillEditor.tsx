@@ -24,11 +24,27 @@ export default function ReactQuillEditor({
   placeholder = '내용을 입력하세요...'
 }: ReactQuillEditorProps) {
   const [isClient, setIsClient] = useState(false)
+  const [quillInstance, setQuillInstance] = useState<any>(null)
 
   // 클라이언트 사이드에서만 에디터 렌더링
   useEffect(() => {
     setIsClient(true)
   }, [])
+
+  // 에디터 인스턴스 가져오기
+  useEffect(() => {
+    if (isClient) {
+      // DOM에서 Quill 인스턴스 찾기
+      const timer = setTimeout(() => {
+        const quillElement = document.querySelector('.ql-editor')
+        if (quillElement && (quillElement as any).__quill) {
+          setQuillInstance((quillElement as any).__quill)
+        }
+      }, 100)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [isClient, value])
 
   // 이미지 업로드 핸들러
   const imageHandler = useCallback(() => {
@@ -74,11 +90,16 @@ export default function ReactQuillEditor({
         
         if (result.ok) {
           // 에디터에 이미지 삽입
-          const quill = (window as any).quill
-          if (quill) {
-            const range = quill.getSelection()
-            quill.insertEmbed(range?.index || 0, 'image', result.data.url)
-            quill.setSelection((range?.index || 0) + 1)
+          if (quillInstance) {
+            const range = quillInstance.getSelection()
+            const index = range ? range.index : quillInstance.getLength()
+            quillInstance.insertEmbed(index, 'image', result.data.url)
+            quillInstance.setSelection(index + 1)
+          } else {
+            // Quill 인스턴스를 찾을 수 없는 경우 직접 HTML 삽입
+            const currentContent = value
+            const newContent = currentContent + `<img src="${result.data.url}" alt="업로드된 이미지" style="max-width: 100%; height: auto;" />`
+            onChange(newContent)
           }
         } else {
           alert(result.error || '이미지 업로드에 실패했습니다.')
