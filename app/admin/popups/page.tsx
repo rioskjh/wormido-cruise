@@ -53,7 +53,7 @@ export default function PopupsPage() {
     isActive: true,
     startDate: '',
     endDate: '',
-    maxShow: '',
+    maxShow: undefined as number | undefined,
     targetPages: '',
     excludePages: '',
     width: '',
@@ -114,7 +114,7 @@ export default function PopupsPage() {
         },
         body: JSON.stringify({
           ...formData,
-          maxShow: formData.maxShow ? parseInt(formData.maxShow) : null,
+          maxShow: formData.maxShow || null,
           width: formData.width ? parseInt(formData.width) : null,
           height: formData.height ? parseInt(formData.height) : null,
           borderRadius: parseInt(formData.borderRadius),
@@ -151,7 +151,7 @@ export default function PopupsPage() {
       isActive: popup.isActive,
       startDate: popup.startDate ? popup.startDate.split('T')[0] : '',
       endDate: popup.endDate ? popup.endDate.split('T')[0] : '',
-      maxShow: popup.maxShow?.toString() || '',
+      maxShow: popup.maxShow || undefined,
       targetPages: popup.targetPages || '',
       excludePages: popup.excludePages || '',
       width: popup.width?.toString() || '',
@@ -206,7 +206,7 @@ export default function PopupsPage() {
       isActive: true,
       startDate: '',
       endDate: '',
-      maxShow: '',
+      maxShow: undefined,
       targetPages: '',
       excludePages: '',
       width: '',
@@ -389,96 +389,161 @@ export default function PopupsPage() {
                   </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* 기본 정보 */}
-                    <div className="space-y-4">
-                      <h4 className="text-md font-medium text-gray-900">기본 정보</h4>
-                      
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  {/* 기본 정보 섹션 */}
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-medium text-gray-900 border-b pb-2">기본 정보</h3>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">제목 *</label>
+                      <input
+                        type="text"
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="팝업 제목"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">내용 *</label>
+                      <textarea
+                        value={formData.content}
+                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                        rows={3}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="간단한 텍스트 내용"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">HTML 내용</label>
+                      <ReactQuillEditor
+                        value={formData.contentHtml}
+                        onChange={(content) => setFormData({ ...formData, contentHtml: content })}
+                        height={300}
+                        placeholder="리치 텍스트 에디터 내용 (이미지, 링크 등 포함 가능)"
+                      />
+                      <p className="mt-2 text-sm text-gray-500">React Quill 에디터를 사용하여 이미지, 링크, 테이블 등을 포함할 수 있습니다.</p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">이미지 URL</label>
+                      <textarea
+                        value={formData.images}
+                        onChange={(e) => setFormData({ ...formData, images: e.target.value })}
+                        rows={3}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="이미지 URL을 한 줄씩 입력하세요"
+                      />
+                      <p className="mt-1 text-sm text-gray-500">여러 이미지를 사용할 경우 한 줄씩 입력하세요.</p>
+                    </div>
+                  </div>
+
+                  {/* 표시 정보 섹션 */}
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-medium text-gray-900 border-b pb-2">표시 정보</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">제목 *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">시작일</label>
                         <input
-                          type="text"
-                          value={formData.title}
-                          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                          type="date"
+                          value={formData.startDate}
+                          onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          required
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">내용 *</label>
-                        <textarea
-                          value={formData.content}
-                          onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                          rows={4}
+                        <label className="block text-sm font-medium text-gray-700 mb-2">종료일</label>
+                        <input
+                          type="date"
+                          value={formData.endDate}
+                          onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
                           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="간단한 텍스트 내용"
                         />
                       </div>
+                    </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">HTML 내용</label>
-                        <ReactQuillEditor
-                          value={formData.contentHtml}
-                          onChange={(content) => setFormData({ ...formData, contentHtml: content })}
-                          height={300}
-                          placeholder="리치 텍스트 에디터 내용 (이미지, 링크 등 포함 가능)"
-                        />
-                        <p className="mt-2 text-sm text-gray-500">React Quill 에디터를 사용하여 이미지, 링크, 테이블 등을 포함할 수 있습니다.</p>
-                      </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">최대 노출 횟수</label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={formData.maxShow || ''}
+                        onChange={(e) => setFormData({ ...formData, maxShow: e.target.value ? parseInt(e.target.value) : undefined })}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="제한 없음"
+                      />
+                    </div>
 
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">대상 페이지</label>
+                      <input
+                        type="text"
+                        value={formData.targetPages || ''}
+                        onChange={(e) => setFormData({ ...formData, targetPages: e.target.value })}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="예: /, /products, /reservation"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">제외 페이지</label>
+                      <input
+                        type="text"
+                        value={formData.excludePages || ''}
+                        onChange={(e) => setFormData({ ...formData, excludePages: e.target.value })}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="예: /admin, /login"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 팝업 속성 섹션 */}
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-medium text-gray-900 border-b pb-2">팝업 속성</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">이미지 URL</label>
-                        <textarea
-                          value={formData.images}
-                          onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-                          rows={3}
+                        <label className="block text-sm font-medium text-gray-700 mb-2">타입</label>
+                        <select
+                          value={formData.type}
+                          onChange={(e) => setFormData({ ...formData, type: e.target.value as Popup['type'] })}
                           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="이미지 URL을 한 줄씩 입력하세요"
-                        />
-                        <p className="mt-1 text-sm text-gray-500">여러 이미지를 사용할 경우 한 줄씩 입력하세요.</p>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">타입</label>
-                          <select
-                            value={formData.type}
-                            onChange={(e) => setFormData({ ...formData, type: e.target.value as Popup['type'] })}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          >
-                            <option value="INFO">정보</option>
-                            <option value="WARNING">경고</option>
-                            <option value="SUCCESS">성공</option>
-                            <option value="ERROR">오류</option>
-                            <option value="PROMOTION">프로모션</option>
-                            <option value="NOTICE">공지</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">위치</label>
-                          <select
-                            value={formData.position}
-                            onChange={(e) => setFormData({ ...formData, position: e.target.value as Popup['position'] })}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          >
-                            <option value="TOP_LEFT">상단 좌측</option>
-                            <option value="TOP_CENTER">상단 중앙</option>
-                            <option value="TOP_RIGHT">상단 우측</option>
-                            <option value="CENTER_LEFT">중앙 좌측</option>
-                            <option value="CENTER">중앙</option>
-                            <option value="CENTER_RIGHT">중앙 우측</option>
-                            <option value="BOTTOM_LEFT">하단 좌측</option>
-                            <option value="BOTTOM_CENTER">하단 중앙</option>
-                            <option value="BOTTOM_RIGHT">하단 우측</option>
-                          </select>
-                        </div>
+                        >
+                          <option value="INFO">정보</option>
+                          <option value="WARNING">경고</option>
+                          <option value="SUCCESS">성공</option>
+                          <option value="ERROR">오류</option>
+                          <option value="PROMOTION">프로모션</option>
+                          <option value="NOTICE">공지</option>
+                        </select>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">크기</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">위치</label>
+                        <select
+                          value={formData.position}
+                          onChange={(e) => setFormData({ ...formData, position: e.target.value as Popup['position'] })}
+                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="TOP_LEFT">상단 좌측</option>
+                          <option value="TOP_CENTER">상단 중앙</option>
+                          <option value="TOP_RIGHT">상단 우측</option>
+                          <option value="CENTER_LEFT">중앙 좌측</option>
+                          <option value="CENTER">중앙</option>
+                          <option value="CENTER_RIGHT">중앙 우측</option>
+                          <option value="BOTTOM_LEFT">하단 좌측</option>
+                          <option value="BOTTOM_CENTER">하단 중앙</option>
+                          <option value="BOTTOM_RIGHT">하단 우측</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">크기</label>
                         <select
                           value={formData.size}
                           onChange={(e) => setFormData({ ...formData, size: e.target.value as Popup['size'] })}
@@ -490,118 +555,60 @@ export default function PopupsPage() {
                           <option value="FULLSCREEN">전체화면</option>
                         </select>
                       </div>
-
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id="isActive"
-                          checked={formData.isActive}
-                          onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        <label htmlFor="isActive" className="ml-2 block text-sm text-gray-900">
-                          활성화
-                        </label>
-                      </div>
-
-                      {/* 쿠키 옵션 */}
-                      <div className="space-y-3 border-t pt-4">
-                        <h5 className="text-sm font-medium text-gray-900">쿠키 설정</h5>
-                        
-                        <div className="flex items-center">
-                          <input
-                            id="showDontShowToday"
-                            type="checkbox"
-                            checked={formData.showDontShowToday}
-                            onChange={(e) => setFormData({ ...formData, showDontShowToday: e.target.checked })}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                          />
-                          <label htmlFor="showDontShowToday" className="ml-2 block text-sm text-gray-900">
-                            "오늘 하루 보지 않기" 옵션 표시
-                          </label>
-                        </div>
-
-                        {formData.showDontShowToday && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">쿠키 만료 시간 (시간)</label>
-                            <input
-                              type="number"
-                              min="1"
-                              max="168"
-                              value={formData.cookieExpireHours}
-                              onChange={(e) => setFormData({ ...formData, cookieExpireHours: parseInt(e.target.value) || 24 })}
-                              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            <p className="mt-1 text-sm text-gray-500">1-168시간 (1주일) 사이로 설정하세요.</p>
-                          </div>
-                        )}
-                      </div>
                     </div>
 
-                    {/* 표시 설정 */}
-                    <div className="space-y-4">
-                      <h4 className="text-md font-medium text-gray-900">표시 설정</h4>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">시작일</label>
-                          <input
-                            type="date"
-                            value={formData.startDate}
-                            onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">종료일</label>
-                          <input
-                            type="date"
-                            value={formData.endDate}
-                            onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">최대 노출 횟수</label>
-                        <input
-                          type="number"
-                          value={formData.maxShow}
-                          onChange={(e) => setFormData({ ...formData, maxShow: e.target.value })}
-                          placeholder="제한 없음"
-                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">대상 페이지</label>
-                        <input
-                          type="text"
-                          value={formData.targetPages}
-                          onChange={(e) => setFormData({ ...formData, targetPages: e.target.value })}
-                          placeholder="예: /, /products, /reservation"
-                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">제외 페이지</label>
-                        <input
-                          type="text"
-                          value={formData.excludePages}
-                          onChange={(e) => setFormData({ ...formData, excludePages: e.target.value })}
-                          placeholder="예: /admin, /login"
-                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="isActive"
+                        checked={formData.isActive}
+                        onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <label htmlFor="isActive" className="ml-2 block text-sm text-gray-900">
+                        활성화
+                      </label>
                     </div>
                   </div>
 
-                  {/* 스타일 설정 */}
-                  <div className="space-y-4">
-                    <h4 className="text-md font-medium text-gray-900">스타일 설정</h4>
+                  {/* 쿠키 설정 섹션 */}
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-medium text-gray-900 border-b pb-2">쿠키 설정</h3>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center">
+                        <input
+                          id="showDontShowToday"
+                          type="checkbox"
+                          checked={formData.showDontShowToday}
+                          onChange={(e) => setFormData({ ...formData, showDontShowToday: e.target.checked })}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label htmlFor="showDontShowToday" className="ml-2 block text-sm text-gray-900">
+                          "오늘 하루 보지 않기" 옵션 표시
+                        </label>
+                      </div>
+                      
+                      {formData.showDontShowToday && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">쿠키 만료 시간 (시간)</label>
+                          <input
+                            type="number"
+                            min="1"
+                            max="168"
+                            value={formData.cookieExpireHours}
+                            onChange={(e) => setFormData({ ...formData, cookieExpireHours: parseInt(e.target.value) || 24 })}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          <p className="mt-1 text-sm text-gray-500">1-168시간 (1주일) 사이로 설정하세요.</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 스타일 설정 섹션 */}
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-medium text-gray-900 border-b pb-2">스타일 설정</h3>
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
