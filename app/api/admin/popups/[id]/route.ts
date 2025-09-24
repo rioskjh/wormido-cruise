@@ -65,11 +65,15 @@ export async function PUT(
     }
 
     const updateData: any = { ...validatedData }
-    if (validatedData.startDate) {
+    if (validatedData.startDate && validatedData.startDate.trim() !== '') {
       updateData.startDate = new Date(validatedData.startDate)
+    } else {
+      updateData.startDate = null
     }
-    if (validatedData.endDate) {
+    if (validatedData.endDate && validatedData.endDate.trim() !== '') {
       updateData.endDate = new Date(validatedData.endDate)
+    } else {
+      updateData.endDate = null
     }
     
     // 에디터 관련 필드 처리

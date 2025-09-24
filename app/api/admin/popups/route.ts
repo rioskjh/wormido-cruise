@@ -84,8 +84,8 @@ export async function POST(request: NextRequest) {
     const popup = await prisma.popup.create({
       data: {
         ...validatedData,
-        startDate: validatedData.startDate ? new Date(validatedData.startDate) : null,
-        endDate: validatedData.endDate ? new Date(validatedData.endDate) : null,
+        startDate: (validatedData.startDate && validatedData.startDate.trim() !== '') ? new Date(validatedData.startDate) : null,
+        endDate: (validatedData.endDate && validatedData.endDate.trim() !== '') ? new Date(validatedData.endDate) : null,
         zIndex: validatedData.zIndex || 1000,
         // 에디터 관련 필드
         contentHtml: validatedData.contentHtml || null,
