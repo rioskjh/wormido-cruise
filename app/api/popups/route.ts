@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     
     const now = new Date()
 
-    // 활성 팝업 조회 (날짜 조건, 노출 횟수 조건 포함)
+    // 활성 팝업 조회 (날짜 조건만 포함)
     const popups = await prisma.popup.findMany({
       where: {
         isActive: true,
@@ -27,12 +27,6 @@ export async function GET(request: NextRequest) {
               { endDate: null },
               { endDate: { gte: now } }
             ]
-          },
-          {
-            OR: [
-              { maxShow: null },
-              { showCount: { lt: prisma.popup.fields.maxShow } }
-            ]
           }
         ]
       },
@@ -45,16 +39,8 @@ export async function GET(request: NextRequest) {
       return currentPath === '/'
     })
 
-    // 노출 횟수 업데이트 (비동기로 처리)
-    if (filteredPopups.length > 0) {
-      const popupIds = filteredPopups.map(popup => popup.id)
-      prisma.popup.updateMany({
-        where: { id: { in: popupIds } },
-        data: { showCount: { increment: 1 } }
-      }).catch(error => {
-        console.error('Failed to update popup show count:', error)
-      })
-    }
+    // 노출 횟수 업데이트는 제거 (성능 최적화)
+    // 필요시 별도 API로 분리하여 처리
 
     return NextResponse.json({
       ok: true,

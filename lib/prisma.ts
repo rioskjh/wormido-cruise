@@ -19,7 +19,15 @@ const createPrismaClient = () => {
         url: databaseUrl,
       },
     },
-  })
+    // Vercel 환경에서 타임아웃 및 연결 문제 해결을 위한 설정
+    __internal: {
+      engine: {
+        connectTimeout: 10000, // 10초
+        queryTimeout: 30000,   // 30초
+        preparedStatements: false, // prepared statement 비활성화
+      },
+    },
+  } as any)
 }
 
 // Vercel serverless 환경에서는 매번 새로운 클라이언트 생성하여 prepared statement 충돌 방지
