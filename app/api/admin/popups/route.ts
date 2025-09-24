@@ -7,7 +7,6 @@ export const runtime = 'nodejs'
 
 const popupSchema = z.object({
   title: z.string().min(1, '제목을 입력해주세요'),
-  content: z.string().min(1, '내용을 입력해주세요'),
   type: z.enum(['INFO', 'WARNING', 'SUCCESS', 'ERROR', 'PROMOTION', 'NOTICE']),
   position: z.enum(['CENTER', 'TOP', 'BOTTOM', 'LEFT', 'RIGHT', 'TOP_LEFT', 'TOP_RIGHT', 'BOTTOM_LEFT', 'BOTTOM_RIGHT']),
   size: z.enum(['SMALL', 'MEDIUM', 'LARGE', 'FULLSCREEN']),
@@ -84,6 +83,7 @@ export async function POST(request: NextRequest) {
     const popup = await prisma.popup.create({
       data: {
         ...validatedData,
+        content: '', // content 필드는 빈 문자열로 설정 (에디터만 사용)
         startDate: (validatedData.startDate && validatedData.startDate.trim() !== '') ? new Date(validatedData.startDate) : null,
         endDate: (validatedData.endDate && validatedData.endDate.trim() !== '') ? new Date(validatedData.endDate) : null,
         zIndex: validatedData.zIndex || 1000,

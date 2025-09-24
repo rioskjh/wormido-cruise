@@ -187,12 +187,8 @@ export default function PopupManager() {
                 } : {})
               }}
             >
-              {/* 팝업 헤더 */}
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">{typeIcon}</span>
-                  <h3 className="font-semibold text-lg">{popup.title}</h3>
-                </div>
+              {/* 팝업 헤더 - 닫기 버튼만 */}
+              <div className="flex justify-end mb-3">
                 <button
                   onClick={() => {
                     setPopups(prev => prev.filter(p => p.id !== popup.id))

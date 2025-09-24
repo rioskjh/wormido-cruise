@@ -42,7 +42,6 @@ export default function PopupsPage() {
 
   const [formData, setFormData] = useState({
     title: '',
-    content: '',
     type: 'INFO' as Popup['type'],
     position: 'CENTER' as Popup['position'],
     size: 'MEDIUM' as Popup['size'],
@@ -135,7 +134,6 @@ export default function PopupsPage() {
     setEditingPopup(popup)
     setFormData({
       title: popup.title,
-      content: popup.content,
       type: popup.type,
       position: popup.position,
       size: popup.size,
@@ -186,7 +184,6 @@ export default function PopupsPage() {
   const resetForm = () => {
     setFormData({
       title: '',
-      content: '',
       type: 'INFO',
       position: 'CENTER',
       size: 'MEDIUM',
@@ -383,16 +380,6 @@ export default function PopupsPage() {
                       />
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">내용 *</label>
-                      <textarea
-                        value={formData.content}
-                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                        rows={3}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="간단한 텍스트 내용"
-                      />
-                    </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">HTML 내용</label>
