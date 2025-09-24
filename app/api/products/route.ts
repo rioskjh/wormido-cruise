@@ -30,11 +30,27 @@ export async function GET(request: NextRequest) {
       ]
     }
 
-    // 상품 목록 조회
+    // 상품 목록 조회 (detail_html 컬럼이 없으므로 select로 명시적 선택)
     const [products, total] = await Promise.all([
       prisma.product.findMany({
         where,
-        include: {
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          categoryId: true,
+          basePrice: true,
+          adultPrice: true,
+          childPrice: true,
+          infantPrice: true,
+          maxCapacity: true,
+          currentBookings: true,
+          isActive: true,
+          useOptions: true,
+          startDate: true,
+          endDate: true,
+          createdAt: true,
+          updatedAt: true,
           category: true,
           personTypePrices: true,
           images: {

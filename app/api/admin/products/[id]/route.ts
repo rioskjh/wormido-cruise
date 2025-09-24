@@ -127,8 +127,9 @@ export async function PUT(
     const body = await request.json()
     const validatedData = updateProductSchema.parse(body)
 
-    // 날짜 변환
-    const updateData: any = { ...validatedData }
+    // 날짜 변환 및 detailHtml 제외 (데이터베이스에 컬럼이 없을 수 있음)
+    const { detailHtml, ...restData } = validatedData
+    const updateData: any = { ...restData }
     if (validatedData.startDate) {
       updateData.startDate = new Date(validatedData.startDate)
     }

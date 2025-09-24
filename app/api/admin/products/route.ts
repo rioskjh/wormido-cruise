@@ -135,9 +135,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const validatedData = createProductSchema.parse(body)
 
-    // 날짜 변환
+    // 날짜 변환 및 detailHtml 제외 (데이터베이스에 컬럼이 없을 수 있음)
+    const { detailHtml, ...restData } = validatedData
     const productData = {
-      ...validatedData,
+      ...restData,
       startDate: validatedData.startDate ? new Date(validatedData.startDate) : null,
       endDate: validatedData.endDate ? new Date(validatedData.endDate) : null,
     }
