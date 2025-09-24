@@ -17,7 +17,7 @@ export async function verifyPassword(password: string, hashedPassword: string): 
 }
 
 export function generateAccessToken(payload: TokenPayload): string {
-  return jwt.sign(payload, 'x0n8m19s8d91n283nd9s1n283nd9s1n283nd9s', { expiresIn: '15m' })
+  return jwt.sign(payload, 'x0n8m19s8d91n283nd9s1n283nd9s1n283nd9s', { expiresIn: '20m' })
 }
 
 export function generateRefreshToken(payload: TokenPayload): string {
