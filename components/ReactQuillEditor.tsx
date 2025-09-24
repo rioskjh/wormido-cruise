@@ -70,7 +70,7 @@ export default function ReactQuillEditor({
   }
 
   return (
-    <div className="react-quill-editor">
+    <div className="react-quill-editor mb-4">
       <ReactQuill
         theme="snow"
         value={value}

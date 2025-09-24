@@ -428,7 +428,7 @@ export default function PopupsPage() {
                       <p className="mt-2 text-sm text-gray-500">React Quill 에디터를 사용하여 이미지, 링크, 테이블 등을 포함할 수 있습니다.</p>
                     </div>
 
-                    <div>
+                    <div className="mt-8">
                       <label className="block text-sm font-medium text-gray-700 mb-2">이미지 URL</label>
                       <textarea
                         value={formData.images}
