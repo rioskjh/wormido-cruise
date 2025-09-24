@@ -16,9 +16,6 @@ interface Popup {
   startDate?: string
   endDate?: string
   showCount: number
-  maxShow?: number
-  targetPages?: string
-  excludePages?: string
   width?: number
   height?: number
   backgroundColor?: string
@@ -53,9 +50,6 @@ export default function PopupsPage() {
     isActive: true,
     startDate: '',
     endDate: '',
-    maxShow: undefined as number | undefined,
-    targetPages: '',
-    excludePages: '',
     width: '',
     height: '',
     backgroundColor: '#ffffff',
@@ -114,7 +108,6 @@ export default function PopupsPage() {
         },
         body: JSON.stringify({
           ...formData,
-          maxShow: formData.maxShow || null,
           width: formData.width ? parseInt(formData.width) : null,
           height: formData.height ? parseInt(formData.height) : null,
           borderRadius: parseInt(formData.borderRadius),
@@ -151,9 +144,6 @@ export default function PopupsPage() {
       isActive: popup.isActive,
       startDate: popup.startDate ? popup.startDate.split('T')[0] : '',
       endDate: popup.endDate ? popup.endDate.split('T')[0] : '',
-      maxShow: popup.maxShow || undefined,
-      targetPages: popup.targetPages || '',
-      excludePages: popup.excludePages || '',
       width: popup.width?.toString() || '',
       height: popup.height?.toString() || '',
       backgroundColor: popup.backgroundColor || '#ffffff',
@@ -206,9 +196,6 @@ export default function PopupsPage() {
       isActive: true,
       startDate: '',
       endDate: '',
-      maxShow: undefined,
-      targetPages: '',
-      excludePages: '',
       width: '',
       height: '',
       backgroundColor: '#ffffff',
@@ -296,9 +283,6 @@ export default function PopupsPage() {
                     상태
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    노출 횟수
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     기간
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -329,9 +313,6 @@ export default function PopupsPage() {
                       }`}>
                         {popup.isActive ? '활성' : '비활성'}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {popup.showCount} / {popup.maxShow || '∞'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {popup.startDate && popup.endDate ? (
@@ -425,7 +406,6 @@ export default function PopupsPage() {
                         height={300}
                         placeholder="리치 텍스트 에디터 내용 (이미지, 링크 등 포함 가능)"
                       />
-                      <p className="mt-2 text-sm text-gray-500">React Quill 에디터를 사용하여 이미지, 링크, 테이블 등을 포함할 수 있습니다.</p>
                     </div>
 
                     <div className="mt-8">
@@ -467,39 +447,6 @@ export default function PopupsPage() {
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">최대 노출 횟수</label>
-                      <input
-                        type="number"
-                        min="0"
-                        value={formData.maxShow || ''}
-                        onChange={(e) => setFormData({ ...formData, maxShow: e.target.value ? parseInt(e.target.value) : undefined })}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="제한 없음"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">대상 페이지</label>
-                      <input
-                        type="text"
-                        value={formData.targetPages || ''}
-                        onChange={(e) => setFormData({ ...formData, targetPages: e.target.value })}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="예: /, /products, /reservation"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">제외 페이지</label>
-                      <input
-                        type="text"
-                        value={formData.excludePages || ''}
-                        onChange={(e) => setFormData({ ...formData, excludePages: e.target.value })}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="예: /admin, /login"
-                      />
-                    </div>
                   </div>
 
                   {/* 팝업 속성 섹션 */}
