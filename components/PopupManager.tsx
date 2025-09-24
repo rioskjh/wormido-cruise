@@ -24,6 +24,12 @@ interface Popup {
   borderColor?: string
   borderRadius?: number
   zIndex: number
+  // 에디터 및 이미지 관련 필드
+  contentHtml?: string
+  images?: string
+  // 쿠키 관련 필드
+  showDontShowToday: boolean
+  cookieExpireHours: number
   createdAt: string
   updatedAt: string
 }
@@ -31,10 +37,39 @@ interface Popup {
 export default function PopupManager() {
   const [popups, setPopups] = useState<Popup[]>([])
   const [loading, setLoading] = useState(true)
+  const [dontShowToday, setDontShowToday] = useState<{ [key: number]: boolean }>({})
   const pathname = usePathname()
 
   // 관리자 페이지에서는 팝업을 표시하지 않음
   const isAdminPage = pathname.startsWith('/admin')
+
+  // 쿠키 관련 함수들
+  const setCookie = (name: string, value: string, hours: number) => {
+    const expires = new Date()
+    expires.setTime(expires.getTime() + (hours * 60 * 60 * 1000))
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`
+  }
+
+  const getCookie = (name: string): string | null => {
+    const nameEQ = name + "="
+    const ca = document.cookie.split(';')
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i]
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length)
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length)
+    }
+    return null
+  }
+
+  const isPopupBlocked = (popupId: number): boolean => {
+    const cookieName = `popup_blocked_${popupId}`
+    return getCookie(cookieName) === 'true'
+  }
+
+  const blockPopup = (popupId: number, hours: number) => {
+    const cookieName = `popup_blocked_${popupId}`
+    setCookie(cookieName, 'true', hours)
+  }
 
   useEffect(() => {
     if (!isAdminPage) {
@@ -50,7 +85,9 @@ export default function PopupManager() {
       const data = await response.json()
       
       if (data.ok) {
-        setPopups(data.data)
+        // 쿠키로 차단된 팝업 필터링
+        const filteredPopups = data.data.filter((popup: Popup) => !isPopupBlocked(popup.id))
+        setPopups(filteredPopups)
       }
     } catch (error) {
       console.error('Failed to load popups:', error)
@@ -168,13 +205,61 @@ export default function PopupManager() {
 
               {/* 팝업 내용 */}
               <div className="text-sm leading-relaxed">
-                {popup.content}
+                {popup.contentHtml ? (
+                  <div 
+                    dangerouslySetInnerHTML={{ __html: popup.contentHtml }}
+                    className="prose prose-sm max-w-none"
+                  />
+                ) : (
+                  popup.content
+                )}
+                
+                {/* 이미지 표시 */}
+                {popup.images && (
+                  <div className="mt-3 space-y-2">
+                    {popup.images.split('\n').filter(url => url.trim()).map((imageUrl, index) => (
+                      <img
+                        key={index}
+                        src={imageUrl.trim()}
+                        alt={`팝업 이미지 ${index + 1}`}
+                        className="max-w-full h-auto rounded"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
+
+              {/* 쿠키 옵션 */}
+              {popup.showDontShowToday && (
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <label className="flex items-center space-x-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={dontShowToday[popup.id] || false}
+                      onChange={(e) => {
+                        setDontShowToday(prev => ({
+                          ...prev,
+                          [popup.id]: e.target.checked
+                        }))
+                      }}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <span>오늘 하루 이 창 보지 않기</span>
+                  </label>
+                </div>
+              )}
 
               {/* 팝업 푸터 */}
               <div className="flex justify-end mt-4 pt-3 border-t border-gray-200">
                 <button
                   onClick={() => {
+                    // "오늘 하루 보지 않기"가 체크된 경우 쿠키 설정
+                    if (dontShowToday[popup.id]) {
+                      blockPopup(popup.id, popup.cookieExpireHours)
+                    }
                     setPopups(prev => prev.filter(p => p.id !== popup.id))
                   }}
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors"

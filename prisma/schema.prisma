@@ -415,6 +415,12 @@ model Popup {
   borderColor     String?      @map("border_color")
   borderRadius    Int?         @map("border_radius")
   zIndex          Int          @default(1000) @map("z_index")
+  // 에디터 및 이미지 관련 필드
+  contentHtml     String?      @map("content_html") // HTML 에디터 내용
+  images          String?      // 이미지 URL들 (JSON 배열)
+  // 쿠키 관련 필드
+  showDontShowToday Boolean    @default(false) @map("show_dont_show_today") // "오늘 하루 보지 않기" 옵션 표시 여부
+  cookieExpireHours Int        @default(24) @map("cookie_expire_hours") // 쿠키 만료 시간 (시간)
   createdAt       DateTime     @default(now()) @map("created_at")
   updatedAt       DateTime     @updatedAt @map("updated_at")
 

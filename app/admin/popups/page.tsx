@@ -25,6 +25,12 @@ interface Popup {
   borderColor?: string
   borderRadius?: number
   zIndex: number
+  // 에디터 및 이미지 관련 필드
+  contentHtml?: string
+  images?: string
+  // 쿠키 관련 필드
+  showDontShowToday: boolean
+  cookieExpireHours: number
   createdAt: string
   updatedAt: string
 }
@@ -55,7 +61,13 @@ export default function PopupsPage() {
     textColor: '#000000',
     borderColor: '#e5e7eb',
     borderRadius: '8',
-    zIndex: '1000'
+    zIndex: '1000',
+    // 에디터 및 이미지 관련 필드
+    contentHtml: '',
+    images: '',
+    // 쿠키 관련 필드
+    showDontShowToday: false,
+    cookieExpireHours: 24
   })
 
   useEffect(() => {
@@ -147,7 +159,13 @@ export default function PopupsPage() {
       textColor: popup.textColor || '#000000',
       borderColor: popup.borderColor || '#e5e7eb',
       borderRadius: popup.borderRadius?.toString() || '8',
-      zIndex: popup.zIndex.toString()
+      zIndex: popup.zIndex.toString(),
+      // 에디터 및 이미지 관련 필드
+      contentHtml: popup.contentHtml || '',
+      images: popup.images || '',
+      // 쿠키 관련 필드
+      showDontShowToday: popup.showDontShowToday || false,
+      cookieExpireHours: popup.cookieExpireHours || 24
     })
     setShowModal(true)
   }
@@ -196,7 +214,13 @@ export default function PopupsPage() {
       textColor: '#000000',
       borderColor: '#e5e7eb',
       borderRadius: '8',
-      zIndex: '1000'
+      zIndex: '1000',
+      // 에디터 및 이미지 관련 필드
+      contentHtml: '',
+      images: '',
+      // 쿠키 관련 필드
+      showDontShowToday: false,
+      cookieExpireHours: 24
     })
   }
 
@@ -388,8 +412,32 @@ export default function PopupsPage() {
                           onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                           rows={4}
                           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          required
+                          placeholder="간단한 텍스트 내용"
                         />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">HTML 내용</label>
+                        <textarea
+                          value={formData.contentHtml}
+                          onChange={(e) => setFormData({ ...formData, contentHtml: e.target.value })}
+                          rows={6}
+                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="HTML 에디터 내용 (이미지, 링크 등 포함 가능)"
+                        />
+                        <p className="mt-1 text-sm text-gray-500">HTML 태그를 사용하여 이미지, 링크 등을 포함할 수 있습니다.</p>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">이미지 URL</label>
+                        <textarea
+                          value={formData.images}
+                          onChange={(e) => setFormData({ ...formData, images: e.target.value })}
+                          rows={3}
+                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="이미지 URL을 한 줄씩 입력하세요"
+                        />
+                        <p className="mt-1 text-sm text-gray-500">여러 이미지를 사용할 경우 한 줄씩 입력하세요.</p>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
@@ -454,6 +502,39 @@ export default function PopupsPage() {
                         <label htmlFor="isActive" className="ml-2 block text-sm text-gray-900">
                           활성화
                         </label>
+                      </div>
+
+                      {/* 쿠키 옵션 */}
+                      <div className="space-y-3 border-t pt-4">
+                        <h5 className="text-sm font-medium text-gray-900">쿠키 설정</h5>
+                        
+                        <div className="flex items-center">
+                          <input
+                            id="showDontShowToday"
+                            type="checkbox"
+                            checked={formData.showDontShowToday}
+                            onChange={(e) => setFormData({ ...formData, showDontShowToday: e.target.checked })}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <label htmlFor="showDontShowToday" className="ml-2 block text-sm text-gray-900">
+                            "오늘 하루 보지 않기" 옵션 표시
+                          </label>
+                        </div>
+
+                        {formData.showDontShowToday && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">쿠키 만료 시간 (시간)</label>
+                            <input
+                              type="number"
+                              min="1"
+                              max="168"
+                              value={formData.cookieExpireHours}
+                              onChange={(e) => setFormData({ ...formData, cookieExpireHours: parseInt(e.target.value) || 24 })}
+                              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <p className="mt-1 text-sm text-gray-500">1-168시간 (1주일) 사이로 설정하세요.</p>
+                          </div>
+                        )}
                       </div>
                     </div>
 
