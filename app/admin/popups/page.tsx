@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import AdminLayout from '@/components/AdminLayout'
 import { useToast } from '@/contexts/ToastContext'
+import TinyMCEEditor from '@/components/TinyMCEEditor'
 
 interface Popup {
   id: number
@@ -417,15 +418,14 @@ export default function PopupsPage() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">HTML 내용</label>
-                        <textarea
+                        <label className="block text-sm font-medium text-gray-700 mb-2">HTML 내용</label>
+                        <TinyMCEEditor
                           value={formData.contentHtml}
-                          onChange={(e) => setFormData({ ...formData, contentHtml: e.target.value })}
-                          rows={6}
-                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          onChange={(content) => setFormData({ ...formData, contentHtml: content })}
+                          height={300}
                           placeholder="HTML 에디터 내용 (이미지, 링크 등 포함 가능)"
                         />
-                        <p className="mt-1 text-sm text-gray-500">HTML 태그를 사용하여 이미지, 링크 등을 포함할 수 있습니다.</p>
+                        <p className="mt-2 text-sm text-gray-500">리치 텍스트 에디터를 사용하여 이미지, 링크, 테이블 등을 포함할 수 있습니다.</p>
                       </div>
 
                       <div>

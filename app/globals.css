@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* TinyMCE 에디터 스타일 */
+.tinymce-editor {
+  @apply border border-gray-300 rounded-md;
+}
+
+.tinymce-editor .tox-tinymce {
+  @apply border-0 rounded-md;
+}
+
+.tinymce-editor .tox-editor-header {
+  @apply border-b border-gray-200;
+}
+
+.tinymce-editor .tox-toolbar__primary {
+  @apply bg-gray-50;
+}
+
+.tinymce-editor .tox-edit-area__iframe {
+  @apply border-0;
+}
+
 /* Pretendard 폰트 import */
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
