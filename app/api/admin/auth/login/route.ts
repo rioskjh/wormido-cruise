@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 20 * 60, // 20분
+      maxAge: 10 * 60, // 10분
     })
 
     response.cookies.set('refreshToken', refreshToken, {

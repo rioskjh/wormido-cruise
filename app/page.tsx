@@ -154,7 +154,11 @@ export default function Home() {
                 : `/images/0279006e5653701283e6e34a07b609333312b52a.png`
               
               return (
-                <div key={product.id} className="content-stretch flex flex-col items-center justify-start relative shrink-0 w-full md:w-[380px]">
+                <Link 
+                  key={product.id} 
+                  href={`/products/${product.id}`}
+                  className="content-stretch flex flex-col items-center justify-start relative shrink-0 w-full md:w-[380px] hover:transform hover:scale-105 transition-all duration-200 cursor-pointer"
+                >
                   {/* 상품 이미지 영역 */}
                   <div className="relative rounded-tl-[10px] rounded-tr-[10px] shrink-0 w-full h-[250px]">
                     <Image
@@ -208,18 +212,15 @@ export default function Home() {
                         </div>
                         
                         {/* 예약 버튼 */}
-                        <Link 
-                          href={`/products/${product.id}`}
-                          className="box-border content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[4px] shrink-0 w-full bg-design-blue hover:bg-blue-600 transition-colors duration-200"
-                        >
+                        <div className="box-border content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[4px] shrink-0 w-full bg-design-blue hover:bg-blue-600 transition-colors duration-200">
                           <div className="font-['Pretendard:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[17px] text-center text-nowrap text-white">
                             <p className="leading-[30px] whitespace-pre">예약하기</p>
                           </div>
-                        </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               )
             })}
           </div>
