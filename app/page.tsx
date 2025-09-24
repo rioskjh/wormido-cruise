@@ -83,7 +83,7 @@ export default function Home() {
                 <div className="content-stretch flex flex-col gap-6 md:gap-[30px] h-auto md:h-[262px] items-center md:items-start justify-start relative shrink-0 w-full md:w-[427.534px] text-center md:text-left">
                   {/* 메인 타이틀 */}
                   <div className="box-border content-stretch flex gap-[10px] items-center justify-center pl-0 pr-[20px] py-[10px] relative shrink-0">
-                    <div className="font-pretendard leading-[40px] md:leading-[76px] not-italic relative shrink-0 text-[32px] md:text-[56px] text-nowrap text-white whitespace-pre" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }}>
+                    <div className="font-pretendard leading-[40px] md:leading-[76px] not-italic relative shrink-0 text-[32px] md:text-[56px] text-nowrap text-white whitespace-pre font-medium" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }}>
                       <p className="mb-0">푸른 바다 위에서</p>
                       <p>만나는 특별한 하루</p>
                     </div>

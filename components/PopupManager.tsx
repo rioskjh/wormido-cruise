@@ -213,9 +213,9 @@ export default function PopupManager() {
                 )}
               </div>
 
-              {/* 쿠키 옵션 */}
-              {popup.showDontShowToday && (
-                <div className="mt-3 pt-3 border-t border-gray-200">
+              {/* 팝업 푸터 - 체크박스와 닫기 버튼을 한 줄에 배치 */}
+              <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-200">
+                {popup.showDontShowToday ? (
                   <label className="flex items-center space-x-2 text-sm">
                     <input
                       type="checkbox"
@@ -230,11 +230,10 @@ export default function PopupManager() {
                     />
                     <span>오늘 하루 이 창 보지 않기</span>
                   </label>
-                </div>
-              )}
-
-              {/* 팝업 푸터 */}
-              <div className="flex justify-end mt-4 pt-3 border-t border-gray-200">
+                ) : (
+                  <div></div>
+                )}
+                
                 <button
                   onClick={() => {
                     // "오늘 하루 보지 않기"가 체크된 경우 쿠키 설정
@@ -245,7 +244,7 @@ export default function PopupManager() {
                   }}
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors"
                 >
-                  확인
+                  닫기
                 </button>
               </div>
             </div>

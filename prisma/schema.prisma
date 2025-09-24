@@ -73,6 +73,7 @@ model Product {
   id            Int      @id @default(autoincrement())
   name          String
   description   String?
+  detailHtml    String?  @map("detail_html") // 상품 상세정보 (HTML 에디터)
   categoryId    Int?     @map("category_id")
   category      ProductCategory? @relation(fields: [categoryId], references: [id])
   basePrice     Int      @default(0) @map("base_price")

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { useToast } from '@/contexts/ToastContext'
+import ReactQuillEditor from '@/components/ReactQuillEditor'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,6 +18,7 @@ interface Product {
   id: number
   name: string
   description: string | null
+  detailHtml: string | null
   categoryId: number | null
   category: ProductCategory | null
   basePrice: number
@@ -46,6 +48,7 @@ interface Product {
 interface ProductFormData {
   name: string
   description: string
+  detailHtml: string
   categoryId: number | null
   basePrice: number
   adultPrice: number
@@ -80,6 +83,7 @@ export default function AdminProductsPage() {
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     description: '',
+    detailHtml: '',
     categoryId: null,
     basePrice: 0,
     adultPrice: 0,
@@ -247,6 +251,7 @@ export default function AdminProductsPage() {
     setFormData({
       name: '',
       description: '',
+      detailHtml: '',
       categoryId: null,
       basePrice: 0,
       adultPrice: 0,
@@ -268,6 +273,7 @@ export default function AdminProductsPage() {
     setFormData({
       name: product.name,
       description: product.description || '',
+      detailHtml: product.detailHtml || '',
       categoryId: product.categoryId,
       basePrice: product.basePrice,
       adultPrice: product.adultPrice,
@@ -787,6 +793,18 @@ export default function AdminProductsPage() {
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      상세정보
+                    </label>
+                    <ReactQuillEditor
+                      value={formData.detailHtml}
+                      onChange={(content) => setFormData({ ...formData, detailHtml: content })}
+                      height={300}
+                      placeholder="상품 상세정보를 입력하세요 (이미지, 링크 등 포함 가능)"
                     />
                   </div>
 

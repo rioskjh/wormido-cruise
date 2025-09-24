@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic'
 const updateProductSchema = z.object({
   name: z.string().min(1, '상품명을 입력해주세요').optional(),
   description: z.string().optional(),
+  detailHtml: z.string().optional(),
   categoryId: z.number().optional(),
   basePrice: z.number().min(0, '기본 가격은 0 이상이어야 합니다').optional(),
   adultPrice: z.number().min(0, '성인 가격은 0 이상이어야 합니다').optional(),
