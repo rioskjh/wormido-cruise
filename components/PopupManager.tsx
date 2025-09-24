@@ -26,7 +26,6 @@ interface Popup {
   zIndex: number
   // 에디터 및 이미지 관련 필드
   contentHtml?: string
-  images?: string
   // 쿠키 관련 필드
   showDontShowToday: boolean
   cookieExpireHours: number
@@ -215,23 +214,6 @@ export default function PopupManager() {
                   />
                 ) : (
                   popup.content
-                )}
-                
-                {/* 이미지 표시 */}
-                {popup.images && (
-                  <div className="mt-3 space-y-2">
-                    {popup.images.split('\n').filter(url => url.trim()).map((imageUrl, index) => (
-                      <img
-                        key={index}
-                        src={imageUrl.trim()}
-                        alt={`팝업 이미지 ${index + 1}`}
-                        className="max-w-full h-auto rounded"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none'
-                        }}
-                      />
-                    ))}
-                  </div>
                 )}
               </div>
 

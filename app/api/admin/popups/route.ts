@@ -21,9 +21,8 @@ const popupSchema = z.object({
   borderColor: z.string().optional(),
   borderRadius: z.number().optional(),
   zIndex: z.number().optional(),
-  // 에디터 및 이미지 관련 필드
+  // 에디터 관련 필드
   contentHtml: z.string().optional(),
-  images: z.string().optional(),
   // 쿠키 관련 필드
   showDontShowToday: z.boolean().optional(),
   cookieExpireHours: z.number().min(1).max(168).optional()
@@ -88,9 +87,8 @@ export async function POST(request: NextRequest) {
         startDate: validatedData.startDate ? new Date(validatedData.startDate) : null,
         endDate: validatedData.endDate ? new Date(validatedData.endDate) : null,
         zIndex: validatedData.zIndex || 1000,
-        // 에디터 및 이미지 관련 필드
+        // 에디터 관련 필드
         contentHtml: validatedData.contentHtml || null,
-        images: validatedData.images || null,
         // 쿠키 관련 필드
         showDontShowToday: validatedData.showDontShowToday || false,
         cookieExpireHours: validatedData.cookieExpireHours || 24

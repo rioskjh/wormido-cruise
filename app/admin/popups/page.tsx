@@ -25,7 +25,6 @@ interface Popup {
   zIndex: number
   // 에디터 및 이미지 관련 필드
   contentHtml?: string
-  images?: string
   // 쿠키 관련 필드
   showDontShowToday: boolean
   cookieExpireHours: number
@@ -59,7 +58,6 @@ export default function PopupsPage() {
     zIndex: '1000',
     // 에디터 및 이미지 관련 필드
     contentHtml: '',
-    images: '',
     // 쿠키 관련 필드
     showDontShowToday: false,
     cookieExpireHours: 24
@@ -153,7 +151,6 @@ export default function PopupsPage() {
       zIndex: popup.zIndex.toString(),
       // 에디터 및 이미지 관련 필드
       contentHtml: popup.contentHtml || '',
-      images: popup.images || '',
       // 쿠키 관련 필드
       showDontShowToday: popup.showDontShowToday || false,
       cookieExpireHours: popup.cookieExpireHours || 24
@@ -205,7 +202,6 @@ export default function PopupsPage() {
       zIndex: '1000',
       // 에디터 및 이미지 관련 필드
       contentHtml: '',
-      images: '',
       // 쿠키 관련 필드
       showDontShowToday: false,
       cookieExpireHours: 24
@@ -408,17 +404,6 @@ export default function PopupsPage() {
                       />
                     </div>
 
-                    <div className="mt-8">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">이미지 URL</label>
-                      <textarea
-                        value={formData.images}
-                        onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-                        rows={3}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="이미지 URL을 한 줄씩 입력하세요"
-                      />
-                      <p className="mt-1 text-sm text-gray-500">여러 이미지를 사용할 경우 한 줄씩 입력하세요.</p>
-                    </div>
                   </div>
 
                   {/* 표시 정보 섹션 */}
