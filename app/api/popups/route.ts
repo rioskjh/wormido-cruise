@@ -39,25 +39,10 @@ export async function GET(request: NextRequest) {
       orderBy: { zIndex: 'asc' }
     })
 
-    // 페이지 필터링
+    // 메인 페이지에서만 팝업 노출
     const filteredPopups = popups.filter(popup => {
-      // 대상 페이지 확인
-      if (popup.targetPages) {
-        const targetPages = popup.targetPages.split(',').map(page => page.trim())
-        if (!targetPages.includes(currentPath) && !targetPages.includes('*')) {
-          return false
-        }
-      }
-
-      // 제외 페이지 확인
-      if (popup.excludePages) {
-        const excludePages = popup.excludePages.split(',').map(page => page.trim())
-        if (excludePages.includes(currentPath) || excludePages.includes('*')) {
-          return false
-        }
-      }
-
-      return true
+      // 메인 페이지(/)에서만 노출
+      return currentPath === '/'
     })
 
     // 노출 횟수 업데이트 (비동기로 처리)

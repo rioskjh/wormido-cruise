@@ -42,6 +42,9 @@ export default function PopupManager() {
 
   // 관리자 페이지에서는 팝업을 표시하지 않음
   const isAdminPage = pathname.startsWith('/admin')
+  
+  // 메인 페이지에서만 팝업을 표시
+  const isMainPage = pathname === '/'
 
   // 쿠키 관련 함수들
   const setCookie = (name: string, value: string, hours: number) => {
@@ -72,12 +75,12 @@ export default function PopupManager() {
   }
 
   useEffect(() => {
-    if (!isAdminPage) {
+    if (!isAdminPage && isMainPage) {
       loadPopups()
     } else {
       setLoading(false)
     }
-  }, [pathname, isAdminPage])
+  }, [pathname, isAdminPage, isMainPage])
 
   const loadPopups = async () => {
     try {
