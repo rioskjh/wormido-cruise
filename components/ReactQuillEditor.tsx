@@ -51,9 +51,14 @@ export default function ReactQuillEditor({
         const formData = new FormData()
         formData.append('image', file)
 
-        const token = localStorage.getItem('admin_access_token')
+        // 관리자 토큰 찾기 (여러 가능한 키 확인)
+        const token = localStorage.getItem('adminToken') || 
+                     localStorage.getItem('admin_access_token') || 
+                     localStorage.getItem('access_token') || 
+                     localStorage.getItem('admin_token')
+        
         if (!token) {
-          alert('로그인이 필요합니다.')
+          alert('관리자 로그인이 필요합니다. 페이지를 새로고침 후 다시 시도해주세요.')
           return
         }
 
