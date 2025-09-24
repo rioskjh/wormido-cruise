@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import AdminLayout from '@/components/AdminLayout'
 import { useToast } from '@/contexts/ToastContext'
-import TinyMCEEditor from '@/components/TinyMCEEditor'
+import ReactQuillEditor from '@/components/ReactQuillEditor'
 
 interface Popup {
   id: number
@@ -419,13 +419,13 @@ export default function PopupsPage() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">HTML 내용</label>
-                        <TinyMCEEditor
+                        <ReactQuillEditor
                           value={formData.contentHtml}
                           onChange={(content) => setFormData({ ...formData, contentHtml: content })}
                           height={300}
-                          placeholder="HTML 에디터 내용 (이미지, 링크 등 포함 가능)"
+                          placeholder="리치 텍스트 에디터 내용 (이미지, 링크 등 포함 가능)"
                         />
-                        <p className="mt-2 text-sm text-gray-500">리치 텍스트 에디터를 사용하여 이미지, 링크, 테이블 등을 포함할 수 있습니다.</p>
+                        <p className="mt-2 text-sm text-gray-500">React Quill 에디터를 사용하여 이미지, 링크, 테이블 등을 포함할 수 있습니다.</p>
                       </div>
 
                       <div>

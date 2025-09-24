@@ -2,24 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* TinyMCE 에디터 스타일 */
-.tinymce-editor {
+/* React Quill 에디터 스타일 */
+.react-quill-editor {
   @apply border border-gray-300 rounded-md;
 }
 
-.tinymce-editor .tox-tinymce {
-  @apply border-0 rounded-md;
+.react-quill-editor .ql-toolbar {
+  @apply border-b border-gray-200 bg-gray-50;
 }
 
-.tinymce-editor .tox-editor-header {
-  @apply border-b border-gray-200;
-}
-
-.tinymce-editor .tox-toolbar__primary {
-  @apply bg-gray-50;
-}
-
-.tinymce-editor .tox-edit-area__iframe {
+.react-quill-editor .ql-container {
   @apply border-0;
 }
 
