@@ -242,12 +242,8 @@ export default function PopupsPage() {
 
   return (
     <AdminLayout title="팝업 관리" description="사이트에 표시될 팝업을 관리할 수 있습니다.">
-      {/* 헤더 */}
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">팝업 관리</h1>
-          <p className="text-gray-600">사이트에 표시될 팝업을 생성하고 관리할 수 있습니다.</p>
-        </div>
+      {/* 새 팝업 생성 버튼 */}
+      <div className="flex justify-end mb-6">
         <button
           onClick={openModal}
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
