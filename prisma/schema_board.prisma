@@ -58,7 +58,6 @@ model Member {
   orders        Order[]
   posts         Post[]
   reservations  Reservation[]
-  refreshTokens RefreshToken[]
 
   @@map("members")
 }
@@ -279,7 +278,6 @@ model Product {
   schedules   ProductSchedule[]
   orderItems  OrderItem[]
   personTypePrices PersonTypePrice[]
-  reservations Reservation[]
 
   @@map("products")
 }

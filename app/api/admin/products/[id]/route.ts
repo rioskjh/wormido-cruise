@@ -58,15 +58,14 @@ export async function GET(
       include: {
         category: true,
         personTypePrices: true,
-        productOptions: {
+        options: {
           include: {
             values: true,
           },
         },
         _count: {
           select: {
-            reservations: true,
-            orders: true,
+            orderItems: true,
           }
         }
       },
@@ -204,8 +203,7 @@ export async function DELETE(
       include: {
         _count: {
           select: {
-            reservations: true,
-            orders: true,
+            orderItems: true,
           }
         }
       },
@@ -219,7 +217,7 @@ export async function DELETE(
     }
 
     // 예약이나 주문이 있는 경우 삭제 방지
-    if (existingProduct._count.reservations > 0 || existingProduct._count.orders > 0) {
+    if (existingProduct._count.orderItems > 0) {
       return NextResponse.json({
         ok: false,
         error: '예약이나 주문이 있는 상품은 삭제할 수 없습니다. 비활성화를 사용해주세요.',

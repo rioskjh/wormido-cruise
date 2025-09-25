@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 카테고리 목록 조회 (정렬 순서대로)
-    const categories = await prisma.productCategory.findMany({
+    const categories = await prisma.category.findMany({
       orderBy: [
         { sortOrder: 'asc' },
         { createdAt: 'asc' }
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
     const { name, description, sortOrder, isActive } = createCategorySchema.parse(body)
 
     // 카테고리명 중복 확인
-    const existingCategory = await prisma.productCategory.findFirst({
+    const existingCategory = await prisma.category.findFirst({
       where: { name }
     })
 
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 새 카테고리 생성
-    const category = await prisma.productCategory.create({
+    const category = await prisma.category.create({
       data: {
         name,
         description,

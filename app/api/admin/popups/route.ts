@@ -84,8 +84,8 @@ export async function POST(request: NextRequest) {
       data: {
         ...validatedData,
         content: '', // content 필드는 빈 문자열로 설정 (에디터만 사용)
-        startDate: (validatedData.startDate && validatedData.startDate.trim() !== '') ? new Date(validatedData.startDate) : null,
-        endDate: (validatedData.endDate && validatedData.endDate.trim() !== '') ? new Date(validatedData.endDate) : null,
+        startDate: validatedData.startDate ? new Date(validatedData.startDate) : new Date(),
+        endDate: validatedData.endDate ? new Date(validatedData.endDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30일 후
         zIndex: validatedData.zIndex || 1000,
         // 에디터 관련 필드
         contentHtml: validatedData.contentHtml || null,

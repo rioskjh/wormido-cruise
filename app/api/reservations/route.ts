@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     const product = await prisma.product.findUnique({
       where: { id: productId },
       include: {
-        productOptions: {
+        options: {
           include: {
             values: true
           }
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
       const reservation = await tx.reservation.create({
         data: {
           orderNumber,
-          memberId,
+          memberId: memberId || 1, // 기본 회원 ID (비회원 예약용)
           productId,
           customerName,
           customerPhone,

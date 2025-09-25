@@ -46,7 +46,7 @@ export async function GET(
     }
 
     // 카테고리 조회
-    const category = await prisma.productCategory.findUnique({
+    const category = await prisma.category.findUnique({
       where: { id: categoryId },
       include: {
         _count: {
@@ -116,7 +116,7 @@ export async function PUT(
     const updateData = updateCategorySchema.parse(body)
 
     // 카테고리 존재 확인
-    const existingCategory = await prisma.productCategory.findUnique({
+    const existingCategory = await prisma.category.findUnique({
       where: { id: categoryId }
     })
 
@@ -129,7 +129,7 @@ export async function PUT(
 
     // 카테고리명 중복 확인 (자기 자신 제외)
     if (updateData.name && updateData.name !== existingCategory.name) {
-      const duplicateCategory = await prisma.productCategory.findFirst({
+      const duplicateCategory = await prisma.category.findFirst({
         where: { 
           name: updateData.name,
           id: { not: categoryId }
@@ -145,7 +145,7 @@ export async function PUT(
     }
 
     // 카테고리 수정
-    const updatedCategory = await prisma.productCategory.update({
+    const updatedCategory = await prisma.category.update({
       where: { id: categoryId },
       data: updateData,
       include: {
@@ -213,7 +213,7 @@ export async function DELETE(
     }
 
     // 카테고리 존재 확인
-    const existingCategory = await prisma.productCategory.findUnique({
+    const existingCategory = await prisma.category.findUnique({
       where: { id: categoryId },
       include: {
         _count: {
@@ -240,7 +240,7 @@ export async function DELETE(
     }
 
     // 카테고리 삭제
-    await prisma.productCategory.delete({
+    await prisma.category.delete({
       where: { id: categoryId }
     })
 

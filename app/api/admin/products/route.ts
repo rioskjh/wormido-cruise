@@ -78,8 +78,7 @@ export async function GET(request: NextRequest) {
           },
           _count: {
             select: {
-              reservations: true,
-              orders: true,
+              orderItems: true,
             }
           }
         },
@@ -138,6 +137,8 @@ export async function POST(request: NextRequest) {
     // 날짜 변환
     const productData = {
       ...validatedData,
+      description: validatedData.description || '', // 기본 설명
+      categoryId: validatedData.categoryId || 1, // 기본 카테고리 ID
       startDate: validatedData.startDate ? new Date(validatedData.startDate) : null,
       endDate: validatedData.endDate ? new Date(validatedData.endDate) : null,
     }

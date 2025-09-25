@@ -43,7 +43,7 @@ export async function GET(
         images: {
           orderBy: { sortOrder: 'asc' }
         },
-        productOptions: {
+        options: {
           where: { isActive: true },
           orderBy: { sortOrder: 'asc' },
           include: {
@@ -91,7 +91,7 @@ export async function GET(
           filePath: image.filePath,
           sortOrder: image.sortOrder
         })),
-        options: product.productOptions.map(option => ({
+        options: product.options.map(option => ({
           id: option.id,
           name: option.name,
           values: option.values.map(value => ({

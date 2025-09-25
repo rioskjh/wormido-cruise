@@ -53,22 +53,22 @@ export async function GET(request: NextRequest) {
       
       // 대기 중인 예약 수
       prisma.reservation.count({
-        where: { paymentStatus: 'PENDING' }
+        where: { status: 'PENDING' }
       }),
       
       // 확정된 예약 수
       prisma.reservation.count({
-        where: { paymentStatus: 'COMPLETED' }
+        where: { status: 'CONFIRMED' }
       }),
       
       // 취소된 예약 수
       prisma.reservation.count({
-        where: { paymentStatus: 'CANCELLED' }
+        where: { status: 'CANCELLED' }
       }),
       
       // 총 매출 (확정된 예약의 총 금액)
       prisma.reservation.aggregate({
-        where: { paymentStatus: 'COMPLETED' },
+        where: { status: 'CONFIRMED' },
         _sum: { totalAmount: true }
       }),
       

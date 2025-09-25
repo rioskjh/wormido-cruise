@@ -17,16 +17,10 @@ export async function GET(request: NextRequest) {
         isActive: true,
         AND: [
           {
-            OR: [
-              { startDate: null },
-              { startDate: { lte: now } }
-            ]
+            startDate: { lte: now }
           },
           {
-            OR: [
-              { endDate: null },
-              { endDate: { gte: now } }
-            ]
+            endDate: { gte: now }
           }
         ]
       },

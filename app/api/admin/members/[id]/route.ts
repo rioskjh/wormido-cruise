@@ -62,9 +62,13 @@ export async function GET(
         },
         orders: {
           include: {
-            product: {
-              select: {
-                name: true,
+            items: {
+              include: {
+                product: {
+                  select: {
+                    name: true,
+                  }
+                }
               }
             }
           },
