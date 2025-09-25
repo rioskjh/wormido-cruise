@@ -11,6 +11,7 @@ interface Product {
   id: number
   name: string
   description: string
+  detailHtml: string | null
   basePrice: number
   adultPrice: number
   childPrice: number
@@ -447,6 +448,18 @@ export default function ProductDetailPage() {
             <h2 className="text-2xl font-bold text-gray-900 mb-6">상품 상세 정보</h2>
             
             <div className="prose max-w-none">
+              {/* 상품 상세 내용 (에디터로 작성된 내용) */}
+              {product.detailHtml && (
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">상품 상세 내용</h3>
+                  <div 
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: product.detailHtml }}
+                  />
+                </div>
+              )}
+              
+              {/* 이용 안내 */}
               <div className="bg-gray-50 p-6 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">이용 안내</h3>
                 <ul className="space-y-2 text-gray-700">

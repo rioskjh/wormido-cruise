@@ -18,13 +18,14 @@ export async function GET(
       }, { status: 400 })
     }
 
-    // 상품 정보 조회 (옵션 및 이미지 포함, detail_html 컬럼이 없으므로 select로 명시적 선택)
+    // 상품 정보 조회 (옵션 및 이미지 포함)
     const product = await prisma.product.findUnique({
       where: { id: productId },
       select: {
         id: true,
         name: true,
         description: true,
+        detailHtml: true,
         categoryId: true,
         basePrice: true,
         adultPrice: true,
@@ -75,6 +76,7 @@ export async function GET(
         id: product.id,
         name: product.name,
         description: product.description,
+        detailHtml: product.detailHtml,
         basePrice: product.basePrice,
         adultPrice: product.adultPrice,
         childPrice: product.childPrice,
