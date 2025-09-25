@@ -181,22 +181,22 @@ export default function Home() {
                   </div>
                 
                   {/* 상품 정보 영역 */}
-                  <div className="relative rounded-bl-[10px] rounded-br-[10px] shrink-0 w-full">
+                  <div className="relative rounded-bl-[10px] rounded-br-[10px] shrink-0 w-full h-[280px]">
                     <div className="absolute border border-[#dddddd] border-solid inset-0 pointer-events-none rounded-bl-[10px] rounded-br-[10px]"></div>
                     <div className="flex flex-col items-center relative size-full">
-                      <div className="box-border content-stretch flex flex-col gap-[30px] items-center justify-start px-[20px] py-[30px] relative w-full">
+                      <div className="box-border content-stretch flex flex-col gap-[30px] items-center justify-start px-[20px] py-[30px] relative w-full h-full">
                         {/* 상품 제목 */}
-                        <div className="content-stretch flex flex-col gap-[10px] items-center justify-start relative shrink-0 w-full">
+                        <div className="content-stretch flex flex-col gap-[10px] items-center justify-start relative shrink-0 w-full h-[60px]">
                           <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[20px] text-center">
                             <p className="leading-[30px] whitespace-pre">{product.name}</p>
                           </div>
-                          <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#666666] text-[14px] text-center">
-                            <p className="leading-[22px] line-clamp-2">{product.description}</p>
+                          <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#666666] text-[14px] text-center h-[44px] flex items-center justify-center">
+                            <p className="leading-[22px] line-clamp-2">{product.description || '상품 설명이 없습니다.'}</p>
                           </div>
                         </div>
                         
                         {/* 가격 정보 */}
-                        <div className="content-stretch flex flex-col gap-[15px] items-center justify-start relative shrink-0 w-full">
+                        <div className="content-stretch flex flex-col gap-[15px] items-center justify-start relative shrink-0 w-full h-[120px]">
                           <div className="flex justify-between items-center w-full">
                             <span className="font-['Pretendard:Medium',_sans-serif] text-[#222222] text-[16px]">성인</span>
                             <span className="font-['Pretendard:Bold',_sans-serif] text-[#222222] text-[16px]">{product.adultPrice.toLocaleString()}원</span>
@@ -212,7 +212,7 @@ export default function Home() {
                         </div>
                         
                         {/* 예약 버튼 */}
-                        <div className="box-border content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[4px] shrink-0 w-full bg-design-blue hover:bg-blue-600 transition-colors duration-200">
+                        <div className="box-border content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[4px] shrink-0 w-full h-[50px] bg-design-blue hover:bg-blue-600 transition-colors duration-200">
                           <div className="font-['Pretendard:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[17px] text-center text-nowrap text-white">
                             <p className="leading-[30px] whitespace-pre">예약하기</p>
                           </div>
