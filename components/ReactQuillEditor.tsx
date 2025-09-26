@@ -1,8 +1,15 @@
 'use client'
 
-import { useState, useMemo, useRef, useCallback } from 'react'
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
+
+// Quill 타입 확장
+declare global {
+  interface Window {
+    Quill: any
+  }
+}
 
 // ReactQuill을 동적으로 로드 (SSR 문제 방지)
 const ReactQuill = dynamic(() => import('react-quill'), { 
@@ -69,13 +76,19 @@ export default function ReactQuillEditor({
         const result = await response.json()
 
         if (result.ok) {
+          // Vercel Blob URL 사용 확인
+          const imageUrl = result.data.url
+          console.log('Uploaded image URL:', imageUrl) // 디버깅용
+          
           // 에디터에 이미지 삽입 - 기존 내용 유지
           const currentContent = value || ''
-          const imageHtml = `<p><img src="${result.data.url}"></p>`
+          const imageHtml = `<p><img src="${imageUrl}"></p>`
           
           // 기존 내용이 있으면 끝에 이미지 추가, 없으면 이미지만
           const newContent = currentContent ? currentContent + imageHtml : imageHtml
           onChange(newContent)
+          
+          console.log('Final content with image:', newContent) // 디버깅용
         } else {
           alert(result.error || '이미지 업로드에 실패했습니다.')
         }
@@ -87,25 +100,39 @@ export default function ReactQuillEditor({
   }, [value, onChange]) // value와 onChange를 의존성에 추가
 
   const modules = useMemo(() => ({
-    toolbar: [
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      [{ 'font': [] }],
-      [{ 'size': ['small', false, 'large', 'huge'] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'script': 'sub'}, { 'script': 'super' }],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'indent': '-1'}, { 'indent': '+1' }],
-      [{ 'direction': 'rtl' }],
-      [{ 'align': [] }],
-      ['link', 'image', 'video'],
-      ['blockquote', 'code-block'],
-      ['clean']
-    ],
+    toolbar: {
+      container: [
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+        [{ 'font': [] }],
+        [{ 'size': ['small', false, 'large', 'huge'] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'indent': '-1'}, { 'indent': '+1' }],
+        [{ 'direction': 'rtl' }],
+        [{ 'align': [] }],
+        ['link', 'image', 'video'],
+        ['blockquote', 'code-block'],
+        ['clean']
+      ],
+      handlers: {
+        image: imageHandler
+      }
+    },
     clipboard: {
       matchVisual: false,
+    },
+    imageUploader: false, // 기본 이미지 업로더 비활성화
+    imageResize: {
+      displayStyles: {
+        backgroundColor: 'black',
+        border: 'none',
+        color: 'white'
+      },
+      modules: ['Resize', 'DisplaySize', 'Toolbar']
     }
-  }), [])
+  }), [imageHandler])
 
   const formats = [
     'header', 'font', 'size',
@@ -117,9 +144,22 @@ export default function ReactQuillEditor({
     'code-block', 'script'
   ]
 
-  // 툴팁 추가를 위한 useEffect - 완전히 제거하고 다른 방법 사용
+  // ReactQuill 인스턴스 설정 및 기본 이미지 처리 비활성화
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.Quill) {
+      // ReactQuill의 기본 이미지 핸들러를 완전히 비활성화
+      const Image = window.Quill.import('formats/image')
+      Image.sanitize = function(url: string) {
+        // data: URL을 허용하지 않음
+        if (url.startsWith('data:')) {
+          return null
+        }
+        return url
+      }
+    }
+  }, [])
 
-        return (
+  return (
           <div className="react-quill-editor" style={{ minHeight: '300px', position: 'relative' }}>
             {/* HTML 소스 보기 버튼 - 우측 상단 */}
             <div className="html-source-toggle" style={{
@@ -191,6 +231,7 @@ export default function ReactQuillEditor({
                 preserveWhitespace={true}
                 bounds="self"
                 scrollingContainer="self"
+                readOnly={false}
               />
             )}
             <style jsx global>{`
@@ -331,6 +372,17 @@ export default function ReactQuillEditor({
           border: 4px solid transparent;
           border-top-color: #1f2937;
           z-index: 1000;
+        }
+        
+        /* 기본 이미지 처리 비활성화 */
+        .react-quill-editor .ql-editor img {
+          max-width: 100%;
+          height: auto;
+        }
+        
+        /* ReactQuill 기본 이미지 업로드 비활성화 */
+        .react-quill-editor .ql-editor img[src^="data:"] {
+          display: none !important;
         }
       `}</style>
     </div>
