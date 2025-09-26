@@ -4,6 +4,7 @@ import { useState, Suspense, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import ReactQuillEditor from '@/components/ReactQuillEditor'
+import { useToast } from '@/contexts/ToastContext'
 
 interface PostFormData {
   type: 'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA'
@@ -25,6 +26,7 @@ interface PostFile {
 function AdminBoardWritePageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { showSuccess, showError } = useToast()
   const [formData, setFormData] = useState<PostFormData>({
     type: 'NOTICE',
     title: '',
@@ -128,15 +130,15 @@ function AdminBoardWritePageContent() {
           await uploadFilesToPost(result.post.id)
         }
         
-        alert('게시글이 성공적으로 작성되었습니다.')
+        showSuccess('게시글 작성 완료', '게시글이 성공적으로 작성되었습니다.')
         router.push('/admin/board')
       } else {
         const error = await response.json()
-        alert(error.error || '게시글 작성에 실패했습니다.')
+        showError('게시글 작성 실패', error.error || '게시글 작성에 실패했습니다.')
       }
     } catch (error) {
       console.error('게시글 작성 오류:', error)
-      alert('게시글 작성 중 오류가 발생했습니다.')
+      showError('게시글 작성 오류', '게시글 작성 중 오류가 발생했습니다.')
     } finally {
       setLoading(false)
     }

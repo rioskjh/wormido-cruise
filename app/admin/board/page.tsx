@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
+import { useToast } from '@/contexts/ToastContext'
 
 interface Post {
   id: number
@@ -32,6 +33,7 @@ interface BoardStats {
 
 export default function AdminBoardPage() {
   const router = useRouter()
+  const { showSuccess, showError } = useToast()
   const [activeTab, setActiveTab] = useState<'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA'>('NOTICE')
   const [posts, setPosts] = useState<Post[]>([])
   const [stats, setStats] = useState<BoardStats>({
@@ -115,16 +117,16 @@ export default function AdminBoardPage() {
       })
 
       if (response.ok) {
-        alert('게시글이 삭제되었습니다.')
+        showSuccess('게시글 삭제 완료', '게시글이 삭제되었습니다.')
         fetchPosts()
         fetchStats()
       } else {
         const error = await response.json()
-        alert(error.error || '게시글 삭제에 실패했습니다.')
+        showError('게시글 삭제 실패', error.error || '게시글 삭제에 실패했습니다.')
       }
     } catch (error) {
       console.error('게시글 삭제 오류:', error)
-      alert('게시글 삭제 중 오류가 발생했습니다.')
+      showError('게시글 삭제 오류', '게시글 삭제 중 오류가 발생했습니다.')
     }
   }
 
@@ -143,15 +145,15 @@ export default function AdminBoardPage() {
       })
 
       if (response.ok) {
-        alert('공지 상태가 변경되었습니다.')
+        showSuccess('공지 상태 변경 완료', '공지 상태가 변경되었습니다.')
         fetchPosts()
       } else {
         const error = await response.json()
-        alert(error.error || '공지 상태 변경에 실패했습니다.')
+        showError('공지 상태 변경 실패', error.error || '공지 상태 변경에 실패했습니다.')
       }
     } catch (error) {
       console.error('공지 상태 변경 오류:', error)
-      alert('공지 상태 변경 중 오류가 발생했습니다.')
+      showError('공지 상태 변경 오류', '공지 상태 변경 중 오류가 발생했습니다.')
     }
   }
 

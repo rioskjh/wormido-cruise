@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import ReactQuillEditor from '@/components/ReactQuillEditor'
+import { useToast } from '@/contexts/ToastContext'
 
 interface Post {
   id: number
@@ -43,6 +44,7 @@ interface PostFile {
 export default function AdminBoardEditPage() {
   const router = useRouter()
   const params = useParams() as { id: string }
+  const { showSuccess, showError } = useToast()
   const [post, setPost] = useState<Post | null>(null)
   const [formData, setFormData] = useState<PostFormData>({
     type: 'NOTICE',
@@ -190,15 +192,15 @@ export default function AdminBoardEditPage() {
           await uploadFilesToPost(parseInt(params.id))
         }
         
-        alert('게시글이 성공적으로 수정되었습니다.')
+        showSuccess('게시글 수정 완료', '게시글이 성공적으로 수정되었습니다.')
         router.push('/admin/board')
       } else {
         const error = await response.json()
-        alert(error.error || '게시글 수정에 실패했습니다.')
+        showError('게시글 수정 실패', error.error || '게시글 수정에 실패했습니다.')
       }
     } catch (error) {
       console.error('게시글 수정 오류:', error)
-      alert('게시글 수정 중 오류가 발생했습니다.')
+      showError('게시글 수정 오류', '게시글 수정 중 오류가 발생했습니다.')
     } finally {
       setSaving(false)
     }
@@ -291,13 +293,13 @@ export default function AdminBoardEditPage() {
 
       if (response.ok) {
         setExistingFiles(prev => prev.filter(file => file.id !== fileId))
-        alert('첨부파일이 삭제되었습니다.')
+        showSuccess('첨부파일 삭제 완료', '첨부파일이 삭제되었습니다.')
       } else {
-        alert('첨부파일 삭제에 실패했습니다.')
+        showError('첨부파일 삭제 실패', '첨부파일 삭제에 실패했습니다.')
       }
     } catch (error) {
       console.error('파일 삭제 오류:', error)
-      alert('첨부파일 삭제 중 오류가 발생했습니다.')
+      showError('첨부파일 삭제 오류', '첨부파일 삭제 중 오류가 발생했습니다.')
     }
   }
 
