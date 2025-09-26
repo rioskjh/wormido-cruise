@@ -33,6 +33,13 @@ interface PostFormData {
   qnaPassword: string
 }
 
+interface PostFile {
+  id: number
+  filename: string
+  size: number
+  url: string
+}
+
 export default function AdminBoardEditPage() {
   const router = useRouter()
   const params = useParams()
@@ -49,6 +56,9 @@ export default function AdminBoardEditPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [uploadingFiles, setUploadingFiles] = useState<boolean[]>([])
+  const [uploadedFiles, setUploadedFiles] = useState<PostFile[]>([])
+  const [existingFiles, setExistingFiles] = useState<PostFile[]>([])
 
   const boardTypes = [
     { key: 'NOTICE', name: '공지사항', icon: '📢', description: '중요한 공지사항을 작성합니다.' },
@@ -90,6 +100,16 @@ export default function AdminBoardEditPage() {
           authorName: postData.authorName || '',
           qnaPassword: '' // 비밀번호는 다시 입력받음
         })
+
+        // 기존 첨부파일 로드
+        if (postData.files && postData.files.length > 0) {
+          setExistingFiles(postData.files.map((file: any) => ({
+            id: file.id,
+            filename: file.filename,
+            size: file.size,
+            url: file.url
+          })))
+        }
       } else {
         const error = await response.json()
         alert(error.error || '게시글을 불러올 수 없습니다.')
@@ -164,6 +184,11 @@ export default function AdminBoardEditPage() {
       })
 
       if (response.ok) {
+        // 새로 추가된 첨부파일이 있으면 업로드
+        if (uploadedFiles.length > 0) {
+          await uploadFilesToPost(parseInt(params.id as string))
+        }
+        
         alert('게시글이 성공적으로 수정되었습니다.')
         router.push('/admin/board')
       } else {
@@ -191,6 +216,96 @@ export default function AdminBoardEditPage() {
         [field]: ''
       }))
     }
+  }
+
+  const handleFileUpload = async (files: FileList) => {
+    const fileArray = Array.from(files)
+    
+    // 파일 개수 제한 (최대 5개)
+    if (existingFiles.length + uploadedFiles.length + fileArray.length > 5) {
+      alert('첨부파일은 최대 5개까지 업로드할 수 있습니다.')
+      return
+    }
+
+    // 파일 크기 검증 (5MB 제한)
+    for (const file of fileArray) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert(`${file.name} 파일의 크기가 5MB를 초과합니다.`)
+        return
+      }
+    }
+
+    // 임시로 파일 정보 저장 (게시글 수정 후 실제 업로드)
+    const newFiles: PostFile[] = fileArray.map((file, index) => ({
+      id: Date.now() + index, // 임시 ID
+      filename: file.name,
+      size: file.size,
+      url: URL.createObjectURL(file)
+    }))
+
+    setUploadedFiles(prev => [...prev, ...newFiles])
+  }
+
+  const uploadFilesToPost = async (postId: number) => {
+    const token = localStorage.getItem('adminToken')
+    
+    for (const file of uploadedFiles) {
+      try {
+        // 임시 URL에서 실제 파일 가져오기
+        const response = await fetch(file.url)
+        const blob = await response.blob()
+        const actualFile = new File([blob], file.filename, { type: blob.type })
+
+        const formData = new FormData()
+        formData.append('file', actualFile)
+
+        await fetch(`/api/admin/posts/${postId}/files`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        })
+      } catch (error) {
+        console.error('파일 업로드 오류:', error)
+      }
+    }
+  }
+
+  const removeNewFile = (index: number) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index))
+  }
+
+  const removeExistingFile = async (fileId: number) => {
+    if (!confirm('첨부파일을 삭제하시겠습니까?')) return
+
+    try {
+      const token = localStorage.getItem('adminToken')
+      const response = await fetch(`/api/admin/posts/${params.id}/files/${fileId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        setExistingFiles(prev => prev.filter(file => file.id !== fileId))
+        alert('첨부파일이 삭제되었습니다.')
+      } else {
+        alert('첨부파일 삭제에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('파일 삭제 오류:', error)
+      alert('첨부파일 삭제 중 오류가 발생했습니다.')
+    }
+  }
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
 
   if (loading) {
@@ -315,6 +430,111 @@ export default function AdminBoardEditPage() {
               </div>
               {errors.content && <p className="mt-1 text-sm text-red-600">{errors.content}</p>}
             </div>
+
+            {/* 첨부파일 */}
+            {(formData.type === 'NOTICE' || formData.type === 'EVENT' || formData.type === 'REVIEW' || formData.type === 'QNA') && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  첨부파일 (최대 5개, 파일당 5MB)
+                </label>
+                
+                {/* 기존 첨부파일 */}
+                {existingFiles.length > 0 && (
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">기존 첨부파일</h4>
+                    <div className="space-y-2">
+                      {existingFiles.map((file) => (
+                        <div key={file.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                          <div className="flex items-center">
+                            <svg className="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">{file.filename}</p>
+                              <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <a
+                              href={file.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500 hover:text-blue-700 p-1"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                            </a>
+                            <button
+                              type="button"
+                              onClick={() => removeExistingFile(file.id)}
+                              className="text-red-500 hover:text-red-700 p-1"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 새 파일 업로드 */}
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                  <input
+                    type="file"
+                    multiple
+                    onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
+                    className="hidden"
+                    id="file-upload-edit"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar,.7z,.jpg,.jpeg,.png,.gif"
+                  />
+                  <label
+                    htmlFor="file-upload-edit"
+                    className="cursor-pointer flex flex-col items-center justify-center text-gray-500 hover:text-gray-700"
+                  >
+                    <svg className="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <span className="text-sm">파일을 선택하거나 여기에 드래그하세요</span>
+                    <span className="text-xs text-gray-400 mt-1">PDF, DOC, XLS, PPT, TXT, ZIP, 이미지 파일</span>
+                  </label>
+                </div>
+                
+                {/* 새로 업로드된 파일 목록 */}
+                {uploadedFiles.length > 0 && (
+                  <div className="mt-4">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">새로 추가할 파일</h4>
+                    <div className="space-y-2">
+                      {uploadedFiles.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
+                          <div className="flex items-center">
+                            <svg className="w-5 h-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">{file.filename}</p>
+                              <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeNewFile(index)}
+                            className="text-red-500 hover:text-red-700 p-1"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* 옵션 */}
             <div className="space-y-4">
