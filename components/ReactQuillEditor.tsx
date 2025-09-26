@@ -86,48 +86,25 @@ export default function ReactQuillEditor({
   }, [value, onChange]) // value와 onChange를 의존성에 추가
 
   const modules = useMemo(() => ({
-    toolbar: {
-      container: [
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-        [{ 'font': [] }],
-        [{ 'size': ['small', false, 'large', 'huge'] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ 'color': [] }, { 'background': [] }],
-        [{ 'script': 'sub'}, { 'script': 'super' }],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        [{ 'indent': '-1'}, { 'indent': '+1' }],
-        [{ 'direction': 'rtl' }],
-        [{ 'align': [] }],
-        ['link', 'image', 'video'],
-        ['blockquote', 'code-block'],
-        ['clean']
-      ],
-      handlers: {
-        image: imageHandler
-      }
-    },
+    toolbar: [
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'font': [] }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'indent': '-1'}, { 'indent': '+1' }],
+      [{ 'direction': 'rtl' }],
+      [{ 'align': [] }],
+      ['link', 'image', 'video'],
+      ['blockquote', 'code-block'],
+      ['clean']
+    ],
     clipboard: {
       matchVisual: false,
-    },
-    keyboard: {
-      bindings: {
-        // 기본 키보드 바인딩 유지
-        tab: {
-          key: 9,
-          handler: function(range: any, context: any) {
-            return true; // 기본 탭 동작 허용
-          }
-        },
-        // Enter 키 바인딩
-        enter: {
-          key: 13,
-          handler: function(range: any, context: any) {
-            return true; // 기본 Enter 동작 허용
-          }
-        }
-      }
     }
-  }), [imageHandler])
+  }), [])
 
   const formats = [
     'header', 'font', 'size',
@@ -142,7 +119,7 @@ export default function ReactQuillEditor({
   // 툴팁 추가를 위한 useEffect - 완전히 제거하고 다른 방법 사용
 
   return (
-    <div className="react-quill-editor">
+    <div className="react-quill-editor" style={{ minHeight: '300px' }}>
       <ReactQuill
         theme="snow"
         value={value}
@@ -150,49 +127,38 @@ export default function ReactQuillEditor({
         modules={modules}
         formats={formats}
         placeholder={placeholder}
-        style={{ height: 'auto' }}
-        onFocus={() => {
-          // 포커스 시 안전한 선택 영역 설정
-          setTimeout(() => {
-            try {
-              const editor = document.querySelector('.ql-editor') as HTMLElement
-              if (editor) {
-                // 기존 선택 영역 제거
-                const selection = window.getSelection()
-                if (selection) {
-                  selection.removeAllRanges()
-                }
-                editor.focus()
-              }
-            } catch (error) {
-              // 에러 무시
-            }
-          }, 0)
+        style={{ 
+          height: 'auto',
+          minHeight: '300px'
         }}
-        onBlur={() => {
-          // 블러 시 선택 영역 정리
-          try {
-            const selection = window.getSelection()
-            if (selection) {
-              selection.removeAllRanges()
-            }
-          } catch (error) {
-            // 에러 무시
-          }
-        }}
+        preserveWhitespace={true}
+        bounds="self"
+        scrollingContainer="self"
       />
       <style jsx global>{`
+        .react-quill-editor {
+          min-height: 300px !important;
+          height: auto !important;
+        }
+        .react-quill-editor .ql-container {
+          min-height: 250px !important;
+          height: auto !important;
+          overflow: visible !important;
+          border-bottom-left-radius: 0.375rem;
+          border-bottom-right-radius: 0.375rem;
+        }
         .react-quill-editor .ql-editor {
-          min-height: 200px;
+          min-height: 250px !important;
           height: auto !important;
           font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           font-size: 14px;
           line-height: 1.6;
           overflow: visible !important;
+          padding: 12px 15px !important;
         }
-        .react-quill-editor .ql-container {
-          height: auto !important;
-          overflow: visible !important;
+        .react-quill-editor .ql-editor.ql-blank::before {
+          font-style: normal;
+          color: #9ca3af;
         }
         .react-quill-editor .ql-toolbar {
           border-color: #d1d5db;
