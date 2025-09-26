@@ -51,12 +51,22 @@ export async function GET(request: NextRequest) {
       ]
     }
 
-    // 정렬 조건
-    let orderBy: any = { createdAt: 'desc' }
+    // 정렬 조건 - 공지사항 우선, 그 다음 일반 정렬
+    let orderBy: any = [
+      { isNotice: 'desc' }, // 공지사항 먼저
+      { createdAt: 'desc' }  // 그 다음 최신순
+    ]
+    
     if (sort === 'views') {
-      orderBy = { views: 'desc' }
+      orderBy = [
+        { isNotice: 'desc' }, // 공지사항 먼저
+        { views: 'desc' }     // 그 다음 조회수순
+      ]
     } else if (sort === 'title') {
-      orderBy = { title: 'asc' }
+      orderBy = [
+        { isNotice: 'desc' }, // 공지사항 먼저
+        { title: 'asc' }      // 그 다음 제목순
+      ]
     }
 
     const posts = await prisma.post.findMany({
