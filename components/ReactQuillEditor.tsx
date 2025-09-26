@@ -97,8 +97,9 @@ export default function ReactQuillEditor({
             quillInstance.setSelection(index + 1)
           } else {
             // Quill 인스턴스를 찾을 수 없는 경우 직접 HTML 삽입
-            const currentContent = value
-            const newContent = currentContent + `<img src="${result.data.url}" alt="업로드된 이미지" style="max-width: 100%; height: auto;" />`
+            // 기존 내용을 유지하면서 이미지 추가
+            const currentContent = value || ''
+            const newContent = currentContent + `<p><img src="${result.data.url}" alt="업로드된 이미지" style="max-width: 100%; height: auto;" /></p>`
             onChange(newContent)
           }
         } else {

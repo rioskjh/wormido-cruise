@@ -323,7 +323,24 @@ function AdminBoardWritePageContent() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   첨부파일 (최대 5개, 파일당 5MB)
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                <div 
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-6"
+                  onDrop={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                      handleFileUpload(e.dataTransfer.files)
+                    }
+                  }}
+                  onDragOver={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                  }}
+                  onDragEnter={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                  }}
+                >
                   <input
                     type="file"
                     multiple

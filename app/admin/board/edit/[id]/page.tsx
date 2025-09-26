@@ -482,7 +482,24 @@ export default function AdminBoardEditPage() {
                 )}
 
                 {/* 새 파일 업로드 */}
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                <div 
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-6"
+                  onDrop={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                      handleFileUpload(e.dataTransfer.files)
+                    }
+                  }}
+                  onDragOver={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                  }}
+                  onDragEnter={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                  }}
+                >
                   <input
                     type="file"
                     multiple
