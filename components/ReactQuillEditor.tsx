@@ -71,7 +71,7 @@ export default function ReactQuillEditor({
         if (result.ok) {
           // 에디터에 이미지 삽입 - 기존 내용 유지
           const currentContent = value || ''
-          const imageHtml = `<p><img src="${result.data.url}" alt="업로드된 이미지" style="max-width: 100%; height: auto;" /></p>`
+          const imageHtml = `<p><img src="${result.data.url}"></p>`
           
           // 기존 내용이 있으면 끝에 이미지 추가, 없으면 이미지만
           const newContent = currentContent ? currentContent + imageHtml : imageHtml
