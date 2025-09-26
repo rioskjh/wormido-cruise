@@ -185,6 +185,29 @@ export default function ReactQuillEditor({
     }
   }, [])
 
+  // 에디터 상태 모니터링 및 복구
+  useEffect(() => {
+    const checkEditorState = () => {
+      const editorElement = document.querySelector('.react-quill-editor .ql-editor')
+      if (editorElement) {
+        // 에디터가 존재하는지 확인
+        const hasContent = editorElement.innerHTML.trim() !== ''
+        const hasPlaceholder = editorElement.classList.contains('ql-blank')
+        
+        // 에디터가 비어있고 placeholder도 없는 경우 복구
+        if (!hasContent && !hasPlaceholder) {
+          console.log('에디터 상태 복구 중...')
+          editorElement.classList.add('ql-blank')
+        }
+      }
+    }
+
+    // 주기적으로 에디터 상태 확인
+    const interval = setInterval(checkEditorState, 1000)
+    
+    return () => clearInterval(interval)
+  }, [value])
+
   return (
           <div className="react-quill-editor" style={{ minHeight: '300px', position: 'relative' }}>
             {/* HTML 소스 보기 버튼 - 우측 상단 */}
@@ -258,6 +281,14 @@ export default function ReactQuillEditor({
                 bounds="self"
                 scrollingContainer="self"
                 readOnly={false}
+                onFocus={() => {
+                  // 포커스 시 에디터 상태 유지
+                  console.log('ReactQuill focused')
+                }}
+                onBlur={() => {
+                  // 블러 시에도 에디터 상태 유지
+                  console.log('ReactQuill blurred')
+                }}
               />
             )}
             <style jsx global>{`
@@ -272,6 +303,7 @@ export default function ReactQuillEditor({
           overflow: visible !important;
           border-bottom-left-radius: 0.375rem;
           border-bottom-right-radius: 0.375rem;
+          position: relative !important;
         }
         .react-quill-editor .ql-editor {
           min-height: 250px !important;
@@ -281,10 +313,18 @@ export default function ReactQuillEditor({
           line-height: 1.6;
           overflow: visible !important;
           padding: 12px 15px !important;
+          position: relative !important;
+          display: block !important;
+        }
+        .react-quill-editor .ql-editor:focus {
+          outline: none !important;
+          border: none !important;
         }
         .react-quill-editor .ql-editor.ql-blank::before {
           font-style: normal;
           color: #9ca3af;
+          position: absolute !important;
+          pointer-events: none !important;
         }
         
         /* HTML 소스 보기 스타일 */
