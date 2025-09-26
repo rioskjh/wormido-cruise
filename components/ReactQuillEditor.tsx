@@ -108,6 +108,17 @@ export default function ReactQuillEditor({
     },
     clipboard: {
       matchVisual: false,
+    },
+    keyboard: {
+      bindings: {
+        // 기본 키보드 바인딩 유지
+        tab: {
+          key: 9,
+          handler: function(range: any, context: any) {
+            return true; // 기본 탭 동작 허용
+          }
+        }
+      }
     }
   }), [imageHandler])
 
@@ -133,6 +144,19 @@ export default function ReactQuillEditor({
         formats={formats}
         placeholder={placeholder}
         style={{ height: 'auto' }}
+        onFocus={() => {
+          // 포커스 시 안전한 선택 영역 설정
+          setTimeout(() => {
+            try {
+              const editor = document.querySelector('.ql-editor') as HTMLElement
+              if (editor) {
+                editor.focus()
+              }
+            } catch (error) {
+              // 에러 무시
+            }
+          }, 0)
+        }}
       />
       <style jsx global>{`
         .react-quill-editor .ql-editor {
