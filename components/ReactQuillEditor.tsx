@@ -24,6 +24,7 @@ export default function ReactQuillEditor({
   placeholder = '내용을 입력하세요...'
 }: ReactQuillEditorProps) {
   const [quillInstance, setQuillInstance] = useState<any>(null)
+  const [showHtmlSource, setShowHtmlSource] = useState(false)
 
   // 이미지 업로드 핸들러
   const imageHandler = useCallback(() => {
@@ -120,21 +121,74 @@ export default function ReactQuillEditor({
 
   return (
     <div className="react-quill-editor" style={{ minHeight: '300px' }}>
-      <ReactQuill
-        theme="snow"
-        value={value}
-        onChange={onChange}
-        modules={modules}
-        formats={formats}
-        placeholder={placeholder}
-        style={{ 
-          height: 'auto',
-          minHeight: '300px'
-        }}
-        preserveWhitespace={true}
-        bounds="self"
-        scrollingContainer="self"
-      />
+      {/* HTML 소스 보기 모드 */}
+      {showHtmlSource ? (
+        <div className="html-source-container">
+          <div className="html-source-header">
+            <span className="html-source-title">HTML 소스 코드</span>
+            <button
+              type="button"
+              onClick={() => setShowHtmlSource(false)}
+              className="html-source-close"
+            >
+              ✕
+            </button>
+          </div>
+          <textarea
+            value={value || ''}
+            onChange={(e) => onChange(e.target.value)}
+            className="html-source-textarea"
+            placeholder="HTML 코드를 직접 편집할 수 있습니다..."
+            style={{
+              width: '100%',
+              minHeight: '300px',
+              fontFamily: 'monospace',
+              fontSize: '12px',
+              padding: '12px',
+              border: '1px solid #d1d5db',
+              borderRadius: '0.375rem',
+              resize: 'vertical'
+            }}
+          />
+        </div>
+      ) : (
+        <ReactQuill
+          theme="snow"
+          value={value}
+          onChange={onChange}
+          modules={modules}
+          formats={formats}
+          placeholder={placeholder}
+          style={{ 
+            height: 'auto',
+            minHeight: '300px'
+          }}
+          preserveWhitespace={true}
+          bounds="self"
+          scrollingContainer="self"
+        />
+      )}
+      
+      {/* HTML 소스 보기 버튼 */}
+      <div className="html-source-toggle">
+        <button
+          type="button"
+          onClick={() => setShowHtmlSource(!showHtmlSource)}
+          className="html-source-button"
+          style={{
+            marginTop: '8px',
+            padding: '6px 12px',
+            fontSize: '12px',
+            backgroundColor: '#f3f4f6',
+            border: '1px solid #d1d5db',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            color: '#374151'
+          }}
+        >
+          {showHtmlSource ? '에디터 보기' : 'HTML 소스 보기'}
+        </button>
+      </div>
       <style jsx global>{`
         .react-quill-editor {
           min-height: 300px !important;
@@ -159,6 +213,54 @@ export default function ReactQuillEditor({
         .react-quill-editor .ql-editor.ql-blank::before {
           font-style: normal;
           color: #9ca3af;
+        }
+        
+        /* HTML 소스 보기 스타일 */
+        .html-source-container {
+          border: 1px solid #d1d5db;
+          border-radius: 0.375rem;
+          overflow: hidden;
+        }
+        
+        .html-source-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px 12px;
+          background-color: #f9fafb;
+          border-bottom: 1px solid #d1d5db;
+        }
+        
+        .html-source-title {
+          font-size: 14px;
+          font-weight: 500;
+          color: #374151;
+        }
+        
+        .html-source-close {
+          background: none;
+          border: none;
+          font-size: 16px;
+          cursor: pointer;
+          color: #6b7280;
+          padding: 2px 4px;
+          border-radius: 2px;
+        }
+        
+        .html-source-close:hover {
+          background-color: #e5e7eb;
+          color: #374151;
+        }
+        
+        .html-source-textarea {
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+          line-height: 1.5;
+          background-color: #fafafa;
+        }
+        
+        .html-source-button:hover {
+          background-color: #e5e7eb;
+          border-color: #9ca3af;
         }
         .react-quill-editor .ql-toolbar {
           border-color: #d1d5db;
