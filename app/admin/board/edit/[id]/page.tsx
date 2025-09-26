@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import ReactQuillEditor from '@/components/ReactQuillEditor'
@@ -42,7 +42,7 @@ interface PostFile {
 
 export default function AdminBoardEditPage() {
   const router = useRouter()
-  const params = useParams()
+  const params = useParams() as { id: string }
   const [post, setPost] = useState<Post | null>(null)
   const [formData, setFormData] = useState<PostFormData>({
     type: 'NOTICE',
@@ -70,13 +70,9 @@ export default function AdminBoardEditPage() {
 
   const currentBoardType = boardTypes.find(bt => bt.key === formData.type)
 
-  useEffect(() => {
-    if (params.id) {
-      fetchPost()
-    }
-  }, [params.id])
-
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
+    if (!params?.id) return
+    
     try {
       setLoading(true)
       const token = localStorage.getItem('adminToken')
@@ -122,7 +118,13 @@ export default function AdminBoardEditPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [params?.id, router])
+
+  useEffect(() => {
+    if (params?.id) {
+      fetchPost()
+    }
+  }, [params?.id, fetchPost])
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -186,7 +188,7 @@ export default function AdminBoardEditPage() {
       if (response.ok) {
         // 새로 추가된 첨부파일이 있으면 업로드
         if (uploadedFiles.length > 0) {
-          await uploadFilesToPost(parseInt(params.id as string))
+          await uploadFilesToPost(parseInt(params.id))
         }
         
         alert('게시글이 성공적으로 수정되었습니다.')
