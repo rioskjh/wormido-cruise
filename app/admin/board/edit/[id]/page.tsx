@@ -69,7 +69,12 @@ export default function AdminBoardEditPage() {
   const fetchPost = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/admin/posts/${params.id}`)
+      const token = localStorage.getItem('adminToken')
+      const response = await fetch(`/api/admin/posts/${params.id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       
       if (response.ok) {
         const data = await response.json()
@@ -148,10 +153,12 @@ export default function AdminBoardEditPage() {
         }
       }
 
+      const token = localStorage.getItem('adminToken')
       const response = await fetch(`/api/admin/posts/${params.id}`, {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(submitData)
       })

@@ -62,13 +62,18 @@ export default function AdminBoardPage() {
   const fetchPosts = async () => {
     try {
       setLoading(true)
+      const token = localStorage.getItem('adminToken')
       const params = new URLSearchParams({
         type: activeTab,
         search: searchTerm,
         sort: sortBy
       })
       
-      const response = await fetch(`/api/admin/posts?${params}`)
+      const response = await fetch(`/api/admin/posts?${params}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       if (response.ok) {
         const data = await response.json()
         setPosts(data.posts || [])
@@ -82,7 +87,12 @@ export default function AdminBoardPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('/api/admin/board/stats')
+      const token = localStorage.getItem('adminToken')
+      const response = await fetch('/api/admin/board/stats', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       if (response.ok) {
         const data = await response.json()
         setStats(data.stats || stats)
@@ -96,8 +106,12 @@ export default function AdminBoardPage() {
     if (!confirm('정말로 이 게시글을 삭제하시겠습니까?')) return
 
     try {
+      const token = localStorage.getItem('adminToken')
       const response = await fetch(`/api/admin/posts/${postId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       })
 
       if (response.ok) {
@@ -116,10 +130,12 @@ export default function AdminBoardPage() {
 
   const handleToggleNotice = async (postId: number, currentStatus: boolean) => {
     try {
+      const token = localStorage.getItem('adminToken')
       const response = await fetch(`/api/admin/posts/${postId}`, {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           isNotice: !currentStatus

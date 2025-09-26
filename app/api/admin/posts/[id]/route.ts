@@ -21,9 +21,17 @@ export async function GET(
 ) {
   try {
     // 관리자 인증 확인
-    const payload = verifyAdminToken(request)
-    if (!payload) {
-      return NextResponse.json({ ok: false, error: '인증이 필요합니다.' }, { status: 401 })
+    const token = request.headers.get('authorization')?.replace('Bearer ', '')
+    if (!token) {
+      return NextResponse.json({ ok: false, error: '인증 토큰이 필요합니다.' }, { status: 401 })
+    }
+
+    const mockRequest = new NextRequest('http://localhost', {
+      headers: { authorization: `Bearer ${token}` }
+    })
+    const admin = await verifyAdminToken(mockRequest)
+    if (!admin) {
+      return NextResponse.json({ ok: false, error: '유효하지 않은 토큰입니다.' }, { status: 401 })
     }
 
     const postId = parseInt(params.id)
@@ -69,9 +77,17 @@ export async function PATCH(
 ) {
   try {
     // 관리자 인증 확인
-    const payload = verifyAdminToken(request)
-    if (!payload) {
-      return NextResponse.json({ ok: false, error: '인증이 필요합니다.' }, { status: 401 })
+    const token = request.headers.get('authorization')?.replace('Bearer ', '')
+    if (!token) {
+      return NextResponse.json({ ok: false, error: '인증 토큰이 필요합니다.' }, { status: 401 })
+    }
+
+    const mockRequest = new NextRequest('http://localhost', {
+      headers: { authorization: `Bearer ${token}` }
+    })
+    const admin = await verifyAdminToken(mockRequest)
+    if (!admin) {
+      return NextResponse.json({ ok: false, error: '유효하지 않은 토큰입니다.' }, { status: 401 })
     }
 
     const postId = parseInt(params.id)
@@ -142,9 +158,17 @@ export async function DELETE(
 ) {
   try {
     // 관리자 인증 확인
-    const payload = verifyAdminToken(request)
-    if (!payload) {
-      return NextResponse.json({ ok: false, error: '인증이 필요합니다.' }, { status: 401 })
+    const token = request.headers.get('authorization')?.replace('Bearer ', '')
+    if (!token) {
+      return NextResponse.json({ ok: false, error: '인증 토큰이 필요합니다.' }, { status: 401 })
+    }
+
+    const mockRequest = new NextRequest('http://localhost', {
+      headers: { authorization: `Bearer ${token}` }
+    })
+    const admin = await verifyAdminToken(mockRequest)
+    if (!admin) {
+      return NextResponse.json({ ok: false, error: '유효하지 않은 토큰입니다.' }, { status: 401 })
     }
 
     const postId = parseInt(params.id)

@@ -19,9 +19,17 @@ const createPostSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     // 관리자 인증 확인
-    const payload = verifyAdminToken(request)
-    if (!payload) {
-      return NextResponse.json({ ok: false, error: '인증이 필요합니다.' }, { status: 401 })
+    const token = request.headers.get('authorization')?.replace('Bearer ', '')
+    if (!token) {
+      return NextResponse.json({ ok: false, error: '인증 토큰이 필요합니다.' }, { status: 401 })
+    }
+
+    const mockRequest = new NextRequest('http://localhost', {
+      headers: { authorization: `Bearer ${token}` }
+    })
+    const admin = await verifyAdminToken(mockRequest)
+    if (!admin) {
+      return NextResponse.json({ ok: false, error: '유효하지 않은 토큰입니다.' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -82,9 +90,17 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // 관리자 인증 확인
-    const payload = verifyAdminToken(request)
-    if (!payload) {
-      return NextResponse.json({ ok: false, error: '인증이 필요합니다.' }, { status: 401 })
+    const token = request.headers.get('authorization')?.replace('Bearer ', '')
+    if (!token) {
+      return NextResponse.json({ ok: false, error: '인증 토큰이 필요합니다.' }, { status: 401 })
+    }
+
+    const mockRequest = new NextRequest('http://localhost', {
+      headers: { authorization: `Bearer ${token}` }
+    })
+    const admin = await verifyAdminToken(mockRequest)
+    if (!admin) {
+      return NextResponse.json({ ok: false, error: '유효하지 않은 토큰입니다.' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -101,7 +117,7 @@ export async function POST(request: NextRequest) {
         contentText: contentText,
         isNotice: validatedData.isNotice,
         isSecret: validatedData.isSecret,
-        authorId: payload.id,
+        authorId: admin.id,
         authorName: validatedData.authorName,
         qnaPasswordHash: validatedData.qnaPasswordHash,
       },
