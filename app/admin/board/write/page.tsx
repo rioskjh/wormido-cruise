@@ -27,8 +27,12 @@ function AdminBoardWritePageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { showSuccess, showError } = useToast()
+  // URL 파라미터에서 타입 가져오기
+  const typeParam = searchParams.get('type') as 'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA'
+  const initialType = (typeParam && ['NOTICE', 'EVENT', 'REVIEW', 'FAQ', 'QNA'].includes(typeParam)) ? typeParam : 'NOTICE'
+  
   const [formData, setFormData] = useState<PostFormData>({
-    type: 'NOTICE',
+    type: initialType,
     title: '',
     contentHtml: '',
     isNotice: false,
@@ -52,14 +56,6 @@ function AdminBoardWritePageContent() {
 
   const currentBoardType = boardTypes.find(bt => bt.key === formData.type)
 
-  // URL 파라미터에서 타입 설정 - 초기 렌더링에서 직접 처리
-  const typeParam = searchParams.get('type') as 'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA'
-  if (typeParam && ['NOTICE', 'EVENT', 'REVIEW', 'FAQ', 'QNA'].includes(typeParam) && formData.type !== typeParam) {
-    setFormData(prev => ({
-      ...prev,
-      type: typeParam
-    }))
-  }
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}

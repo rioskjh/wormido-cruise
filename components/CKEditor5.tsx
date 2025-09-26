@@ -142,7 +142,7 @@ export default function CKEditor5({
           onClick={() => setShowHtmlSource(!showHtmlSource)}
           className="html-source-button"
           style={{
-            padding: '6px 12px',
+            padding: '3px 12px',
             fontSize: '12px',
             backgroundColor: '#f3f4f6',
             border: '1px solid #d1d5db',
