@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { useToast } from '@/contexts/ToastContext'
 
@@ -31,10 +31,16 @@ interface BoardStats {
   qnaPosts: number
 }
 
-export default function AdminBoardPage() {
+function AdminBoardPageContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { showSuccess, showError } = useToast()
-  const [activeTab, setActiveTab] = useState<'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA'>('NOTICE')
+  
+  // URL 파라미터에서 타입 가져오기
+  const typeParam = searchParams.get('type') as 'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA'
+  const initialTab = (typeParam && ['NOTICE', 'EVENT', 'REVIEW', 'FAQ', 'QNA'].includes(typeParam)) ? typeParam : 'NOTICE'
+  
+  const [activeTab, setActiveTab] = useState<'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA'>(initialTab)
   const [posts, setPosts] = useState<Post[]>([])
   const [stats, setStats] = useState<BoardStats>({
     totalPosts: 0,
@@ -365,5 +371,22 @@ export default function AdminBoardPage() {
         </div>
       </div>
     </AdminLayout>
+  )
+}
+
+export default function AdminBoardPage() {
+  return (
+    <Suspense fallback={
+      <AdminLayout title="게시판 관리" description="게시판별 게시글을 관리할 수 있습니다.">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <p className="mt-2 text-gray-600">로딩 중...</p>
+          </div>
+        </div>
+      </AdminLayout>
+    }>
+      <AdminBoardPageContent />
+    </Suspense>
   )
 }
