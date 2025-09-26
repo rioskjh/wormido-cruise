@@ -117,6 +117,13 @@ export default function ReactQuillEditor({
           handler: function(range: any, context: any) {
             return true; // 기본 탭 동작 허용
           }
+        },
+        // Enter 키 바인딩
+        enter: {
+          key: 13,
+          handler: function(range: any, context: any) {
+            return true; // 기본 Enter 동작 허용
+          }
         }
       }
     }
@@ -150,6 +157,11 @@ export default function ReactQuillEditor({
             try {
               const editor = document.querySelector('.ql-editor') as HTMLElement
               if (editor) {
+                // 기존 선택 영역 제거
+                const selection = window.getSelection()
+                if (selection) {
+                  selection.removeAllRanges()
+                }
                 editor.focus()
               }
             } catch (error) {
@@ -157,13 +169,30 @@ export default function ReactQuillEditor({
             }
           }, 0)
         }}
+        onBlur={() => {
+          // 블러 시 선택 영역 정리
+          try {
+            const selection = window.getSelection()
+            if (selection) {
+              selection.removeAllRanges()
+            }
+          } catch (error) {
+            // 에러 무시
+          }
+        }}
       />
       <style jsx global>{`
         .react-quill-editor .ql-editor {
           min-height: 200px;
+          height: auto !important;
           font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           font-size: 14px;
           line-height: 1.6;
+          overflow: visible !important;
+        }
+        .react-quill-editor .ql-container {
+          height: auto !important;
+          overflow: visible !important;
         }
         .react-quill-editor .ql-toolbar {
           border-color: #d1d5db;
