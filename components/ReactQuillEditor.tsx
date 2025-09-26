@@ -119,81 +119,86 @@ export default function ReactQuillEditor({
 
   // 툴팁 추가를 위한 useEffect - 완전히 제거하고 다른 방법 사용
 
-  return (
-    <div className="react-quill-editor" style={{ minHeight: '300px' }}>
-      {/* HTML 소스 보기 모드 */}
-      {showHtmlSource ? (
-        <div className="html-source-container">
-          <div className="html-source-header">
-            <span className="html-source-title">HTML 소스 코드</span>
-            <button
-              type="button"
-              onClick={() => setShowHtmlSource(false)}
-              className="html-source-close"
-            >
-              ✕
-            </button>
-          </div>
-          <textarea
-            value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
-            className="html-source-textarea"
-            placeholder="HTML 코드를 직접 편집할 수 있습니다..."
-            style={{
-              width: '100%',
-              minHeight: '300px',
-              fontFamily: 'monospace',
-              fontSize: '12px',
-              padding: '12px',
-              border: '1px solid #d1d5db',
-              borderRadius: '0.375rem',
-              resize: 'vertical'
-            }}
-          />
-        </div>
-      ) : (
-        <ReactQuill
-          theme="snow"
-          value={value}
-          onChange={onChange}
-          modules={modules}
-          formats={formats}
-          placeholder={placeholder}
-          style={{ 
-            height: 'auto',
-            minHeight: '300px'
-          }}
-          preserveWhitespace={true}
-          bounds="self"
-          scrollingContainer="self"
-        />
-      )}
-      
-      {/* HTML 소스 보기 버튼 */}
-      <div className="html-source-toggle">
-        <button
-          type="button"
-          onClick={() => setShowHtmlSource(!showHtmlSource)}
-          className="html-source-button"
-          style={{
-            marginTop: '8px',
-            padding: '6px 12px',
-            fontSize: '12px',
-            backgroundColor: '#f3f4f6',
-            border: '1px solid #d1d5db',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            color: '#374151'
-          }}
-        >
-          {showHtmlSource ? '에디터 보기' : 'HTML 소스 보기'}
-        </button>
-      </div>
-      <style jsx global>{`
-        .react-quill-editor {
-          min-height: 300px !important;
-          height: auto !important;
-        }
+        return (
+          <div className="react-quill-editor" style={{ minHeight: '300px', position: 'relative' }}>
+            {/* HTML 소스 보기 버튼 - 우측 상단 */}
+            <div className="html-source-toggle" style={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+              zIndex: 10
+            }}>
+              <button
+                type="button"
+                onClick={() => setShowHtmlSource(!showHtmlSource)}
+                className="html-source-button"
+                style={{
+                  padding: '6px 12px',
+                  fontSize: '12px',
+                  backgroundColor: '#f3f4f6',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  color: '#374151'
+                }}
+              >
+                {showHtmlSource ? '에디터 보기' : 'HTML 소스 보기'}
+              </button>
+            </div>
+
+            {/* HTML 소스 보기 모드 */}
+            {showHtmlSource ? (
+              <div className="html-source-container">
+                <div className="html-source-header">
+                  <span className="html-source-title">HTML 소스 코드</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowHtmlSource(false)}
+                    className="html-source-close"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <textarea
+                  value={value || ''}
+                  onChange={(e) => onChange(e.target.value)}
+                  className="html-source-textarea"
+                  placeholder="HTML 코드를 직접 편집할 수 있습니다..."
+                  style={{
+                    width: '100%',
+                    minHeight: '300px',
+                    fontFamily: 'monospace',
+                    fontSize: '12px',
+                    padding: '12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '0.375rem',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
+            ) : (
+              <ReactQuill
+                theme="snow"
+                value={value}
+                onChange={onChange}
+                modules={modules}
+                formats={formats}
+                placeholder={placeholder}
+                style={{ 
+                  height: 'auto',
+                  minHeight: '300px'
+                }}
+                preserveWhitespace={true}
+                bounds="self"
+                scrollingContainer="self"
+              />
+            )}
+            <style jsx global>{`
+              .react-quill-editor {
+                min-height: 300px !important;
+                height: auto !important;
+                border-width: 0 !important;
+              }
         .react-quill-editor .ql-container {
           min-height: 250px !important;
           height: auto !important;
