@@ -135,26 +135,45 @@ model Board {
 
 // 게시글 ?이?
 model Post {
-  id              Int      @id @default(autoincrement())
-  boardId         String
-  memberId        Int
+  id              Int       @id @default(autoincrement())
+  type            BoardType // 게시판 타입
+  boardId         String?   // 기존 호환성을 위해 nullable로 유지
+  authorId        Int?      @map("author_id") // 작성자 ID (nullable for non-member posts)
   title           String
-  content         String
-  contentHtml     String?  @map("content_html")  // CKEditor HTML
-  contentText     String?  @map("content_text")  // 검색용 텍스트
-  viewCount       Int      @default(0)
-  isNotice        Boolean  @default(false)
-  isSecret        Boolean  @default(false)       // QnA 비밀글
-  authorName      String?  @map("author_name")   // 비회원 작성자명
-  qnaPasswordHash String?  @map("qna_password_hash") // 비회원 QnA 비밀번호
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  board           Board    @relation(fields: [boardId], references: [boardId], onDelete: Cascade)
-  member          Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  content         String?   // 기존 호환성을 위해 nullable로 유지
+  contentHtml     String?   @map("content_html")  // CKEditor HTML
+  contentText     String?   @map("content_text")  // 검색용 텍스트
+  views           Int       @default(0) @map("views") // viewCount -> views로 변경
+  isNotice        Boolean   @default(false) @map("is_notice")
+  isSecret        Boolean   @default(false) @map("is_secret")       // QnA 비밀글
+  authorName      String?   @map("author_name")   // 비회원 작성자명
+  qnaPasswordHash String?   @map("qna_password_hash") // 비회원 QnA 비밀번호
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  
+  // Relations
+  author          Member?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  board           Board?    @relation(fields: [boardId], references: [boardId], onDelete: Cascade)
+  files           PostFile[] @relation("PostFiles")
   comments        Comment[]
   attachments     Attachment[]
 
   @@map("posts")
+}
+
+// 게시글 첨부파일
+model PostFile {
+  id           Int      @id @default(autoincrement())
+  postId       Int      @map("post_id")
+  storagePath  String   @map("storage_path") // 파일 저장 경로
+  filename     String   // 원본 파일명
+  size         Int      // 파일 크기 (bytes)
+  createdAt    DateTime @default(now()) @map("created_at")
+  
+  // Relations
+  post         Post     @relation("PostFiles", fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("post_files")
 }
 
 // ?이?

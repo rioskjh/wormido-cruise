@@ -50,6 +50,12 @@ export default function AdminNavigation({ onLogout }: AdminNavigationProps) {
       current: pathname === '/admin/popups'
     },
     {
+      name: '게시판 관리',
+      href: '/admin/board',
+      icon: '📝',
+      current: pathname === '/admin/board'
+    },
+    {
       name: '설정',
       href: '/admin/settings',
       icon: '⚙️',
