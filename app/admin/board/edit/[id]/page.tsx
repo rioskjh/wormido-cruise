@@ -111,12 +111,12 @@ export default function AdminBoardEditPage() {
       } else {
         const error = await response.json()
         alert(error.error || '게시글을 불러올 수 없습니다.')
-        router.push('/admin/board')
+        router.push(`/admin/board?type=${formData.type}`)
       }
     } catch (error) {
       console.error('게시글 조회 오류:', error)
       alert('게시글 조회 중 오류가 발생했습니다.')
-      router.push('/admin/board')
+      router.push(`/admin/board?type=${formData.type}`)
     } finally {
       setLoading(false)
     }
@@ -195,7 +195,7 @@ export default function AdminBoardEditPage() {
         }
         
         showSuccess('게시글 수정 완료', '게시글이 성공적으로 수정되었습니다.')
-        router.push('/admin/board')
+        router.push(`/admin/board?type=${formData.type}`)
       } else {
         const error = await response.json()
         showError('게시글 수정 실패', error.error || '게시글 수정에 실패했습니다.')
@@ -335,7 +335,7 @@ export default function AdminBoardEditPage() {
           <div className="text-center">
             <p className="text-gray-600">게시글을 찾을 수 없습니다.</p>
             <button
-              onClick={() => router.push('/admin/board')}
+              onClick={() => router.push(`/admin/board?type=${formData.type}`)}
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
             >
               목록으로 돌아가기
@@ -358,7 +358,7 @@ export default function AdminBoardEditPage() {
               </p>
             </div>
             <button
-              onClick={() => router.back()}
+              onClick={() => router.push(`/admin/board?type=${formData.type}`)}
               className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
             >
               ← 목록으로
