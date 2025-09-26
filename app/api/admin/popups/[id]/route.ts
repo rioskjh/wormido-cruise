@@ -7,9 +7,6 @@ export const runtime = 'nodejs'
 
 const popupUpdateSchema = z.object({
   title: z.string().min(1, '제목을 입력해주세요').optional(),
-  type: z.enum(['INFO', 'WARNING', 'SUCCESS', 'ERROR', 'PROMOTION', 'NOTICE']).optional(),
-  position: z.enum(['CENTER', 'TOP', 'BOTTOM', 'LEFT', 'RIGHT', 'TOP_LEFT', 'TOP_RIGHT', 'BOTTOM_LEFT', 'BOTTOM_RIGHT']).optional(),
-  size: z.enum(['SMALL', 'MEDIUM', 'LARGE', 'FULLSCREEN']).optional(),
   isActive: z.boolean().optional(),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
@@ -69,13 +66,9 @@ export async function PUT(
     
     if (validatedData.startDate && validatedData.startDate.trim() !== '') {
       updateData.startDate = new Date(validatedData.startDate)
-    } else {
-      updateData.startDate = null
     }
     if (validatedData.endDate && validatedData.endDate.trim() !== '') {
       updateData.endDate = new Date(validatedData.endDate)
-    } else {
-      updateData.endDate = null
     }
     
     // 에디터 관련 필드 처리

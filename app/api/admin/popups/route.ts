@@ -7,9 +7,6 @@ export const runtime = 'nodejs'
 
 const popupSchema = z.object({
   title: z.string().min(1, '제목을 입력해주세요'),
-  type: z.enum(['INFO', 'WARNING', 'SUCCESS', 'ERROR', 'PROMOTION', 'NOTICE']),
-  position: z.enum(['CENTER', 'TOP', 'BOTTOM', 'LEFT', 'RIGHT', 'TOP_LEFT', 'TOP_RIGHT', 'BOTTOM_LEFT', 'BOTTOM_RIGHT']),
-  size: z.enum(['SMALL', 'MEDIUM', 'LARGE', 'FULLSCREEN']),
   isActive: z.boolean(),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
