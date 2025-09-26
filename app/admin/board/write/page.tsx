@@ -50,7 +50,7 @@ function AdminBoardWritePageContent() {
 
   const currentBoardType = boardTypes.find(bt => bt.key === formData.type)
 
-  // URL 파라미터에서 타입 설정
+  // URL 파라미터에서 타입 설정 - 한 번만 실행
   useEffect(() => {
     const typeParam = searchParams.get('type') as 'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA'
     if (typeParam && ['NOTICE', 'EVENT', 'REVIEW', 'FAQ', 'QNA'].includes(typeParam)) {
@@ -59,7 +59,7 @@ function AdminBoardWritePageContent() {
         type: typeParam
       }))
     }
-  }, [searchParams])
+  }, []) // 빈 의존성 배열로 한 번만 실행
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}

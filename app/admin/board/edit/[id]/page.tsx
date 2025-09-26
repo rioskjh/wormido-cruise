@@ -124,7 +124,7 @@ export default function AdminBoardEditPage() {
     if (params?.id) {
       fetchPost()
     }
-  }, [params?.id, fetchPost])
+  }, [params?.id]) // fetchPost 의존성 제거
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
