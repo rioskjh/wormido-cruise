@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import AdminLayout from '@/components/AdminLayout'
 import { useToast } from '@/contexts/ToastContext'
-import ReactQuillEditor from '@/components/ReactQuillEditor'
+import CKEditor5 from '@/components/CKEditor5'
 
 interface Popup {
   id: number
@@ -378,7 +378,7 @@ export default function PopupsPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">HTML 내용</label>
-                      <ReactQuillEditor
+                      <CKEditor5
                         value={formData.contentHtml}
                         onChange={(content) => setFormData({ ...formData, contentHtml: content })}
                         height={300}

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { useToast } from '@/contexts/ToastContext'
-import ReactQuillEditor from '@/components/ReactQuillEditor'
+import CKEditor5 from '@/components/CKEditor5'
 
 export const dynamic = 'force-dynamic'
 
@@ -811,7 +811,7 @@ export default function AdminProductsPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       상세정보
                     </label>
-                    <ReactQuillEditor
+                    <CKEditor5
                       value={formData.detailHtml}
                       onChange={(content) => setFormData({ ...formData, detailHtml: content })}
                       height={300}

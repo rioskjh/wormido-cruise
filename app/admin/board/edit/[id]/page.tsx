@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
-import ReactQuillEditor from '@/components/ReactQuillEditor'
+import CKEditor5 from '@/components/CKEditor5'
 import { useToast } from '@/contexts/ToastContext'
 
 interface Post {
@@ -427,7 +427,7 @@ export default function AdminBoardEditPage() {
                 내용 <span className="text-red-500">*</span>
               </label>
               <div className={`border rounded-md ${errors.content ? 'border-red-500' : 'border-gray-300'}`}>
-                <ReactQuillEditor
+                <CKEditor5
                   value={formData.contentHtml}
                   onChange={(value) => handleInputChange('contentHtml', value)}
                   placeholder="내용을 입력해주세요"
