@@ -225,7 +225,7 @@ export default function ReactQuillEditor({
       
       return () => clearTimeout(timer)
     }
-  }, [isClient, value])
+  }, [isClient]) // value 의존성 제거
 
   return (
     <div className="react-quill-editor">

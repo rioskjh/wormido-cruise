@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, Suspense, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import ReactQuillEditor from '@/components/ReactQuillEditor'
@@ -26,7 +26,7 @@ function AdminBoardWritePageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [formData, setFormData] = useState<PostFormData>({
-    type: (searchParams.get('type') as 'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA') || 'NOTICE',
+    type: 'NOTICE',
     title: '',
     contentHtml: '',
     isNotice: false,
@@ -49,6 +49,17 @@ function AdminBoardWritePageContent() {
   ] as const
 
   const currentBoardType = boardTypes.find(bt => bt.key === formData.type)
+
+  // URL 파라미터에서 타입 설정
+  useEffect(() => {
+    const typeParam = searchParams.get('type') as 'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA'
+    if (typeParam && ['NOTICE', 'EVENT', 'REVIEW', 'FAQ', 'QNA'].includes(typeParam)) {
+      setFormData(prev => ({
+        ...prev,
+        type: typeParam
+      }))
+    }
+  }, [searchParams])
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
