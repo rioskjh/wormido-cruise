@@ -33,6 +33,24 @@ export default function ReactQuillEditor({
   const [quillInstance, setQuillInstance] = useState<any>(null)
   const [showHtmlSource, setShowHtmlSource] = useState(false)
 
+  // base64 이미지를 제거하는 함수
+  const removeBase64Images = (content: string): string => {
+    if (!content) return content
+    
+    // data: URL을 가진 img 태그를 제거
+    const cleanedContent = content.replace(/<img[^>]*src="data:[^"]*"[^>]*>/gi, '')
+    return cleanedContent
+  }
+
+  // onChange 핸들러 래퍼
+  const handleChange = (content: string) => {
+    const cleanedContent = removeBase64Images(content)
+    if (cleanedContent !== content) {
+      console.log('Base64 이미지가 감지되어 제거되었습니다.')
+    }
+    onChange(cleanedContent)
+  }
+
   // 이미지 업로드 핸들러
   const imageHandler = useCallback(() => {
     const input = document.createElement('input')
@@ -141,13 +159,24 @@ export default function ReactQuillEditor({
       try {
         // ReactQuill의 기본 이미지 핸들러를 완전히 비활성화
         const Image = window.Quill.import('formats/image')
-        if (Image && Image.sanitize) {
-          Image.sanitize = function(url: string) {
-            // data: URL을 허용하지 않음
-            if (url && url.startsWith('data:')) {
+        if (Image) {
+          // Image 모듈의 기본 동작을 오버라이드
+          Image.create = function(value: string) {
+            // data: URL인 경우 null 반환하여 삽입 방지
+            if (value && value.startsWith('data:')) {
               return null
             }
-            return url
+            return this.constructor.prototype.create.call(this, value)
+          }
+          
+          if (Image.sanitize) {
+            Image.sanitize = function(url: string) {
+              // data: URL을 허용하지 않음
+              if (url && url.startsWith('data:')) {
+                return null
+              }
+              return url
+            }
           }
         }
       } catch (error) {
@@ -217,7 +246,7 @@ export default function ReactQuillEditor({
               <ReactQuill
                 theme="snow"
                 value={value}
-                onChange={onChange}
+                onChange={handleChange}
                 modules={modules}
                 formats={formats}
                 placeholder={placeholder}
