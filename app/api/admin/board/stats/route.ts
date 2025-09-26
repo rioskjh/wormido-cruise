@@ -1,20 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyToken } from '@/lib/auth'
+import { verifyAdminToken } from '@/lib/admin-auth'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
     // 관리자 인증 확인
-    const token = request.cookies.get('admin-token')?.value
-    if (!token) {
-      return NextResponse.json({ ok: false, error: '인증이 필요합니다.' }, { status: 401 })
-    }
-
-    const payload = verifyToken(token)
+    const payload = verifyAdminToken(request)
     if (!payload) {
-      return NextResponse.json({ ok: false, error: '유효하지 않은 토큰입니다.' }, { status: 401 })
+      return NextResponse.json({ ok: false, error: '인증이 필요합니다.' }, { status: 401 })
     }
 
     // 게시판별 통계 조회
