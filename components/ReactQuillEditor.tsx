@@ -66,21 +66,15 @@ export default function ReactQuillEditor({
         })
 
         const result = await response.json()
-        
+
         if (result.ok) {
-          // 에디터에 이미지 삽입
-          if (quillInstance) {
-            const range = quillInstance.getSelection()
-            const index = range ? range.index : quillInstance.getLength()
-            quillInstance.insertEmbed(index, 'image', result.data.url)
-            quillInstance.setSelection(index + 1)
-          } else {
-            // Quill 인스턴스를 찾을 수 없는 경우 직접 HTML 삽입
-            // 기존 내용을 유지하면서 이미지 추가
-            const currentContent = value || ''
-            const newContent = currentContent + `<p><img src="${result.data.url}" alt="업로드된 이미지" style="max-width: 100%; height: auto;" /></p>`
-            onChange(newContent)
-          }
+          // 에디터에 이미지 삽입 - 기존 내용 유지
+          const currentContent = value || ''
+          const imageHtml = `<p><img src="${result.data.url}" alt="업로드된 이미지" style="max-width: 100%; height: auto;" /></p>`
+          
+          // 기존 내용이 있으면 끝에 이미지 추가, 없으면 이미지만
+          const newContent = currentContent ? currentContent + imageHtml : imageHtml
+          onChange(newContent)
         } else {
           alert(result.error || '이미지 업로드에 실패했습니다.')
         }
@@ -89,7 +83,7 @@ export default function ReactQuillEditor({
         alert('이미지 업로드 중 오류가 발생했습니다.')
       }
     }
-  }, []) // 의존성 배열을 비워서 한 번만 생성
+  }, [value, onChange]) // value와 onChange를 의존성에 추가
 
   const modules = useMemo(() => ({
     toolbar: {
