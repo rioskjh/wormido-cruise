@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import ReactQuillEditor from '@/components/ReactQuillEditor'
@@ -120,11 +120,10 @@ export default function AdminBoardEditPage() {
     }
   }, [params?.id, router])
 
-  useEffect(() => {
-    if (params?.id) {
-      fetchPost()
-    }
-  }, [params?.id]) // fetchPost 의존성 제거
+  // 컴포넌트 마운트 시 게시글 데이터 로드
+  if (params?.id && !post && !loading) {
+    fetchPost()
+  }
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}

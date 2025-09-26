@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
+import { useState, useMemo, useRef, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
 
@@ -23,28 +23,7 @@ export default function ReactQuillEditor({
   height = 300,
   placeholder = '내용을 입력하세요...'
 }: ReactQuillEditorProps) {
-  const [isClient, setIsClient] = useState(false)
   const [quillInstance, setQuillInstance] = useState<any>(null)
-
-  // 클라이언트 사이드에서만 에디터 렌더링
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  // 에디터 인스턴스 가져오기
-  useEffect(() => {
-    if (isClient) {
-      // DOM에서 Quill 인스턴스 찾기
-      const timer = setTimeout(() => {
-        const quillElement = document.querySelector('.ql-editor')
-        if (quillElement && (quillElement as any).__quill) {
-          setQuillInstance((quillElement as any).__quill)
-        }
-      }, 100)
-      
-      return () => clearTimeout(timer)
-    }
-  }, [isClient, value])
 
   // 이미지 업로드 핸들러
   const imageHandler = useCallback(() => {
@@ -110,7 +89,7 @@ export default function ReactQuillEditor({
         alert('이미지 업로드 중 오류가 발생했습니다.')
       }
     }
-  }, [quillInstance, value, onChange])
+  }, []) // 의존성 배열을 비워서 한 번만 생성
 
   const modules = useMemo(() => ({
     toolbar: {
@@ -148,90 +127,7 @@ export default function ReactQuillEditor({
     'code-block', 'script'
   ]
 
-  if (!isClient) {
-    return (
-      <div className="h-32 bg-gray-100 rounded-md animate-pulse flex items-center justify-center text-gray-500">
-        에디터 로딩 중...
-      </div>
-    )
-  }
-
-  // 툴팁 추가를 위한 useEffect - 한 번만 실행
-  useEffect(() => {
-    if (!isClient) return
-    
-    const addTooltips = () => {
-      const toolbarElement = document.querySelector('.react-quill-editor .ql-toolbar')
-      if (!toolbarElement) return
-      
-      const buttons = toolbarElement.querySelectorAll('button')
-      
-      buttons.forEach(button => {
-        const className = button.className
-        if (className.includes('ql-bold')) {
-          button.title = '굵게 (Ctrl+B)'
-        } else if (className.includes('ql-italic')) {
-          button.title = '기울임 (Ctrl+I)'
-        } else if (className.includes('ql-underline')) {
-          button.title = '밑줄 (Ctrl+U)'
-        } else if (className.includes('ql-strike')) {
-          button.title = '취소선'
-        } else if (className.includes('ql-header')) {
-          button.title = '제목 스타일'
-        } else if (className.includes('ql-list')) {
-          if (className.includes('ql-bullet')) {
-            button.title = '글머리 기호 목록'
-          } else if (className.includes('ql-ordered')) {
-            button.title = '번호 목록'
-          }
-        } else if (className.includes('ql-indent')) {
-          if (className.includes('ql-indent-1')) {
-            button.title = '들여쓰기'
-          } else if (className.includes('ql-indent-2')) {
-            button.title = '내어쓰기'
-          }
-        } else if (className.includes('ql-align')) {
-          button.title = '정렬'
-        } else if (className.includes('ql-color')) {
-          button.title = '글자 색상'
-        } else if (className.includes('ql-background')) {
-          button.title = '배경 색상'
-        } else if (className.includes('ql-link')) {
-          button.title = '링크 삽입'
-        } else if (className.includes('ql-image')) {
-          button.title = '이미지 삽입'
-        } else if (className.includes('ql-video')) {
-          button.title = '동영상 삽입'
-        } else if (className.includes('ql-blockquote')) {
-          button.title = '인용구'
-        } else if (className.includes('ql-code-block')) {
-          button.title = '코드 블록'
-        } else if (className.includes('ql-clean')) {
-          button.title = '서식 지우기'
-        } else if (className.includes('ql-script')) {
-          if (className.includes('ql-sub')) {
-            button.title = '아래첨자'
-          } else if (className.includes('ql-super')) {
-            button.title = '위첨자'
-          }
-        } else if (className.includes('ql-direction')) {
-          button.title = '텍스트 방향'
-        } else if (className.includes('ql-font')) {
-          button.title = '글꼴'
-        } else if (className.includes('ql-size')) {
-          button.title = '글자 크기'
-        }
-      })
-    }
-    
-    // 즉시 실행
-    addTooltips()
-    
-    // DOM이 완전히 로드된 후에도 실행
-    const timer = setTimeout(addTooltips, 100)
-    
-    return () => clearTimeout(timer)
-  }, [isClient]) // isClient만 의존성으로 사용
+  // 툴팁 추가를 위한 useEffect - 완전히 제거하고 다른 방법 사용
 
   return (
     <div className="react-quill-editor">

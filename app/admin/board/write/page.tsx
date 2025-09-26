@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense, useCallback } from 'react'
+import { useState, Suspense, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import ReactQuillEditor from '@/components/ReactQuillEditor'
@@ -50,16 +50,14 @@ function AdminBoardWritePageContent() {
 
   const currentBoardType = boardTypes.find(bt => bt.key === formData.type)
 
-  // URL 파라미터에서 타입 설정 - 한 번만 실행
-  useEffect(() => {
-    const typeParam = searchParams.get('type') as 'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA'
-    if (typeParam && ['NOTICE', 'EVENT', 'REVIEW', 'FAQ', 'QNA'].includes(typeParam)) {
-      setFormData(prev => ({
-        ...prev,
-        type: typeParam
-      }))
-    }
-  }, []) // 빈 의존성 배열로 한 번만 실행
+  // URL 파라미터에서 타입 설정 - 초기 렌더링에서 직접 처리
+  const typeParam = searchParams.get('type') as 'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA'
+  if (typeParam && ['NOTICE', 'EVENT', 'REVIEW', 'FAQ', 'QNA'].includes(typeParam) && formData.type !== typeParam) {
+    setFormData(prev => ({
+      ...prev,
+      type: typeParam
+    }))
+  }
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
