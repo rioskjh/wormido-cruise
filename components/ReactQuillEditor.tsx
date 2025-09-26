@@ -122,15 +122,6 @@ export default function ReactQuillEditor({
     },
     clipboard: {
       matchVisual: false,
-    },
-    imageUploader: false, // 기본 이미지 업로더 비활성화
-    imageResize: {
-      displayStyles: {
-        backgroundColor: 'black',
-        border: 'none',
-        color: 'white'
-      },
-      modules: ['Resize', 'DisplaySize', 'Toolbar']
     }
   }), [imageHandler])
 
@@ -147,14 +138,20 @@ export default function ReactQuillEditor({
   // ReactQuill 인스턴스 설정 및 기본 이미지 처리 비활성화
   useEffect(() => {
     if (typeof window !== 'undefined' && window.Quill) {
-      // ReactQuill의 기본 이미지 핸들러를 완전히 비활성화
-      const Image = window.Quill.import('formats/image')
-      Image.sanitize = function(url: string) {
-        // data: URL을 허용하지 않음
-        if (url.startsWith('data:')) {
-          return null
+      try {
+        // ReactQuill의 기본 이미지 핸들러를 완전히 비활성화
+        const Image = window.Quill.import('formats/image')
+        if (Image && Image.sanitize) {
+          Image.sanitize = function(url: string) {
+            // data: URL을 허용하지 않음
+            if (url && url.startsWith('data:')) {
+              return null
+            }
+            return url
+          }
         }
-        return url
+      } catch (error) {
+        console.warn('Quill Image module not available:', error)
       }
     }
   }, [])
