@@ -26,13 +26,19 @@ export default function CKEditor5({
     
     const loadCKEditor = async () => {
       try {
-        const [ckeditorModule, classicModule] = await Promise.all([
+        const [ckeditorModule, classicModule, sourceEditingModule] = await Promise.all([
           import('@ckeditor/ckeditor5-react'),
-          import('@ckeditor/ckeditor5-build-classic')
+          import('@ckeditor/ckeditor5-build-classic'),
+          import('@ckeditor/ckeditor5-source-editing')
         ])
         
         setCKEditor(() => ckeditorModule.CKEditor)
         setClassicEditor(() => classicModule.default)
+        
+        // SourceEditing 플러그인을 ClassicEditor에 추가
+        if (classicModule.default && sourceEditingModule) {
+          classicModule.default.builtinPlugins.push(sourceEditingModule as any)
+        }
       } catch (error) {
         console.error('CKEditor 로드 실패:', error)
       }
