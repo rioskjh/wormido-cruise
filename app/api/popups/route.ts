@@ -6,9 +6,6 @@ export const runtime = 'nodejs'
 // 활성 팝업 조회
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const currentPath = searchParams.get('path') || '/'
-    
     const now = new Date()
 
     // 활성 팝업 조회 (날짜 조건만 포함)
@@ -27,18 +24,10 @@ export async function GET(request: NextRequest) {
       orderBy: { zIndex: 'asc' }
     })
 
-    // 메인 페이지에서만 팝업 노출
-    const filteredPopups = popups.filter(popup => {
-      // 메인 페이지(/)에서만 노출
-      return currentPath === '/'
-    })
-
-    // 노출 횟수 업데이트는 제거 (성능 최적화)
-    // 필요시 별도 API로 분리하여 처리
-
+    // 모든 활성 팝업 반환 (클라이언트에서 필터링)
     return NextResponse.json({
       ok: true,
-      data: filteredPopups
+      data: popups
     })
 
   } catch (error) {
