@@ -3,6 +3,9 @@ import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 import { z } from 'zod'
 
+// 동적 렌더링 강제
+export const dynamic = 'force-dynamic'
+
 // 네비게이션 생성/수정 스키마
 const navigationSchema = z.object({
   title: z.string().min(1, '제목은 필수입니다'),

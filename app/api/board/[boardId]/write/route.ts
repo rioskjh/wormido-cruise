@@ -4,6 +4,9 @@ import { verifyToken } from '@/lib/auth'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 
+// 동적 렌더링 강제
+export const dynamic = 'force-dynamic'
+
 // POST: 게시글 작성
 export async function POST(
   request: NextRequest,

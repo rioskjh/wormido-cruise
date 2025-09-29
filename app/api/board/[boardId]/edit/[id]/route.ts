@@ -3,6 +3,9 @@ import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 import { z } from 'zod'
 
+// 동적 렌더링 강제
+export const dynamic = 'force-dynamic'
+
 // GET: 게시글 수정을 위한 데이터 조회
 export async function GET(
   request: NextRequest,

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
+// 동적 렌더링 강제
+export const dynamic = 'force-dynamic'
+
 // 카테고리 목록 조회 (네비게이션용)
 export async function GET(request: NextRequest) {
   try {
