@@ -123,16 +123,99 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 메인 콘텐츠 */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-design-gray mb-4 font-pretendard">
-            아름다운 월미도 바다를 즐기는 크루즈 투어
-          </h2>
-          <p className="text-lg text-design-gray-light font-pretendard">
-            특별한 추억을 만들어보세요
-          </p>
+      {/* 예약 카드 섹션 */}
+      <section className="w-full py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row gap-8 items-center justify-center max-w-6xl mx-auto">
+            {/* 승선권 예매하기 카드 */}
+            <Link 
+              href="/reservation" 
+              className="group w-full md:w-[585px] bg-white rounded-[10px] border border-[#222222] hover:border-design-blue transition-all duration-200 hover:shadow-lg"
+            >
+              <div className="flex items-center justify-between px-[50px] py-[30px]">
+                <div className="flex gap-[40px] items-center">
+                  {/* 아이콘 */}
+                  <div className="w-[44px] h-[44px] bg-design-blue rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                    </svg>
+                  </div>
+                  
+                  {/* 텍스트 */}
+                  <div className="flex flex-col gap-1">
+                    <h3 className="font-semibold text-[#222222] text-[24px] font-pretendard">
+                      승선권 예매하기
+                    </h3>
+                    <p className="font-regular text-[#444444] text-[17px] font-pretendard">
+                      원하는 일정과 좌석을 간편하게 선택
+                    </p>
+                  </div>
+                </div>
+                
+                {/* 화살표 */}
+                <div className="w-[36px] h-[36px] flex items-center justify-center">
+                  <svg className="w-6 h-6 text-[#222222] group-hover:text-design-blue transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+
+            {/* 예약확인 및 취소 카드 */}
+            <Link 
+              href="/reservation/check" 
+              className="group w-full md:w-[585px] bg-white rounded-[10px] border border-[#dddddd] hover:border-design-blue transition-all duration-200 hover:shadow-lg"
+            >
+              <div className="flex items-center justify-between px-[50px] py-[30px]">
+                <div className="flex gap-[40px] items-center">
+                  {/* 아이콘 */}
+                  <div className="w-[44px] h-[44px] bg-design-blue rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  
+                  {/* 텍스트 */}
+                  <div className="flex flex-col gap-1">
+                    <h3 className="font-semibold text-[#222222] text-[24px] font-pretendard">
+                      예약확인 및 취소
+                    </h3>
+                    <p className="font-regular text-[#444444] text-[17px] font-pretendard">
+                      예약 내역을 한눈에 확인하세요.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* 화살표 */}
+                <div className="w-[36px] h-[36px] flex items-center justify-center">
+                  <svg className="w-6 h-6 text-[#CECECE] group-hover:text-design-blue transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+          </div>
         </div>
+      </section>
+
+      {/* 상품소개 섹션 */}
+      <section className="w-full py-8">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-center mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 bg-design-blue rounded-full flex items-center justify-center">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-design-gray font-pretendard">상품소개</h2>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 메인 콘텐츠 */}
+      <div className="container mx-auto px-4 pb-8">
 
         {/* 상품 목록 */}
         {loading ? (
