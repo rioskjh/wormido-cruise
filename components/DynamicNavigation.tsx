@@ -39,7 +39,7 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
     fetchCategories()
   }, [])
 
-  // 페이지 포커스 시 데이터 새로고침
+  // 페이지 포커스 시 데이터 새로고침 및 주기적 새로고침
   useEffect(() => {
     const handleFocus = () => {
       fetchNavigations()
@@ -50,10 +50,16 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
       fetchNavigations()
     }
     
+    // 30초마다 네비게이션 데이터 새로고침 (캐시 방지)
+    const interval = setInterval(() => {
+      fetchNavigations()
+    }, 30000)
+    
     window.addEventListener('focus', handleFocus)
     window.addEventListener('navigation-refresh', handleNavigationRefresh)
     
     return () => {
+      clearInterval(interval)
       window.removeEventListener('focus', handleFocus)
       window.removeEventListener('navigation-refresh', handleNavigationRefresh)
     }
@@ -61,7 +67,9 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
 
   const fetchNavigations = async () => {
     try {
-      const response = await fetch('/api/navigations', {
+      // 타임스탬프를 쿼리 파라미터로 추가하여 캐시 방지
+      const timestamp = new Date().getTime()
+      const response = await fetch(`/api/navigations?t=${timestamp}`, {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -73,7 +81,7 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
 
       if (data.ok && Array.isArray(data.data)) {
         setNavigations(data.data)
-        console.log('네비게이션 데이터 새로고침:', data.data)
+        console.log('네비게이션 데이터 새로고침:', data.data, 'timestamp:', data.timestamp)
       } else {
         setNavigations([])
         console.warn('네비게이션 데이터가 배열이 아닙니다:', data.data)

@@ -211,6 +211,10 @@ export default function AdminNavigationEditPage({ params }: { params: { id: stri
       const data = await response.json()
 
       if (data.ok) {
+        // 사용자 페이지 네비게이션도 강제 새로고침
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('navigation-refresh'))
+        }
         router.push('/admin/navigations')
       } else {
         setError(data.error)

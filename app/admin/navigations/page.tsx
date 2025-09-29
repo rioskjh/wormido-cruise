@@ -71,6 +71,10 @@ export default function AdminNavigationsPage() {
 
       if (data.ok) {
         fetchNavigations()
+        // 사용자 페이지 네비게이션도 강제 새로고침
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('navigation-refresh'))
+        }
       } else {
         alert(data.error)
       }
@@ -95,6 +99,10 @@ export default function AdminNavigationsPage() {
 
       if (data.ok) {
         fetchNavigations()
+        // 사용자 페이지 네비게이션도 강제 새로고침
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('navigation-refresh'))
+        }
       } else {
         alert(data.error)
       }
