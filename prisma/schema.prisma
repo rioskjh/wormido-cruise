@@ -127,6 +127,7 @@ model Board {
   skin        String    @default("default")
   useComment  Boolean   @default(true)
   useUpload   Boolean   @default(false)
+  isAdminOnly Boolean   @default(false) @map("is_admin_only") // 관리자 전용 게시판 여부
   createdAt   DateTime  @default(now())
   posts       Post[]
 

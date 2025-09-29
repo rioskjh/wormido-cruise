@@ -368,12 +368,30 @@ export default function AdminNavigationsPage() {
 
           await Promise.all(updatePromises)
           
-          // 사용자 페이지 네비게이션도 강제 새로고침
+          // 사용자 페이지 네비게이션 강제 새로고침 (다중 방법)
           if (typeof window !== 'undefined') {
+            // 1. 커스텀 이벤트 발생
             window.dispatchEvent(new Event('navigation-refresh'))
+            
+            // 2. 전역 이벤트 발생 (다른 탭에서도 동기화)
+            window.dispatchEvent(new CustomEvent('navigation-order-updated', {
+              detail: { 
+                timestamp: new Date().toISOString(),
+                updatedCount: newNavigations.length 
+              }
+            }))
+            
+            // 3. 약간의 지연 후 추가 새로고침 (서버 반영 시간 고려)
+            setTimeout(() => {
+              window.dispatchEvent(new Event('navigation-refresh'))
+              console.log('지연된 네비게이션 새로고침 실행')
+            }, 500)
+            
+            // 4. localStorage에 타임스탬프 저장 (다른 컴포넌트에서 확인 가능)
+            localStorage.setItem('navigation-last-updated', new Date().toISOString())
           }
           
-          console.log('네비게이션 순서가 업데이트되었습니다.')
+          console.log('네비게이션 순서가 업데이트되었습니다. 사용자 페이지 동기화 완료.')
         } catch (error) {
           console.error('네비게이션 순서 업데이트 오류:', error)
           // 실패 시 원래 상태로 복원

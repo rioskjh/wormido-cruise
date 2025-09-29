@@ -50,6 +50,26 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
       fetchNavigations()
     }
     
+    const handleNavigationOrderUpdated = (event: CustomEvent) => {
+      console.log('네비게이션 순서 업데이트 이벤트 수신:', event.detail)
+      // 즉시 새로고침
+      fetchNavigations()
+      
+      // 추가로 약간의 지연 후 한 번 더 새로고침 (서버 반영 시간 고려)
+      setTimeout(() => {
+        fetchNavigations()
+        console.log('지연된 네비게이션 새로고침 (사용자 페이지)')
+      }, 1000)
+    }
+    
+    // localStorage 변경 감지 (다른 탭에서의 업데이트)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'navigation-last-updated' && e.newValue) {
+        console.log('다른 탭에서 네비게이션 업데이트 감지:', e.newValue)
+        fetchNavigations()
+      }
+    }
+    
     // 30초마다 네비게이션 데이터 새로고침 (캐시 방지)
     const interval = setInterval(() => {
       fetchNavigations()
@@ -57,31 +77,42 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
     
     window.addEventListener('focus', handleFocus)
     window.addEventListener('navigation-refresh', handleNavigationRefresh)
+    window.addEventListener('navigation-order-updated', handleNavigationOrderUpdated as EventListener)
+    window.addEventListener('storage', handleStorageChange)
     
     return () => {
       clearInterval(interval)
       window.removeEventListener('focus', handleFocus)
       window.removeEventListener('navigation-refresh', handleNavigationRefresh)
+      window.removeEventListener('navigation-order-updated', handleNavigationOrderUpdated as EventListener)
+      window.removeEventListener('storage', handleStorageChange)
     }
   }, [])
 
   const fetchNavigations = async () => {
     try {
-      // 타임스탬프를 쿼리 파라미터로 추가하여 캐시 방지
+      // 강력한 캐시 방지를 위한 다중 파라미터
       const timestamp = new Date().getTime()
-      const response = await fetch(`/api/navigations?t=${timestamp}`, {
+      const random = Math.random().toString(36).substring(7)
+      const response = await fetch(`/api/navigations?t=${timestamp}&r=${random}&v=${Date.now()}`, {
         cache: 'no-store',
         headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
           'Pragma': 'no-cache',
-          'Expires': '0'
+          'Expires': '0',
+          'If-Modified-Since': '0',
+          'If-None-Match': '*'
         }
       })
       const data = await response.json()
 
       if (data.ok && Array.isArray(data.data)) {
         setNavigations(data.data)
-        console.log('네비게이션 데이터 새로고침:', data.data, 'timestamp:', data.timestamp)
+        console.log('네비게이션 데이터 새로고침 완료:', {
+          count: data.data.length,
+          timestamp: data.timestamp,
+          fetchTime: new Date().toISOString()
+        })
       } else {
         setNavigations([])
         console.warn('네비게이션 데이터가 배열이 아닙니다:', data.data)

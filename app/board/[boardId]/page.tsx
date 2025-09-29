@@ -18,7 +18,17 @@ interface Post {
   }
 }
 
+interface Board {
+  id: number
+  boardId: string
+  title: string
+  description: string | null
+  type: string
+  isAdminOnly: boolean
+}
+
 interface BoardData {
+  board: Board
   posts: Post[]
   pagination: {
     page: number
@@ -39,24 +49,11 @@ export default function BoardPage() {
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
 
-  // 게시판 정보
-  const boardInfo = {
-    notice: { title: '공지사항', description: '월미도 크루즈의 주요 공지사항을 확인하세요.' },
-    event: { title: '이벤트', description: '다양한 이벤트와 혜택을 만나보세요.' },
-    review: { title: '리뷰', description: '고객님들의 생생한 후기를 확인하세요.' },
-    faq: { title: 'FAQ', description: '자주 묻는 질문과 답변을 확인하세요.' },
-    qna: { title: 'Q&A', description: '궁금한 점을 질문하고 답변을 받아보세요.' }
-  }
-
-  const currentBoard = boardInfo[boardId as keyof typeof boardInfo]
+  // API에서 받은 게시판 정보 사용
+  const currentBoard = boardData?.board
 
   useEffect(() => {
-    if (currentBoard) {
-      fetchPosts()
-    } else {
-      setError('존재하지 않는 게시판입니다.')
-      setLoading(false)
-    }
+    fetchPosts()
   }, [boardId, currentPage, search])
 
   const fetchPosts = async () => {
@@ -120,8 +117,8 @@ export default function BoardPage() {
         <div className="container mx-auto px-4">
         {/* 게시판 헤더 */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{currentBoard.title}</h1>
-          <p className="text-gray-600">{currentBoard.description}</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{currentBoard?.title || '게시판'}</h1>
+          <p className="text-gray-600">{currentBoard?.description || ''}</p>
         </div>
 
         {/* 검색 및 작성 버튼 */}
@@ -143,12 +140,15 @@ export default function BoardPage() {
               </button>
             </form>
             
-            <Link
-              href={`/board/${boardId}/write`}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
-              글쓰기
-            </Link>
+            {/* 관리자 전용 게시판이 아닌 경우에만 글쓰기 버튼 표시 */}
+            {currentBoard && !currentBoard.isAdminOnly && (
+              <Link
+                href={`/board/${boardId}/write`}
+                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                글쓰기
+              </Link>
+            )}
           </div>
         </div>
 

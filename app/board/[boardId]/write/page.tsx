@@ -6,28 +6,56 @@ import Link from 'next/link'
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
 
+interface Board {
+  id: number
+  boardId: string
+  title: string
+  description: string | null
+  type: string
+  isAdminOnly: boolean
+}
+
 export default function BoardWritePage() {
   const params = useParams()
   const router = useRouter()
   const boardId = params.boardId as string
   
   const [loading, setLoading] = useState(false)
+  const [boardLoading, setBoardLoading] = useState(true)
   const [error, setError] = useState('')
+  const [board, setBoard] = useState<Board | null>(null)
   const [formData, setFormData] = useState({
     title: '',
     content: ''
   })
 
-  // 게시판 정보
-  const boardInfo = {
-    notice: { title: '공지사항', description: '월미도 크루즈의 주요 공지사항을 확인하세요.' },
-    event: { title: '이벤트', description: '다양한 이벤트와 혜택을 만나보세요.' },
-    review: { title: '리뷰', description: '고객님들의 생생한 후기를 확인하세요.' },
-    faq: { title: 'FAQ', description: '자주 묻는 질문과 답변을 확인하세요.' },
-    qna: { title: 'Q&A', description: '궁금한 점을 질문하고 답변을 받아보세요.' }
-  }
+  // 게시판 정보 조회
+  useEffect(() => {
+    const fetchBoardInfo = async () => {
+      try {
+        const response = await fetch(`/api/board/${boardId}`)
+        const data = await response.json()
+        
+        if (data.ok) {
+          setBoard(data.data.board)
+          
+          // 관리자 전용 게시판인 경우 접근 차단
+          if (data.data.board.isAdminOnly) {
+            setError('관리자만 글을 작성할 수 있는 게시판입니다.')
+            return
+          }
+        } else {
+          setError(data.error || '게시판 정보를 불러올 수 없습니다.')
+        }
+      } catch (error) {
+        setError('게시판 정보를 불러오는 중 오류가 발생했습니다.')
+      } finally {
+        setBoardLoading(false)
+      }
+    }
 
-  const currentBoard = boardInfo[boardId as keyof typeof boardInfo]
+    fetchBoardInfo()
+  }, [boardId])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -85,12 +113,29 @@ export default function BoardWritePage() {
     }
   }
 
-  if (!currentBoard) {
+  // 게시판 정보 로딩 중
+  if (boardLoading) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">존재하지 않는 게시판입니다</h1>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-2 text-gray-600">게시판 정보를 불러오는 중...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // 게시판이 존재하지 않거나 관리자 전용 게시판인 경우
+  if (!board || error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              {error || '존재하지 않는 게시판입니다'}
+            </h1>
             <Link href="/" className="text-blue-600 hover:text-blue-800">
               홈으로 돌아가기
             </Link>
@@ -112,11 +157,11 @@ export default function BoardWritePage() {
               href={`/board/${boardId}`}
               className="text-blue-600 hover:text-blue-800 text-sm"
             >
-              ← {currentBoard.title} 목록으로
+              ← {board.title} 목록으로
             </Link>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{currentBoard.title} 글쓰기</h1>
-          <p className="text-gray-600">{currentBoard.description}</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{board.title} 글쓰기</h1>
+          <p className="text-gray-600">{board.description}</p>
         </div>
 
         {/* 글쓰기 폼 */}

@@ -13,17 +13,20 @@ export async function GET(
     const search = searchParams.get('search') || ''
     const skip = (page - 1) * limit
 
-    // 게시판 타입 매핑
-    const boardTypeMap: { [key: string]: 'NOTICE' | 'EVENT' | 'REVIEW' | 'FAQ' | 'QNA' } = {
-      'notice': 'NOTICE',
-      'event': 'EVENT', 
-      'review': 'REVIEW',
-      'faq': 'FAQ',
-      'qna': 'QNA'
-    }
+    // 게시판 정보 조회
+    const board = await prisma.board.findUnique({
+      where: { boardId: params.boardId },
+      select: {
+        id: true,
+        boardId: true,
+        title: true,
+        description: true,
+        type: true,
+        isAdminOnly: true
+      }
+    })
 
-    const boardType = boardTypeMap[params.boardId]
-    if (!boardType) {
+    if (!board) {
       return NextResponse.json({
         ok: false,
         error: '존재하지 않는 게시판입니다.'
@@ -32,7 +35,7 @@ export async function GET(
 
     // 검색 조건
     const where: any = {
-      type: boardType
+      type: board.type
     }
 
     if (search) {
@@ -64,6 +67,7 @@ export async function GET(
     return NextResponse.json({
       ok: true,
       data: {
+        board,
         posts,
         pagination: {
           page,
