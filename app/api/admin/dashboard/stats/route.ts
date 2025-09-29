@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     }
     
     if (!payload || (payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN')) {
-      console.warn('API: Invalid payload or insufficient role', payload)
+      console.log('Admin auth failed:', { payload, role: payload?.role })
       return NextResponse.json({
         ok: false,
         error: '관리자 권한이 필요합니다.',
@@ -51,26 +51,17 @@ export async function GET(request: NextRequest) {
       // 전체 예약 수
       prisma.reservation.count(),
       
-      // 대기 중인 예약 수
-      prisma.reservation.count({
-        where: { status: 'PENDING' }
-      }),
+      // 대기 중인 예약 수 (raw SQL 사용 - enum 타입 문제 임시 해결)
+      prisma.$queryRaw`SELECT COUNT(*)::int as count FROM reservations WHERE status = 'PENDING'`.then((result: any) => result[0]?.count || 0),
       
-      // 확정된 예약 수
-      prisma.reservation.count({
-        where: { status: 'CONFIRMED' }
-      }),
+      // 확정된 예약 수 (raw SQL 사용)
+      prisma.$queryRaw`SELECT COUNT(*)::int as count FROM reservations WHERE status = 'CONFIRMED'`.then((result: any) => result[0]?.count || 0),
       
-      // 취소된 예약 수
-      prisma.reservation.count({
-        where: { status: 'CANCELLED' }
-      }),
+      // 취소된 예약 수 (raw SQL 사용)
+      prisma.$queryRaw`SELECT COUNT(*)::int as count FROM reservations WHERE status = 'CANCELLED'`.then((result: any) => result[0]?.count || 0),
       
-      // 총 매출 (확정된 예약의 총 금액)
-      prisma.reservation.aggregate({
-        where: { status: 'CONFIRMED' },
-        _sum: { totalAmount: true }
-      }),
+      // 총 매출 (확정된 예약의 총 금액) (raw SQL 사용)
+      prisma.$queryRaw`SELECT COALESCE(SUM(total_amount), 0)::int as total FROM reservations WHERE status = 'CONFIRMED'`.then((result: any) => result[0]?.total || 0),
       
       // 전체 상품 수
       prisma.product.count(),
@@ -95,7 +86,7 @@ export async function GET(request: NextRequest) {
       pendingReservations,
       confirmedReservations,
       cancelledReservations,
-      totalRevenue: totalRevenue._sum.totalAmount || 0,
+      totalRevenue: totalRevenue, // raw SQL에서 이미 숫자로 반환됨
       totalProducts,
       totalMembers,
       recentReservations

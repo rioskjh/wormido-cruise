@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN') {
+      console.log('Admin auth failed:', { payload, role: payload?.role })
       return NextResponse.json({
         ok: false,
         error: '관리자 권한이 필요합니다.',
