@@ -28,6 +28,12 @@ interface Category {
   sortOrder: number
 }
 
+interface Board {
+  id: number
+  title: string
+  boardId: string
+}
+
 export default function AdminNavigationEditPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
@@ -36,6 +42,7 @@ export default function AdminNavigationEditPage({ params }: { params: { id: stri
   const [navigation, setNavigation] = useState<Navigation | null>(null)
   const [contents, setContents] = useState<Content[]>([])
   const [categories, setCategories] = useState<Category[]>([])
+  const [boards, setBoards] = useState<Board[]>([])
   const [formData, setFormData] = useState({
     title: '',
     url: '',
@@ -51,6 +58,7 @@ export default function AdminNavigationEditPage({ params }: { params: { id: stri
     fetchNavigation()
     fetchContents()
     fetchCategories()
+    fetchBoards()
   }, [params.id])
 
   const fetchNavigation = async () => {
@@ -120,6 +128,24 @@ export default function AdminNavigationEditPage({ params }: { params: { id: stri
       }
     } catch (error) {
       console.error('카테고리 조회 오류:', error)
+    }
+  }
+
+  const fetchBoards = async () => {
+    try {
+      const adminToken = localStorage.getItem('adminToken')
+      const response = await fetch('/api/admin/boards/list', {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`
+        }
+      })
+      const data = await response.json()
+
+      if (data.ok) {
+        setBoards(data.data || [])
+      }
+    } catch (error) {
+      console.error('게시판 조회 오류:', error)
     }
   }
 
@@ -297,13 +323,29 @@ export default function AdminNavigationEditPage({ params }: { params: { id: stri
               {formData.type === 'BOARD' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    게시판 설정
+                    연결할 게시판
                   </label>
-                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
-                    <p className="text-sm text-blue-600">
-                      게시판 목록 페이지로 연결됩니다.
-                    </p>
-                  </div>
+                  {boards.length === 0 ? (
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+                      <p className="text-sm text-red-600">
+                        등록된 게시판이 없습니다. 먼저 게시판을 등록해주세요.
+                      </p>
+                    </div>
+                  ) : (
+                    <select
+                      name="targetId"
+                      value={formData.targetId}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">게시판을 선택하세요</option>
+                      {boards.map(board => (
+                        <option key={board.id} value={board.id}>
+                          {board.title}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
               )}
 

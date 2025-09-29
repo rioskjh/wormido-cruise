@@ -104,8 +104,13 @@ export async function POST(request: NextRequest) {
     let finalUrl = validatedData.url
     if (validatedData.type === 'PRODUCTS') {
       finalUrl = '/products'
-    } else if (validatedData.type === 'BOARD') {
-      finalUrl = '/board'
+    } else if (validatedData.type === 'BOARD' && validatedData.targetId) {
+      const board = await prisma.board.findUnique({
+        where: { id: validatedData.targetId }
+      })
+      if (board) {
+        finalUrl = `/board/${board.boardId}`
+      }
     } else if (validatedData.type === 'CONTENT' && validatedData.targetId) {
       const content = await prisma.content.findUnique({
         where: { id: validatedData.targetId }
