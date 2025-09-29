@@ -22,6 +22,12 @@ interface Content {
   slug: string
 }
 
+interface Category {
+  id: number
+  name: string
+  sortOrder: number
+}
+
 export default function AdminNavigationEditPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
@@ -29,6 +35,7 @@ export default function AdminNavigationEditPage({ params }: { params: { id: stri
   const [error, setError] = useState('')
   const [navigation, setNavigation] = useState<Navigation | null>(null)
   const [contents, setContents] = useState<Content[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [formData, setFormData] = useState({
     title: '',
     url: '',
@@ -43,6 +50,7 @@ export default function AdminNavigationEditPage({ params }: { params: { id: stri
   useEffect(() => {
     fetchNavigation()
     fetchContents()
+    fetchCategories()
   }, [params.id])
 
   const fetchNavigation = async () => {
@@ -94,6 +102,24 @@ export default function AdminNavigationEditPage({ params }: { params: { id: stri
       }
     } catch (error) {
       console.error('컨텐츠 조회 오류:', error)
+    }
+  }
+
+  const fetchCategories = async () => {
+    try {
+      const adminToken = localStorage.getItem('adminToken')
+      const response = await fetch('/api/admin/categories/list', {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`
+        }
+      })
+      const data = await response.json()
+
+      if (data.ok) {
+        setCategories(data.data || [])
+      }
+    } catch (error) {
+      console.error('카테고리 조회 오류:', error)
     }
   }
 
@@ -220,22 +246,66 @@ export default function AdminNavigationEditPage({ params }: { params: { id: stri
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  URL
-                </label>
-                <input
-                  type="text"
-                  name="url"
-                  value={formData.url}
-                  onChange={handleInputChange}
-                  placeholder="예: /about, https://example.com"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <p className="text-sm text-gray-500 mt-1">
-                  메뉴 타입이 '사용자 정의' 또는 '외부 링크'인 경우에만 입력하세요.
-                </p>
-              </div>
+              {(formData.type === 'CUSTOM' || formData.type === 'EXTERNAL') && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    URL
+                  </label>
+                  <input
+                    type="text"
+                    name="url"
+                    value={formData.url}
+                    onChange={handleInputChange}
+                    placeholder={formData.type === 'EXTERNAL' ? 'https://example.com' : '/about'}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    {formData.type === 'EXTERNAL' ? '외부 링크 URL을 입력하세요.' : '내부 페이지 경로를 입력하세요.'}
+                  </p>
+                </div>
+              )}
+
+              {formData.type === 'PRODUCTS' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    상품 목록 설정
+                  </label>
+                  {categories.length === 0 ? (
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+                      <p className="text-sm text-red-600">
+                        등록된 카테고리가 없습니다. 먼저 카테고리를 등록해주세요.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-md">
+                      <p className="text-sm text-green-600 mb-2">
+                        등록된 카테고리: {categories.length}개
+                      </p>
+                      <ul className="text-sm text-gray-600">
+                        {categories.map(category => (
+                          <li key={category.id}>• {category.name}</li>
+                        ))}
+                      </ul>
+                      <p className="text-xs text-gray-500 mt-2">
+                        카테고리가 2개 이상인 경우 2뎁스 메뉴로 표시됩니다.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {formData.type === 'BOARD' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    게시판 설정
+                  </label>
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
+                    <p className="text-sm text-blue-600">
+                      게시판 목록 페이지로 연결됩니다.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {formData.type === 'CONTENT' && (
                 <div>

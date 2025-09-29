@@ -17,18 +17,26 @@ interface NavigationItem {
   children: NavigationItem[]
 }
 
+interface Category {
+  id: number
+  name: string
+  sortOrder: number
+}
+
 interface DynamicNavigationProps {
   className?: string
 }
 
 export default function DynamicNavigation({ className = '' }: DynamicNavigationProps) {
   const [navigations, setNavigations] = useState<NavigationItem[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [activeMenu, setActiveMenu] = useState<number | null>(null)
   const pathname = usePathname()
 
   useEffect(() => {
     fetchNavigations()
+    fetchCategories()
   }, [])
 
   const fetchNavigations = async () => {
@@ -46,6 +54,19 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
     }
   }
 
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/categories')
+      const data = await response.json()
+
+      if (data.ok) {
+        setCategories(data.data)
+      }
+    } catch (error) {
+      console.error('카테고리 조회 오류:', error)
+    }
+  }
+
   const handleMouseEnter = (id: number) => {
     setActiveMenu(id)
   }
@@ -55,9 +76,25 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
   }
 
   const renderNavigationItem = (item: NavigationItem) => {
+    // 상품 목록 메뉴인 경우 카테고리 기반 하위 메뉴 생성
+    const isProductsMenu = item.type === 'PRODUCTS'
     const hasChildren = item.children && item.children.length > 0
+    const hasCategoryChildren = isProductsMenu && categories.length > 0
+    const shouldShowDropdown = hasChildren || hasCategoryChildren
     const isActive = activeMenu === item.id
     const isCurrentPage = pathname === item.url
+
+    // 상품 목록 메뉴의 URL 결정
+    const getProductMenuUrl = () => {
+      if (categories.length === 1) {
+        // 카테고리가 1개인 경우 해당 카테고리로 직접 이동
+        return `/products?category=${categories[0].id}`
+      } else if (categories.length > 1) {
+        // 카테고리가 2개 이상인 경우 상품 목록 페이지로 이동
+        return '/products'
+      }
+      return '/products'
+    }
 
     return (
       <li
@@ -66,9 +103,9 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
         onMouseEnter={() => handleMouseEnter(item.id)}
         onMouseLeave={handleMouseLeave}
       >
-        {item.url ? (
+        {item.url || (isProductsMenu && categories.length === 1) ? (
           <Link
-            href={item.url}
+            href={isProductsMenu ? getProductMenuUrl() : (item.url || '#')}
             target={item.isNewWindow ? '_blank' : '_self'}
             rel={item.isNewWindow ? 'noopener noreferrer' : undefined}
             className={`block px-4 py-2 text-sm font-medium transition-colors duration-200 ${
@@ -78,6 +115,23 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
             }`}
           >
             {item.title}
+            {shouldShowDropdown && (
+              <svg
+                className={`inline-block ml-1 w-4 h-4 transition-transform duration-200 ${
+                  isActive ? 'rotate-180' : ''
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            )}
           </Link>
         ) : (
           <span
@@ -88,7 +142,7 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
             }`}
           >
             {item.title}
-            {hasChildren && (
+            {shouldShowDropdown && (
               <svg
                 className={`inline-block ml-1 w-4 h-4 transition-transform duration-200 ${
                   isActive ? 'rotate-180' : ''
@@ -109,7 +163,7 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
         )}
 
         {/* 하위 메뉴 */}
-        {hasChildren && (
+        {shouldShowDropdown && (
           <ul
             className={`absolute top-full left-0 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50 transition-all duration-200 ${
               isActive
@@ -117,7 +171,8 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
                 : 'opacity-0 invisible transform -translate-y-2'
             }`}
           >
-            {item.children.map((child) => (
+            {/* 기존 하위 메뉴 */}
+            {hasChildren && item.children.map((child) => (
               <li key={child.id}>
                 <Link
                   href={child.url || '#'}
@@ -130,6 +185,22 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
                   }`}
                 >
                   {child.title}
+                </Link>
+              </li>
+            ))}
+            
+            {/* 상품 카테고리 하위 메뉴 */}
+            {hasCategoryChildren && categories.map((category) => (
+              <li key={`category-${category.id}`}>
+                <Link
+                  href={`/products?category=${category.id}`}
+                  className={`block px-4 py-2 text-sm transition-colors duration-200 ${
+                    pathname === `/products?category=${category.id}`
+                      ? 'text-blue-600 bg-blue-50'
+                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                  }`}
+                >
+                  {category.name}
                 </Link>
               </li>
             ))}
