@@ -71,9 +71,12 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
       })
       const data = await response.json()
 
-      if (data.ok) {
+      if (data.ok && Array.isArray(data.data)) {
         setNavigations(data.data)
         console.log('네비게이션 데이터 새로고침:', data.data)
+      } else {
+        setNavigations([])
+        console.warn('네비게이션 데이터가 배열이 아닙니다:', data.data)
       }
     } catch (error) {
       console.error('네비게이션 조회 오류:', error)
@@ -87,8 +90,11 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
       const response = await fetch('/api/categories')
       const data = await response.json()
 
-      if (data.ok) {
+      if (data.ok && Array.isArray(data.data)) {
         setCategories(data.data)
+      } else {
+        setCategories([])
+        console.warn('카테고리 데이터가 배열이 아닙니다:', data.data)
       }
     } catch (error) {
       console.error('카테고리 조회 오류:', error)
@@ -106,18 +112,18 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
   const renderNavigationItem = (item: NavigationItem) => {
     // 상품 목록 메뉴인 경우 카테고리 기반 하위 메뉴 생성
     const isProductsMenu = item.type === 'PRODUCTS'
-    const hasChildren = item.children && item.children.length > 0
-    const hasCategoryChildren = isProductsMenu && categories.length > 0
+    const hasChildren = item.children && Array.isArray(item.children) && item.children.length > 0
+    const hasCategoryChildren = isProductsMenu && Array.isArray(categories) && categories.length > 0
     const shouldShowDropdown = hasChildren || hasCategoryChildren
     const isActive = activeMenu === item.id
     const isCurrentPage = pathname === item.url
 
     // 상품 목록 메뉴의 URL 결정
     const getProductMenuUrl = () => {
-      if (categories.length === 1) {
+      if (Array.isArray(categories) && categories.length === 1) {
         // 카테고리가 1개인 경우 해당 카테고리로 직접 이동
         return `/products?category=${categories[0].id}`
-      } else if (categories.length > 1) {
+      } else if (Array.isArray(categories) && categories.length > 1) {
         // 카테고리가 2개 이상인 경우 상품 목록 페이지로 이동
         return '/products'
       }
@@ -131,7 +137,7 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
         onMouseEnter={() => handleMouseEnter(item.id)}
         onMouseLeave={handleMouseLeave}
       >
-        {item.url || (isProductsMenu && categories.length === 1) ? (
+        {item.url || (isProductsMenu && Array.isArray(categories) && categories.length === 1) ? (
           <Link
             href={isProductsMenu ? getProductMenuUrl() : (item.url || '#')}
             target={item.isNewWindow ? '_blank' : '_self'}
@@ -200,7 +206,7 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
             }`}
           >
             {/* 기존 하위 메뉴 */}
-            {hasChildren && item.children.map((child) => (
+            {hasChildren && Array.isArray(item.children) && item.children.map((child) => (
               <li key={child.id}>
                 <Link
                   href={child.url || '#'}
@@ -218,7 +224,7 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
             ))}
             
             {/* 상품 카테고리 하위 메뉴 */}
-            {hasCategoryChildren && categories.map((category) => (
+            {hasCategoryChildren && Array.isArray(categories) && categories.map((category) => (
               <li key={`category-${category.id}`}>
                 <Link
                   href={`/products?category=${category.id}`}
@@ -248,7 +254,7 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
     )
   }
 
-  if (navigations.length === 0) {
+  if (!Array.isArray(navigations) || navigations.length === 0) {
     return null
   }
 
