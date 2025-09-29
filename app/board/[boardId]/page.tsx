@@ -95,12 +95,27 @@ export default function BoardPage() {
     })
   }
 
-  if (!currentBoard) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">존재하지 않는 게시판입니다</h1>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-2 text-gray-600">게시판을 불러오는 중...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !currentBoard) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              {error || '존재하지 않는 게시판입니다'}
+            </h1>
             <Link href="/" className="text-blue-600 hover:text-blue-800">
               홈으로 돌아가기
             </Link>
