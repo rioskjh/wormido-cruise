@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -34,7 +34,7 @@ interface Category {
   sortOrder: number
 }
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams()
   const categoryId = searchParams.get('category')
   
@@ -268,5 +268,30 @@ export default function ProductsPage() {
       
       <Footer />
     </div>
+  )
+}
+
+function ProductsLoading() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <UserNavigation />
+      <div className="py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-design-blue"></div>
+            <p className="mt-4 text-design-gray-light font-pretendard text-lg">상품을 불러오는 중...</p>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  )
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<ProductsLoading />}>
+      <ProductsContent />
+    </Suspense>
   )
 }
