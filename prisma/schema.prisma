@@ -45,6 +45,7 @@ model Member {
   username      String         @unique
   password      String
   email         String         @unique
+  name          String
   phone         String?
   nickname      String
   role          Role           @default(USER)
@@ -59,6 +60,7 @@ model Member {
   posts         Post[]
   reservations  Reservation[]
   refreshTokens RefreshToken[]
+  passwordResetTokens PasswordResetToken[]
 
   @@map("members")
 }
@@ -472,4 +474,16 @@ enum NavigationType {
   BOARD       // 게시판
   CONTENT     // 컨텐츠 페이지
   EXTERNAL    // 외부 링크
+}
+
+// 비밀번호 재설정 토큰
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  memberId  Int      @map("member_id")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@map("password_reset_tokens")
 }
