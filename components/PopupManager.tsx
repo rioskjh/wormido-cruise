@@ -151,7 +151,7 @@ export default function PopupManager() {
     return styles[type]
   }
 
-  if (loading || popups.length === 0) {
+  if (loading || !Array.isArray(popups) || popups.length === 0) {
     return null
   }
 

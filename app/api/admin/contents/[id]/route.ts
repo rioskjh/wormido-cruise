@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyToken } from '@/lib/auth'
+import { verifyAdminToken } from '@/lib/auth'
 
 // 특정 컨텐츠 조회
 export async function GET(
@@ -9,22 +9,12 @@ export async function GET(
 ) {
   try {
     // 관리자 인증 확인
-    const authHeader = request.headers.get('authorization')
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const authResult = await verifyAdminToken(request)
+    if (!authResult.ok) {
       return NextResponse.json({
         ok: false,
-        error: '인증 토큰이 필요합니다.',
-      }, { status: 401 })
-    }
-
-    const token = authHeader.substring(7)
-    const payload = verifyToken(token)
-    
-    if (!payload || (payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN')) {
-      return NextResponse.json({
-        ok: false,
-        error: '관리자 권한이 필요합니다.',
-      }, { status: 403 })
+        error: authResult.error,
+      }, { status: authResult.error?.includes('토큰이 필요') ? 401 : 403 })
     }
 
     const id = parseInt(params.id)
@@ -66,22 +56,12 @@ export async function PUT(
 ) {
   try {
     // 관리자 인증 확인
-    const authHeader = request.headers.get('authorization')
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const authResult = await verifyAdminToken(request)
+    if (!authResult.ok) {
       return NextResponse.json({
         ok: false,
-        error: '인증 토큰이 필요합니다.',
-      }, { status: 401 })
-    }
-
-    const token = authHeader.substring(7)
-    const payload = verifyToken(token)
-    
-    if (!payload || (payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN')) {
-      return NextResponse.json({
-        ok: false,
-        error: '관리자 권한이 필요합니다.',
-      }, { status: 403 })
+        error: authResult.error,
+      }, { status: authResult.error?.includes('토큰이 필요') ? 401 : 403 })
     }
 
     const id = parseInt(params.id)
@@ -176,22 +156,12 @@ export async function DELETE(
 ) {
   try {
     // 관리자 인증 확인
-    const authHeader = request.headers.get('authorization')
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const authResult = await verifyAdminToken(request)
+    if (!authResult.ok) {
       return NextResponse.json({
         ok: false,
-        error: '인증 토큰이 필요합니다.',
-      }, { status: 401 })
-    }
-
-    const token = authHeader.substring(7)
-    const payload = verifyToken(token)
-    
-    if (!payload || (payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN')) {
-      return NextResponse.json({
-        ok: false,
-        error: '관리자 권한이 필요합니다.',
-      }, { status: 403 })
+        error: authResult.error,
+      }, { status: authResult.error?.includes('토큰이 필요') ? 401 : 403 })
     }
 
     const id = parseInt(params.id)

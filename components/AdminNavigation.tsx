@@ -100,7 +100,7 @@ export default function AdminNavigation({ onLogout }: AdminNavigationProps) {
       {/* 네비게이션 메뉴 */}
       <nav className="mt-4 flex-1">
         <ul className="space-y-1 px-2">
-          {navigationItems.map((item) => (
+          {Array.isArray(navigationItems) && navigationItems.map((item) => (
             <li key={item.name}>
               <button
                 onClick={() => handleNavigation(item.href)}

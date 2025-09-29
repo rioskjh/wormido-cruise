@@ -288,7 +288,7 @@ export default function AdminNavigationCreatePage() {
                         등록된 카테고리: {categories.length}개
                       </p>
                       <ul className="text-sm text-gray-600">
-                        {categories.map(category => (
+                        {Array.isArray(categories) && categories.map(category => (
                           <li key={category.id}>• {category.name}</li>
                         ))}
                       </ul>
@@ -319,7 +319,7 @@ export default function AdminNavigationCreatePage() {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">게시판을 선택하세요</option>
-                      {boards.map(board => (
+                      {Array.isArray(boards) && boards.map(board => (
                         <option key={board.id} value={board.id}>
                           {board.title}
                         </option>
@@ -341,7 +341,7 @@ export default function AdminNavigationCreatePage() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">컨텐츠를 선택하세요</option>
-                    {contents.map(content => (
+                    {Array.isArray(contents) && contents.map(content => (
                       <option key={content.id} value={content.id}>
                         {content.title}
                       </option>
@@ -375,7 +375,7 @@ export default function AdminNavigationCreatePage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">최상위 메뉴 (하위 메뉴가 아님)</option>
-                  {navigations
+                  {Array.isArray(navigations) && navigations
                     .filter(nav => !nav.parentId) // 최상위 메뉴만 표시
                     .map(nav => (
                       <option key={nav.id} value={nav.id}>

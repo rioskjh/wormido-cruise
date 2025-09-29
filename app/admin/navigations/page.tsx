@@ -161,7 +161,7 @@ export default function AdminNavigationsPage() {
             </button>
           </div>
         </div>
-        {nav.children.map(child => renderNavigationItem(child, level + 1))}
+        {Array.isArray(nav.children) && nav.children.map(child => renderNavigationItem(child, level + 1))}
       </div>
     )
   }
@@ -218,7 +218,7 @@ export default function AdminNavigationsPage() {
           </div>
           
           <div className="p-4">
-            {navigations.length === 0 ? (
+            {!Array.isArray(navigations) || navigations.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 등록된 메뉴가 없습니다.
               </div>

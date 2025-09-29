@@ -8,9 +8,9 @@ interface ToastContainerProps {
 }
 
 export default function ToastContainer({ toasts, onClose }: ToastContainerProps) {
-  console.log('ToastContainer: 렌더링됨', { toastsCount: toasts.length, toasts })
+  console.log('ToastContainer: 렌더링됨', { toastsCount: Array.isArray(toasts) ? toasts.length : 0, toasts })
   
-  if (toasts.length === 0) {
+  if (!Array.isArray(toasts) || toasts.length === 0) {
     console.log('ToastContainer: toasts가 비어있음, null 반환')
     return null
   }
