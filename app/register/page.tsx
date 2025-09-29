@@ -13,6 +13,7 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: '',
     name: '',
+    nickname: '',
     phone: '',
   })
   const [loading, setLoading] = useState(false)
@@ -128,7 +129,8 @@ export default function RegisterPage() {
           username: formData.username,
           email: formData.email,
           password: formData.password,
-          nickname: formData.name, // name을 nickname으로 전송
+          name: formData.name,
+          nickname: formData.nickname,
           phone: formData.phone,
         }),
       })
@@ -225,6 +227,20 @@ export default function RegisterPage() {
               id="name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="nickname" className="block text-sm font-medium text-gray-700 mb-1">
+              닉네임
+            </label>
+            <input
+              type="text"
+              id="nickname"
+              value={formData.nickname}
+              onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />

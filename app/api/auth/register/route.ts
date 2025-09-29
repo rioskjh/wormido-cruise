@@ -15,6 +15,7 @@ const registerSchema = z.object({
     .min(6, '비밀번호는 최소 6자 이상이어야 합니다')
     .max(30, '비밀번호는 최대 30자까지 가능합니다')
     .regex(/^(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).*$/, '비밀번호는 영문과 특수문자를 각각 최소 1자 이상 포함해야 합니다'),
+  name: z.string().min(1, '이름을 입력해주세요'),
   nickname: z.string().min(1, '닉네임을 입력해주세요'),
   phone: z.string()
     .min(10, '연락처는 최소 10자리여야 합니다')
@@ -25,7 +26,7 @@ const registerSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { username, email, password, nickname, phone } = registerSchema.parse(body)
+    const { username, email, password, name, nickname, phone } = registerSchema.parse(body)
 
     // 중복 확인 - 모든 고유 필드 검사
     const existingUsers = await prisma.member.findMany({
@@ -73,6 +74,7 @@ export async function POST(request: NextRequest) {
         username,
         email,
         password: hashedPassword,
+        name,
         nickname,
         phone,
         role: 'USER',
