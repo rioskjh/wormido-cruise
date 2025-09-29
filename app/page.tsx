@@ -95,27 +95,6 @@ export default function Home() {
                       <p className="leading-[24px] md:leading-[32px] whitespace-pre">월미도 해양관광 크루즈와 함께하는 잊지 못할 여행</p>
                     </div>
                   </div>
-                  
-                  {/* CTA 버튼 */}
-                  <div className="content-stretch flex flex-col md:flex-row gap-4 md:gap-[40px] items-center justify-start relative shrink-0 mt-4 md:mt-8">
-                    <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
-                      <div className="[grid-area:1_/_1] grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[5.208%] mt-[11.458%] place-items-start relative">
-                        <div className="w-12 h-12 bg-design-blue rounded-full flex items-center justify-center">
-                          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="content-stretch flex flex-col gap-[4px] items-center md:items-start justify-start leading-[0] not-italic relative shrink-0 text-nowrap text-center md:text-left">
-                      <div className="font-pretendard relative shrink-0 text-white md:text-design-gray text-[20px] md:text-[24px]">
-                        <p className="leading-[28px] md:leading-[34px] text-nowrap whitespace-pre">승선권 예매하기</p>
-                      </div>
-                      <div className="font-pretendard relative shrink-0 text-white md:text-design-gray-light text-[14px] md:text-[17px]">
-                        <p className="leading-[20px] md:leading-[28px] text-nowrap whitespace-pre">원하는 일정과 좌석을 간편하게 선택</p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -124,13 +103,13 @@ export default function Home() {
       </section>
 
       {/* 예약 카드 섹션 */}
-      <section className="w-full py-16 bg-gray-50">
+      <section className="w-full py-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-8 items-center justify-center max-w-6xl mx-auto">
             {/* 승선권 예매하기 카드 */}
             <Link 
               href="/reservation" 
-              className="group w-full md:w-[585px] bg-white rounded-[10px] border border-[#222222] hover:border-design-blue transition-all duration-200 hover:shadow-lg"
+              className="group w-full md:w-[585px] bg-white rounded-[10px] border border-gray-300 hover:border-[#222222] transition-all duration-200 hover:shadow-lg"
             >
               <div className="flex items-center justify-between px-[50px] py-[30px]">
                 <div className="flex gap-[40px] items-center">
@@ -154,7 +133,7 @@ export default function Home() {
                 
                 {/* 화살표 */}
                 <div className="w-[36px] h-[36px] flex items-center justify-center">
-                  <svg className="w-6 h-6 text-[#222222] group-hover:text-design-blue transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-gray-400 group-hover:text-[#222222] transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
@@ -164,7 +143,7 @@ export default function Home() {
             {/* 예약확인 및 취소 카드 */}
             <Link 
               href="/reservation/check" 
-              className="group w-full md:w-[585px] bg-white rounded-[10px] border border-[#dddddd] hover:border-design-blue transition-all duration-200 hover:shadow-lg"
+              className="group w-full md:w-[585px] bg-white rounded-[10px] border border-gray-300 hover:border-[#222222] transition-all duration-200 hover:shadow-lg"
             >
               <div className="flex items-center justify-between px-[50px] py-[30px]">
                 <div className="flex gap-[40px] items-center">
@@ -188,7 +167,7 @@ export default function Home() {
                 
                 {/* 화살표 */}
                 <div className="w-[36px] h-[36px] flex items-center justify-center">
-                  <svg className="w-6 h-6 text-[#CECECE] group-hover:text-design-blue transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-gray-400 group-hover:text-[#222222] transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
@@ -322,38 +301,17 @@ export default function Home() {
       </div>
 
       {/* 배너 섹션 */}
-      <section className="w-full py-16 relative overflow-hidden">
-        {/* 배경 이미지 */}
-        <div className="absolute inset-0">
-          <Image
-            src="/images/554419256e070f67b901bd627c66e2442e2f9b89.png"
-            alt="배너 배경"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="w-full py-16 bg-gradient-to-br from-design-blue to-design-purple">
+        <div className="container mx-auto px-4">
           <div className="text-center text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 font-pretendard">
               특별한 크루즈 경험을 시작하세요
             </h2>
-            <p className="text-lg md:text-xl mb-6 font-pretendard opacity-90">
+            <p className="text-lg md:text-xl mb-8 font-pretendard opacity-90">
               월미도의 아름다운 바다와 함께하는 잊지 못할 추억을 만들어보세요
             </p>
             
-            {/* 단체여행 안내 */}
-            <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-6 mb-8 max-w-2xl mx-auto">
-              <h3 className="text-xl md:text-2xl font-bold mb-2 font-pretendard">
-                단체여행은 맞춤형 패키지로 편리하게
-              </h3>
-              <p className="text-sm md:text-base opacity-90 font-pretendard">
-                기업 연수, 가족 모임, 친구 모임 등 다양한 단체 여행을 위한 특별한 패키지를 제공합니다
-              </p>
-            </div>
-            
-            <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
