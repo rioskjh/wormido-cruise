@@ -120,15 +120,15 @@ model Attachment {
 // 게시판 ?이?
 model Board {
   id          Int       @id @default(autoincrement())
-  boardId     String    @unique
+  boardId     String    @unique @map("board_id")
   title       String
   description String?
   type        BoardType @default(NOTICE)
   skin        String    @default("default")
-  useComment  Boolean   @default(true)
-  useUpload   Boolean   @default(false)
+  useComment  Boolean   @default(true) @map("use_comment")
+  useUpload   Boolean   @default(false) @map("use_upload")
   isAdminOnly Boolean   @default(false) @map("is_admin_only") // 관리자 전용 게시판 여부
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime  @default(now()) @map("created_at")
   posts       Post[]
 
   @@map("boards")
@@ -138,7 +138,7 @@ model Board {
 model Post {
   id              Int       @id @default(autoincrement())
   type            BoardType // 게시판 타입
-  boardId         String?   // 기존 호환성을 위해 nullable로 유지
+  boardId         String?   @map("board_id") // 기존 호환성을 위해 nullable로 유지
   authorId        Int?      @map("author_id") // 작성자 ID (nullable for non-member posts)
   title           String
   content         String?   // 기존 호환성을 위해 nullable로 유지
