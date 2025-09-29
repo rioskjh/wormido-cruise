@@ -443,3 +443,32 @@ model Content {
 
   @@map("contents")
 }
+
+// 네비게이션 메뉴
+model Navigation {
+  id          Int      @id @default(autoincrement())
+  title       String   // 메뉴 제목
+  url         String?  // 링크 URL (null이면 하위 메뉴가 있는 경우)
+  type        NavigationType @default(CUSTOM) // 메뉴 타입
+  targetId    Int?     @map("target_id") // 연결된 대상 ID (상품, 게시판, 컨텐츠 등)
+  parentId    Int?     @map("parent_id") // 부모 메뉴 ID (null이면 최상위)
+  sortOrder   Int      @default(0) @map("sort_order") // 정렬 순서
+  isActive    Boolean  @default(true) @map("is_active") // 활성화 여부
+  isNewWindow Boolean  @default(false) @map("is_new_window") // 새 창에서 열기
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  // 관계
+  parent      Navigation? @relation("NavigationHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children    Navigation[] @relation("NavigationHierarchy")
+
+  @@map("navigations")
+}
+
+enum NavigationType {
+  CUSTOM      // 사용자 정의 링크
+  PRODUCTS    // 상품 목록
+  BOARD       // 게시판
+  CONTENT     // 컨텐츠 페이지
+  EXTERNAL    // 외부 링크
+}

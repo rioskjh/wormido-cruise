@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/contexts/ToastContext'
+import DynamicNavigation from './DynamicNavigation'
 
 interface User {
   id: number
@@ -149,22 +150,8 @@ export default function UserNavigation() {
           </div>
 
           {/* 메뉴 - 데스크톱에서만 표시 */}
-          <div className="hidden lg:flex content-stretch font-pretendard gap-[80px] items-start justify-start leading-[0] not-italic relative shrink-0 text-design-gray text-[18px] text-nowrap">
-            <Link href="/" className="relative shrink-0 hover:text-design-blue transition-colors">
-              <p className="leading-[30px] text-nowrap whitespace-pre">상품예약</p>
-            </Link>
-            <Link href="/" className="relative shrink-0 hover:text-design-blue transition-colors">
-              <p className="leading-[30px] text-nowrap whitespace-pre">단체여행</p>
-            </Link>
-            <Link href="/" className="relative shrink-0 hover:text-design-blue transition-colors">
-              <p className="leading-[30px] text-nowrap whitespace-pre">운항정보</p>
-            </Link>
-            <Link href="/" className="relative shrink-0 hover:text-design-blue transition-colors">
-              <p className="leading-[30px] text-nowrap whitespace-pre">고객센터</p>
-            </Link>
-            <Link href="/" className="relative shrink-0 hover:text-design-blue transition-colors">
-              <p className="leading-[30px] text-nowrap whitespace-pre">회사소개</p>
-            </Link>
+          <div className="hidden lg:flex content-stretch font-pretendard items-start justify-start leading-[0] not-italic relative shrink-0 text-design-gray text-[18px] text-nowrap">
+            <DynamicNavigation className="flex gap-[80px]" />
           </div>
 
           {/* 우측 버튼들 */}

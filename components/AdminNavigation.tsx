@@ -62,6 +62,12 @@ export default function AdminNavigation({ onLogout }: AdminNavigationProps) {
       current: pathname.startsWith('/admin/contents')
     },
     {
+      name: '네비게이션 관리',
+      href: '/admin/navigations',
+      icon: '🧭',
+      current: pathname.startsWith('/admin/navigations')
+    },
+    {
       name: '설정',
       href: '/admin/settings',
       icon: '⚙️',

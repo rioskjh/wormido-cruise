@@ -1,0 +1,342 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import AdminLayout from '@/components/AdminLayout'
+
+interface Navigation {
+  id: number
+  title: string
+  url: string | null
+  type: 'CUSTOM' | 'PRODUCTS' | 'BOARD' | 'CONTENT' | 'EXTERNAL'
+  targetId: number | null
+  parentId: number | null
+  sortOrder: number
+  isActive: boolean
+  isNewWindow: boolean
+}
+
+interface Content {
+  id: number
+  title: string
+  slug: string
+}
+
+export default function AdminNavigationEditPage({ params }: { params: { id: string } }) {
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [submitLoading, setSubmitLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [navigation, setNavigation] = useState<Navigation | null>(null)
+  const [contents, setContents] = useState<Content[]>([])
+  const [formData, setFormData] = useState({
+    title: '',
+    url: '',
+    type: 'CUSTOM' as 'CUSTOM' | 'PRODUCTS' | 'BOARD' | 'CONTENT' | 'EXTERNAL',
+    targetId: '',
+    parentId: '',
+    sortOrder: 0,
+    isActive: true,
+    isNewWindow: false
+  })
+
+  useEffect(() => {
+    fetchNavigation()
+    fetchContents()
+  }, [params.id])
+
+  const fetchNavigation = async () => {
+    try {
+      setLoading(true)
+      const adminToken = localStorage.getItem('adminToken')
+      const response = await fetch(`/api/admin/navigations/${params.id}`, {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`
+        }
+      })
+      const data = await response.json()
+
+      if (data.ok) {
+        setNavigation(data.data)
+        setFormData({
+          title: data.data.title,
+          url: data.data.url || '',
+          type: data.data.type,
+          targetId: data.data.targetId?.toString() || '',
+          parentId: data.data.parentId?.toString() || '',
+          sortOrder: data.data.sortOrder,
+          isActive: data.data.isActive,
+          isNewWindow: data.data.isNewWindow
+        })
+      } else {
+        setError(data.error)
+      }
+    } catch (error) {
+      console.error('네비게이션 조회 오류:', error)
+      setError('네비게이션 조회 중 오류가 발생했습니다.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchContents = async () => {
+    try {
+      const adminToken = localStorage.getItem('adminToken')
+      const response = await fetch('/api/admin/contents', {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`
+        }
+      })
+      const data = await response.json()
+
+      if (data.ok) {
+        setContents(data.data.contents || [])
+      }
+    } catch (error) {
+      console.error('컨텐츠 조회 오류:', error)
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    try {
+      setSubmitLoading(true)
+      setError('')
+
+      const submitData = {
+        ...formData,
+        targetId: formData.targetId ? parseInt(formData.targetId) : undefined,
+        parentId: formData.parentId ? parseInt(formData.parentId) : undefined,
+        sortOrder: parseInt(formData.sortOrder.toString())
+      }
+
+      const adminToken = localStorage.getItem('adminToken')
+      const response = await fetch(`/api/admin/navigations/${params.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminToken}`
+        },
+        body: JSON.stringify(submitData),
+      })
+
+      const data = await response.json()
+
+      if (data.ok) {
+        router.push('/admin/navigations')
+      } else {
+        setError(data.error)
+      }
+    } catch (error) {
+      console.error('네비게이션 수정 오류:', error)
+      setError('네비게이션 수정 중 오류가 발생했습니다.')
+    } finally {
+      setSubmitLoading(false)
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+    }))
+  }
+
+  if (loading) {
+    return (
+      <AdminLayout title="네비게이션 수정">
+        <div className="p-6">
+          <div className="text-center">로딩 중...</div>
+        </div>
+      </AdminLayout>
+    )
+  }
+
+  if (!navigation) {
+    return (
+      <AdminLayout title="네비게이션 수정">
+        <div className="p-6">
+          <div className="text-center text-red-600">네비게이션을 찾을 수 없습니다.</div>
+        </div>
+      </AdminLayout>
+    )
+  }
+
+  return (
+    <AdminLayout title="네비게이션 수정">
+      <div className="p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">네비게이션 수정</h1>
+          <button
+            onClick={() => router.back()}
+            className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+          >
+            목록으로
+          </button>
+        </div>
+
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">기본 정보</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  메뉴 제목 *
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  메뉴 타입 *
+                </label>
+                <select
+                  name="type"
+                  value={formData.type}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="CUSTOM">사용자 정의 링크</option>
+                  <option value="PRODUCTS">상품 목록</option>
+                  <option value="BOARD">게시판</option>
+                  <option value="CONTENT">컨텐츠 페이지</option>
+                  <option value="EXTERNAL">외부 링크</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  URL
+                </label>
+                <input
+                  type="text"
+                  name="url"
+                  value={formData.url}
+                  onChange={handleInputChange}
+                  placeholder="예: /about, https://example.com"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  메뉴 타입이 '사용자 정의' 또는 '외부 링크'인 경우에만 입력하세요.
+                </p>
+              </div>
+
+              {formData.type === 'CONTENT' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    연결할 컨텐츠
+                  </label>
+                  <select
+                    name="targetId"
+                    value={formData.targetId}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">컨텐츠를 선택하세요</option>
+                    {contents.map(content => (
+                      <option key={content.id} value={content.id}>
+                        {content.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  정렬 순서
+                </label>
+                <input
+                  type="number"
+                  name="sortOrder"
+                  value={formData.sortOrder}
+                  onChange={handleInputChange}
+                  min="0"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  부모 메뉴 ID
+                </label>
+                <input
+                  type="number"
+                  name="parentId"
+                  value={formData.parentId}
+                  onChange={handleInputChange}
+                  placeholder="하위 메뉴로 만들려면 부모 메뉴 ID 입력"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  비워두면 최상위 메뉴가 됩니다. (최대 6개)
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="isActive"
+                  checked={formData.isActive}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label className="ml-2 block text-sm text-gray-900">
+                  활성화
+                </label>
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="isNewWindow"
+                  checked={formData.isNewWindow}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label className="ml-2 block text-sm text-gray-900">
+                  새 창에서 열기
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            >
+              취소
+            </button>
+            <button
+              type="submit"
+              disabled={submitLoading}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            >
+              {submitLoading ? '수정 중...' : '수정'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </AdminLayout>
+  )
+}
