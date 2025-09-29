@@ -34,10 +34,22 @@ export default function BoardWritePage() {
     isSecret: false
   })
   const [isGuest, setIsGuest] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [captchaQuestion, setCaptchaQuestion] = useState('')
   const [captchaAnswer, setCaptchaAnswer] = useState('')
   const [captchaInput, setCaptchaInput] = useState('')
   const [captchaGenerated, setCaptchaGenerated] = useState(false)
+
+  // 로그인 상태 확인
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    setIsLoggedIn(!!token)
+    
+    // Q&A 게시판이고 로그인하지 않은 경우 기본적으로 비회원 모드
+    if (board?.type === 'QNA' && !token) {
+      setIsGuest(true)
+    }
+  }, [board])
 
   // 게시판 정보 조회
   useEffect(() => {
@@ -266,17 +278,35 @@ export default function BoardWritePage() {
                 <div className="border-t pt-6">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">작성자 정보</h3>
                   
-                  <div className="mb-4">
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={isGuest}
-                        onChange={(e) => setIsGuest(e.target.checked)}
-                        className="mr-2"
-                      />
-                      <span className="text-sm text-gray-700">비회원으로 작성하기</span>
-                    </label>
-                  </div>
+                  {/* 로그인 상태에 따른 안내 메시지 */}
+                  {isLoggedIn ? (
+                    <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <p className="text-sm text-blue-700">
+                        회원으로 로그인되어 있습니다. 작성한 글은 회원 정보로 저장됩니다.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <p className="text-sm text-yellow-700">
+                        비회원으로 작성합니다. 작성자명과 비밀번호를 입력해주세요.
+                      </p>
+                    </div>
+                  )}
+                  
+                  {/* 로그인한 경우에만 비회원 모드 선택 가능 */}
+                  {isLoggedIn && (
+                    <div className="mb-4">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={isGuest}
+                          onChange={(e) => setIsGuest(e.target.checked)}
+                          className="mr-2"
+                        />
+                        <span className="text-sm text-gray-700">비회원으로 작성하기</span>
+                      </label>
+                    </div>
+                  )}
 
                   {isGuest && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
