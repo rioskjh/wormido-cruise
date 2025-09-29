@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import UserNavigation from '@/components/UserNavigation'
+import Footer from '@/components/Footer'
 
 interface Post {
   id: number
@@ -112,8 +114,10 @@ export default function BoardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gray-50">
+      <UserNavigation />
+      <div className="py-8">
+        <div className="container mx-auto px-4">
         {/* 게시판 헤더 */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">{currentBoard.title}</h1>
@@ -245,7 +249,9 @@ export default function BoardPage() {
             </div>
           )}
         </div>
+        </div>
       </div>
+      <Footer />
     </div>
   )
 }

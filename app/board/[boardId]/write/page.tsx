@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import UserNavigation from '@/components/UserNavigation'
+import Footer from '@/components/Footer'
 
 export default function BoardWritePage() {
   const params = useParams()
@@ -99,8 +101,10 @@ export default function BoardWritePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gray-50">
+      <UserNavigation />
+      <div className="py-8">
+        <div className="container mx-auto px-4">
         {/* 게시판 헤더 */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex items-center gap-4 mb-2">
@@ -170,7 +174,9 @@ export default function BoardWritePage() {
             </div>
           </form>
         </div>
+        </div>
       </div>
+      <Footer />
     </div>
   )
 }
