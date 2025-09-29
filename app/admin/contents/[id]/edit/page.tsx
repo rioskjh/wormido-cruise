@@ -33,7 +33,12 @@ export default function EditContentPage() {
   const fetchContent = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/admin/contents/${params.id}`)
+      const adminToken = localStorage.getItem('adminToken')
+      const response = await fetch(`/api/admin/contents/${params.id}`, {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`
+        }
+      })
       const data = await response.json()
 
       if (data.ok) {
@@ -53,10 +58,12 @@ export default function EditContentPage() {
       setSubmitLoading(true)
       setError('')
 
+      const adminToken = localStorage.getItem('adminToken')
       const response = await fetch(`/api/admin/contents/${params.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminToken}`
         },
         body: JSON.stringify(formData),
       })

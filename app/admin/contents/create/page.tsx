@@ -15,10 +15,12 @@ export default function CreateContentPage() {
       setLoading(true)
       setError('')
 
+      const adminToken = localStorage.getItem('adminToken')
       const response = await fetch('/api/admin/contents', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminToken}`
         },
         body: JSON.stringify(formData),
       })

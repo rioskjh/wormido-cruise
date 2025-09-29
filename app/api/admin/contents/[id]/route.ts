@@ -9,7 +9,7 @@ export async function GET(
 ) {
   try {
     const result = await verifyAdminToken(request)
-    if (!result.ok || !result.payload || (result.payload.role !== 'ADMIN' && result.payload.role !== 'SUPER_ADMIN')) {
+    if (!result.ok || !result.payload || (result.payload.role !== 'ADMIN' && result.payload.role !== 'SUPER_ADMIN' && result.payload.role !== 'EDITOR')) {
       return NextResponse.json({
         ok: false,
         error: '관리자 권한이 필요합니다.',
@@ -55,7 +55,7 @@ export async function PUT(
 ) {
   try {
     const result = await verifyAdminToken(request)
-    if (!result.ok || !result.payload || (result.payload.role !== 'ADMIN' && result.payload.role !== 'SUPER_ADMIN')) {
+    if (!result.ok || !result.payload || (result.payload.role !== 'ADMIN' && result.payload.role !== 'SUPER_ADMIN' && result.payload.role !== 'EDITOR')) {
       return NextResponse.json({
         ok: false,
         error: '관리자 권한이 필요합니다.',
@@ -154,7 +154,7 @@ export async function DELETE(
 ) {
   try {
     const result = await verifyAdminToken(request)
-    if (!result.ok || !result.payload || (result.payload.role !== 'ADMIN' && result.payload.role !== 'SUPER_ADMIN')) {
+    if (!result.ok || !result.payload || (result.payload.role !== 'ADMIN' && result.payload.role !== 'SUPER_ADMIN' && result.payload.role !== 'EDITOR')) {
       return NextResponse.json({
         ok: false,
         error: '관리자 권한이 필요합니다.',

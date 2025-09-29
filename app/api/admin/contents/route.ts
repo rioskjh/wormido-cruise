@@ -6,7 +6,7 @@ import { verifyAdminToken } from '@/lib/auth'
 export async function GET(request: NextRequest) {
   try {
     const result = await verifyAdminToken(request)
-    if (!result.ok || !result.payload || (result.payload.role !== 'ADMIN' && result.payload.role !== 'SUPER_ADMIN')) {
+    if (!result.ok || !result.payload || (result.payload.role !== 'ADMIN' && result.payload.role !== 'SUPER_ADMIN' && result.payload.role !== 'EDITOR')) {
       return NextResponse.json({
         ok: false,
         error: '관리자 권한이 필요합니다.',
@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const result = await verifyAdminToken(request)
-    if (!result.ok || !result.payload || (result.payload.role !== 'ADMIN' && result.payload.role !== 'SUPER_ADMIN')) {
+    if (!result.ok || !result.payload || (result.payload.role !== 'ADMIN' && result.payload.role !== 'SUPER_ADMIN' && result.payload.role !== 'EDITOR')) {
       return NextResponse.json({
         ok: false,
         error: '관리자 권한이 필요합니다.',

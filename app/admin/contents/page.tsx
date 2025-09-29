@@ -49,7 +49,12 @@ export default function AdminContentsPage() {
         ...(status && { status })
       })
 
-      const response = await fetch(`/api/admin/contents?${params}`)
+      const adminToken = localStorage.getItem('adminToken')
+      const response = await fetch(`/api/admin/contents?${params}`, {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`
+        }
+      })
       const data = await response.json()
 
       if (data.ok) {
@@ -71,8 +76,12 @@ export default function AdminContentsPage() {
     }
 
     try {
+      const adminToken = localStorage.getItem('adminToken')
       const response = await fetch(`/api/admin/contents/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${adminToken}`
+        }
       })
       const data = await response.json()
 
