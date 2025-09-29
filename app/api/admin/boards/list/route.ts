@@ -24,21 +24,18 @@ export async function GET(request: NextRequest) {
       }, { status: 403 })
     }
 
-    // 게시판 목록 조회
-    const boards = await prisma.board.findMany({
-      orderBy: [
-        { createdAt: 'asc' }
-      ],
-      select: {
-        id: true,
-        title: true,
-        boardId: true
-      }
-    })
+    // 게시판 목록 조회 (Post 모델의 type 기반)
+    const boardTypes = [
+      { id: 1, title: '공지사항', boardId: 'notice' },
+      { id: 2, title: '이벤트', boardId: 'event' },
+      { id: 3, title: '리뷰', boardId: 'review' },
+      { id: 4, title: 'FAQ', boardId: 'faq' },
+      { id: 5, title: 'Q&A', boardId: 'qna' }
+    ]
 
     return NextResponse.json({
       ok: true,
-      data: boards
+      data: boardTypes
     })
   } catch (error) {
     console.error('게시판 조회 오류:', error)

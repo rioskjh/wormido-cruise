@@ -121,11 +121,18 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     if (validatedData.type === 'PRODUCTS') {
       finalUrl = '/products'
     } else if (validatedData.type === 'BOARD' && validatedData.targetId) {
-      const board = await prisma.board.findUnique({
-        where: { id: validatedData.targetId }
-      })
-      if (board) {
-        finalUrl = `/board/${board.boardId}`
+      // 게시판 타입별 URL 매핑
+      const boardUrlMap: { [key: number]: string } = {
+        1: '/board/notice',    // 공지사항
+        2: '/board/event',     // 이벤트
+        3: '/board/review',    // 리뷰
+        4: '/board/faq',       // FAQ
+        5: '/board/qna'        // Q&A
+      }
+      
+      const boardUrl = boardUrlMap[validatedData.targetId]
+      if (boardUrl) {
+        finalUrl = boardUrl
       }
     } else if (validatedData.type === 'CONTENT' && validatedData.targetId) {
       const content = await prisma.content.findUnique({

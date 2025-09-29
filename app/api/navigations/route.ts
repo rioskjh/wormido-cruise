@@ -25,6 +25,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       ok: true,
       data: topLevelNavigations
+    }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
     })
   } catch (error) {
     console.error('네비게이션 조회 오류:', error)

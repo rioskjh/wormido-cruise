@@ -39,9 +39,24 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
     fetchCategories()
   }, [])
 
+  // 페이지 포커스 시 데이터 새로고침
+  useEffect(() => {
+    const handleFocus = () => {
+      fetchNavigations()
+    }
+    
+    window.addEventListener('focus', handleFocus)
+    return () => window.removeEventListener('focus', handleFocus)
+  }, [])
+
   const fetchNavigations = async () => {
     try {
-      const response = await fetch('/api/navigations')
+      const response = await fetch('/api/navigations', {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      })
       const data = await response.json()
 
       if (data.ok) {
