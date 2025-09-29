@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyAdminToken } from '@/lib/auth'
+import { verifyToken } from '@/lib/auth'
 import { z } from 'zod'
 
 // 네비게이션 생성/수정 스키마
@@ -18,8 +18,19 @@ const navigationSchema = z.object({
 // GET: 모든 네비게이션 조회 (계층 구조)
 export async function GET(request: NextRequest) {
   try {
-    const result = await verifyAdminToken(request)
-    if (!result.ok || !result.payload || (result.payload.role !== 'ADMIN' && result.payload.role !== 'EDITOR')) {
+    // 관리자 인증 확인
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({
+        ok: false,
+        error: '인증 토큰이 필요합니다.',
+      }, { status: 401 })
+    }
+
+    const token = authHeader.substring(7)
+    const payload = verifyToken(token)
+    
+    if (!payload || (payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN')) {
       return NextResponse.json({
         ok: false,
         error: '관리자 권한이 필요합니다.',
@@ -54,8 +65,19 @@ export async function GET(request: NextRequest) {
 // POST: 새 네비게이션 생성
 export async function POST(request: NextRequest) {
   try {
-    const result = await verifyAdminToken(request)
-    if (!result.ok || !result.payload || (result.payload.role !== 'ADMIN' && result.payload.role !== 'EDITOR')) {
+    // 관리자 인증 확인
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({
+        ok: false,
+        error: '인증 토큰이 필요합니다.',
+      }, { status: 401 })
+    }
+
+    const token = authHeader.substring(7)
+    const payload = verifyToken(token)
+    
+    if (!payload || (payload.role !== 'ADMIN' && payload.role !== 'SUPER_ADMIN')) {
       return NextResponse.json({
         ok: false,
         error: '관리자 권한이 필요합니다.',
