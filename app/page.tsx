@@ -301,40 +301,34 @@ export default function Home() {
       </div>
 
       {/* 배너 섹션 */}
-      <section className="w-full py-16 bg-gradient-to-br from-design-blue to-design-purple">
-        <div className="container mx-auto px-4">
-          <div className="text-center text-white">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 font-pretendard">
-              특별한 크루즈 경험을 시작하세요
+      <section className="w-full py-16 relative overflow-hidden">
+        {/* 배경 이미지 */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/554419256e070f67b901bd627c66e2442e2f9b89.png"
+            alt="배너 배경"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-left text-white">
+            <h2 className="text-5xl font-bold mb-8 font-pretendard leading-[70px]">
+              <span className="font-normal">단체 여행은</span><br />
+              맞춤형 패키지로 편리하게
             </h2>
-            <p className="text-lg md:text-xl mb-8 font-pretendard opacity-90">
-              월미도의 아름다운 바다와 함께하는 잊지 못할 추억을 만들어보세요
-            </p>
             
-            <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <span className="font-pretendard text-lg">매일 운항</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <span className="font-pretendard text-lg">안전한 운항</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </div>
-                <span className="font-pretendard text-lg">최고의 서비스</span>
+            {/* 버튼 */}
+            <div className="inline-flex items-center justify-between px-5 py-2.5 border border-white rounded">
+              <span className="font-semibold text-white text-[17px] font-pretendard">
+                단체여행 패키지 보기
+              </span>
+              <div className="w-5 h-5 ml-2">
+                <svg className="w-5 h-5 text-white rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
+                </svg>
               </div>
             </div>
           </div>
