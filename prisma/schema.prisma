@@ -425,3 +425,21 @@ model SiteSettings {
 
   @@map("site_settings")
 }
+
+// 일반 컨텐츠 페이지
+model Content {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique // URL 슬러그
+  content     String   // 에디터 내용 (HTML)
+  contentText String?  @map("content_text") // 검색용 텍스트
+  description String?  // 메타 설명
+  keywords    String?  // 메타 키워드
+  isActive    Boolean  @default(true) @map("is_active")
+  isPublished Boolean  @default(false) @map("is_published")
+  publishedAt DateTime? @map("published_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("contents")
+}
