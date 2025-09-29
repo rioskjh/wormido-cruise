@@ -181,12 +181,26 @@ export default function AdminNavigationsPage() {
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">네비게이션 관리</h1>
-          <Link
-            href="/admin/navigations/create"
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            새 메뉴 추가
-          </Link>
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                fetchNavigations()
+                // 사용자 페이지 네비게이션도 강제 새로고침
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new Event('navigation-refresh'))
+                }
+              }}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+            >
+              새로고침
+            </button>
+            <Link
+              href="/admin/navigations/create"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              새 메뉴 추가
+            </Link>
+          </div>
         </div>
 
         {error && (

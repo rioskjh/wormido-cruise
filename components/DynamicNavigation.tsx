@@ -45,8 +45,18 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
       fetchNavigations()
     }
     
+    const handleNavigationRefresh = () => {
+      console.log('네비게이션 강제 새로고침 이벤트 수신')
+      fetchNavigations()
+    }
+    
     window.addEventListener('focus', handleFocus)
-    return () => window.removeEventListener('focus', handleFocus)
+    window.addEventListener('navigation-refresh', handleNavigationRefresh)
+    
+    return () => {
+      window.removeEventListener('focus', handleFocus)
+      window.removeEventListener('navigation-refresh', handleNavigationRefresh)
+    }
   }, [])
 
   const fetchNavigations = async () => {
@@ -54,13 +64,16 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
       const response = await fetch('/api/navigations', {
         cache: 'no-store',
         headers: {
-          'Cache-Control': 'no-cache'
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
         }
       })
       const data = await response.json()
 
       if (data.ok) {
         setNavigations(data.data)
+        console.log('네비게이션 데이터 새로고침:', data.data)
       }
     } catch (error) {
       console.error('네비게이션 조회 오류:', error)

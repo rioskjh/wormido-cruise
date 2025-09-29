@@ -24,12 +24,14 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       ok: true,
-      data: topLevelNavigations
+      data: topLevelNavigations,
+      timestamp: new Date().toISOString()
     }, {
       headers: {
         'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
         'Pragma': 'no-cache',
-        'Expires': '0'
+        'Expires': '0',
+        'Last-Modified': new Date().toUTCString()
       }
     })
   } catch (error) {
