@@ -336,106 +336,145 @@ export default function Home() {
       </section>
 
       {/* 공지사항 및 고객센터 섹션 */}
-      <section className="w-full py-16 bg-gray-50">
+      <section className="w-full py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* 공지사항 */}
-            <div className="bg-white rounded-[10px] shadow-lg p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-design-blue rounded-full flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-design-gray font-pretendard">공지사항</h3>
-              </div>
-              <div className="space-y-4">
-                <div className="border-l-4 border-design-blue pl-4 py-2">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="font-semibold text-design-gray font-pretendard text-sm">겨울 시즌 운항 안내</h4>
-                      <p className="text-design-gray-light font-pretendard text-xs mt-1">2024.12.01</p>
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              
+              {/* 공지사항 카드 */}
+              <div className="group">
+                <div className="bg-white border border-gray-200 rounded-[20px] p-8 hover:shadow-xl transition-all duration-300 hover:border-design-blue">
+                  {/* 헤더 */}
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-design-blue to-blue-600 rounded-[16px] flex items-center justify-center shadow-lg">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                      </svg>
                     </div>
-                    <span className="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full font-pretendard">중요</span>
-                  </div>
-                </div>
-                <div className="border-l-4 border-gray-200 pl-4 py-2">
-                  <div className="flex justify-between items-start">
                     <div>
-                      <h4 className="font-semibold text-design-gray font-pretendard text-sm">신규 크루즈 코스 오픈</h4>
-                      <p className="text-design-gray-light font-pretendard text-xs mt-1">2024.11.25</p>
+                      <h3 className="text-2xl font-bold text-design-gray font-pretendard">공지사항</h3>
+                      <p className="text-design-gray-light font-pretendard text-sm">최신 소식을 확인하세요</p>
                     </div>
                   </div>
-                </div>
-                <div className="border-l-4 border-gray-200 pl-4 py-2">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="font-semibold text-design-gray font-pretendard text-sm">예약 시스템 점검 안내</h4>
-                      <p className="text-design-gray-light font-pretendard text-xs mt-1">2024.11.20</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-6 text-center">
-                <Link href="/notice" className="text-design-blue hover:text-blue-600 font-pretendard text-sm font-medium">
-                  더보기 →
-                </Link>
-              </div>
-            </div>
 
-            {/* 고객센터 */}
-            <div className="bg-white rounded-[10px] shadow-lg p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-design-purple rounded-full flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 100 19.5 9.75 9.75 0 000-19.5z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-design-gray font-pretendard">도와드릴까요?</h3>
-              </div>
-              <div className="space-y-4">
-                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="w-12 h-12 bg-design-blue rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
+                  {/* 공지사항 목록 */}
+                  <div className="space-y-6">
+                    <div className="flex items-start gap-4 p-4 bg-red-50 rounded-[12px] border-l-4 border-red-500">
+                      <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-semibold text-design-gray font-pretendard text-base">겨울 시즌 운항 안내</h4>
+                          <span className="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full font-pretendard font-medium">중요</span>
+                        </div>
+                        <p className="text-design-gray-light font-pretendard text-sm">2024.12.01</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4 p-4 hover:bg-gray-50 rounded-[12px] transition-colors">
+                      <div className="w-2 h-2 bg-design-blue rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-design-gray font-pretendard text-base mb-1">신규 크루즈 코스 오픈</h4>
+                        <p className="text-design-gray-light font-pretendard text-sm">2024.11.25</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4 p-4 hover:bg-gray-50 rounded-[12px] transition-colors">
+                      <div className="w-2 h-2 bg-gray-300 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-design-gray font-pretendard text-base mb-1">예약 시스템 점검 안내</h4>
+                        <p className="text-design-gray-light font-pretendard text-sm">2024.11.20</p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-design-gray font-pretendard">전화 문의</h4>
-                    <p className="text-design-gray-light font-pretendard text-sm">032-123-4567</p>
-                    <p className="text-design-gray-light font-pretendard text-xs">평일 09:00 - 18:00</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="w-12 h-12 bg-design-purple rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-design-gray font-pretendard">카카오톡 상담</h4>
-                    <p className="text-design-gray-light font-pretendard text-sm">@월미도크루즈</p>
-                    <p className="text-design-gray-light font-pretendard text-xs">24시간 자동응답</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-design-gray font-pretendard">이메일 문의</h4>
-                    <p className="text-design-gray-light font-pretendard text-sm">info@wormicruise.com</p>
-                    <p className="text-design-gray-light font-pretendard text-xs">24시간 접수</p>
+
+                  {/* 더보기 버튼 */}
+                  <div className="mt-8 text-center">
+                    <Link 
+                      href="/board/notice" 
+                      className="inline-flex items-center gap-2 text-design-blue hover:text-blue-600 font-pretendard text-base font-medium transition-colors"
+                    >
+                      더보기
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
                   </div>
                 </div>
               </div>
-              <div className="mt-6 text-center">
-                <Link href="/support" className="text-design-blue hover:text-blue-600 font-pretendard text-sm font-medium">
-                  자주 묻는 질문 →
-                </Link>
+
+              {/* 고객센터 카드 */}
+              <div className="group">
+                <div className="bg-white border border-gray-200 rounded-[20px] p-8 hover:shadow-xl transition-all duration-300 hover:border-design-purple">
+                  {/* 헤더 */}
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-design-purple to-purple-600 rounded-[16px] flex items-center justify-center shadow-lg">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 100 19.5 9.75 9.75 0 000-19.5z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold text-design-gray font-pretendard">도와드릴까요?</h3>
+                      <p className="text-design-gray-light font-pretendard text-sm">언제든지 문의해주세요</p>
+                    </div>
+                  </div>
+
+                  {/* 고객센터 옵션 */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-[16px] hover:from-blue-100 hover:to-blue-200 transition-all duration-200">
+                      <div className="w-14 h-14 bg-design-blue rounded-[12px] flex items-center justify-center shadow-md">
+                        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-design-gray font-pretendard text-lg">전화 문의</h4>
+                        <p className="text-design-gray-light font-pretendard text-base font-medium">032-123-4567</p>
+                        <p className="text-design-gray-light font-pretendard text-sm">평일 09:00 - 18:00</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-purple-50 to-purple-100 rounded-[16px] hover:from-purple-100 hover:to-purple-200 transition-all duration-200">
+                      <div className="w-14 h-14 bg-design-purple rounded-[12px] flex items-center justify-center shadow-md">
+                        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-design-gray font-pretendard text-lg">카카오톡 상담</h4>
+                        <p className="text-design-gray-light font-pretendard text-base font-medium">@월미도크루즈</p>
+                        <p className="text-design-gray-light font-pretendard text-sm">24시간 자동응답</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-green-50 to-green-100 rounded-[16px] hover:from-green-100 hover:to-green-200 transition-all duration-200">
+                      <div className="w-14 h-14 bg-green-500 rounded-[12px] flex items-center justify-center shadow-md">
+                        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-design-gray font-pretendard text-lg">이메일 문의</h4>
+                        <p className="text-design-gray-light font-pretendard text-base font-medium">info@wormicruise.com</p>
+                        <p className="text-design-gray-light font-pretendard text-sm">24시간 접수</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 더보기 버튼 */}
+                  <div className="mt-8 text-center">
+                    <Link 
+                      href="/board/qna" 
+                      className="inline-flex items-center gap-2 text-design-blue hover:text-blue-600 font-pretendard text-base font-medium transition-colors"
+                    >
+                      자주 묻는 질문
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
               </div>
+
             </div>
           </div>
         </div>
