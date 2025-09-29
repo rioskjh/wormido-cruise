@@ -22,6 +22,21 @@ interface Board {
   boardId: string
 }
 
+interface Navigation {
+  id: number
+  title: string
+  url: string | null
+  type: 'CUSTOM' | 'PRODUCTS' | 'BOARD' | 'CONTENT' | 'EXTERNAL'
+  targetId: number | null
+  parentId: number | null
+  sortOrder: number
+  isActive: boolean
+  isNewWindow: boolean
+  children: Navigation[]
+  createdAt: string
+  updatedAt: string
+}
+
 export default function AdminNavigationCreatePage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -29,6 +44,7 @@ export default function AdminNavigationCreatePage() {
   const [contents, setContents] = useState<Content[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [boards, setBoards] = useState<Board[]>([])
+  const [navigations, setNavigations] = useState<Navigation[]>([])
   const [formData, setFormData] = useState({
     title: '',
     url: '',
@@ -44,6 +60,7 @@ export default function AdminNavigationCreatePage() {
     fetchContents()
     fetchCategories()
     fetchBoards()
+    fetchNavigations()
   }, [])
 
   const fetchContents = async () => {
@@ -97,6 +114,24 @@ export default function AdminNavigationCreatePage() {
       }
     } catch (error) {
       console.error('게시판 조회 오류:', error)
+    }
+  }
+
+  const fetchNavigations = async () => {
+    try {
+      const adminToken = localStorage.getItem('adminToken')
+      const response = await fetch('/api/admin/navigations', {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`
+        }
+      })
+      const data = await response.json()
+
+      if (data.ok) {
+        setNavigations(data.data || [])
+      }
+    } catch (error) {
+      console.error('네비게이션 조회 오류:', error)
     }
   }
 
@@ -331,18 +366,25 @@ export default function AdminNavigationCreatePage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  부모 메뉴 ID
+                  부모 메뉴
                 </label>
-                <input
-                  type="number"
+                <select
                   name="parentId"
                   value={formData.parentId}
                   onChange={handleInputChange}
-                  placeholder="하위 메뉴로 만들려면 부모 메뉴 ID 입력"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                >
+                  <option value="">최상위 메뉴 (하위 메뉴가 아님)</option>
+                  {navigations
+                    .filter(nav => !nav.parentId) // 최상위 메뉴만 표시
+                    .map(nav => (
+                      <option key={nav.id} value={nav.id}>
+                        {nav.title} ({nav.type})
+                      </option>
+                    ))}
+                </select>
                 <p className="text-sm text-gray-500 mt-1">
-                  비워두면 최상위 메뉴가 됩니다. (최대 6개)
+                  부모 메뉴를 선택하면 하위 메뉴가 됩니다. 비워두면 최상위 메뉴가 됩니다.
                 </p>
               </div>
             </div>
