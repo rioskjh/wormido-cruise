@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import CKEditor5 from '@/components/CKEditor5'
 
 interface ContentEditorProps {
   onSubmit: (data: any) => void
@@ -22,6 +23,7 @@ export default function ContentEditor({ onSubmit, loading, initialData }: Conten
     title: '',
     slug: '',
     content: '',
+    contentHtml: '',
     description: '',
     keywords: '',
     isActive: true,
@@ -34,6 +36,7 @@ export default function ContentEditor({ onSubmit, loading, initialData }: Conten
         title: initialData.title,
         slug: initialData.slug,
         content: initialData.content,
+        contentHtml: initialData.content,
         description: initialData.description || '',
         keywords: initialData.keywords || '',
         isActive: initialData.isActive,
@@ -47,6 +50,14 @@ export default function ContentEditor({ onSubmit, loading, initialData }: Conten
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+    }))
+  }
+
+  const handleEditorChange = (contentHtml: string) => {
+    setFormData(prev => ({
+      ...prev,
+      contentHtml: contentHtml,
+      content: contentHtml // HTML을 텍스트로도 저장
     }))
   }
 
@@ -120,17 +131,13 @@ export default function ContentEditor({ onSubmit, loading, initialData }: Conten
           <label className="block text-sm font-medium text-gray-700 mb-2">
             내용 *
           </label>
-          <textarea
-            name="content"
-            value={formData.content}
-            onChange={handleInputChange}
-            required
-            rows={15}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="컨텐츠 내용을 입력하세요 (HTML 태그 사용 가능)"
+          <CKEditor5
+            value={formData.contentHtml}
+            onChange={handleEditorChange}
+            placeholder="컨텐츠 내용을 입력하세요"
           />
           <p className="mt-1 text-sm text-gray-500">
-            HTML 태그를 사용하여 내용을 작성할 수 있습니다.
+            리치 텍스트 에디터를 사용하여 내용을 작성할 수 있습니다.
           </p>
         </div>
 
