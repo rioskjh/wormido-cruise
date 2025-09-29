@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
+import CKEditor5 from '@/components/CKEditor5'
 
 interface Board {
   id: number
@@ -26,8 +27,17 @@ export default function BoardWritePage() {
   const [board, setBoard] = useState<Board | null>(null)
   const [formData, setFormData] = useState({
     title: '',
-    content: ''
+    content: '',
+    contentHtml: '',
+    authorName: '',
+    password: '',
+    isSecret: false
   })
+  const [isGuest, setIsGuest] = useState(false)
+  const [captchaQuestion, setCaptchaQuestion] = useState('')
+  const [captchaAnswer, setCaptchaAnswer] = useState('')
+  const [captchaInput, setCaptchaInput] = useState('')
+  const [captchaGenerated, setCaptchaGenerated] = useState(false)
 
   // 게시판 정보 조회
   useEffect(() => {
@@ -57,11 +67,36 @@ export default function BoardWritePage() {
     fetchBoardInfo()
   }, [boardId])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
+  // 비회원 작성 시 CAPTCHA 생성
+  useEffect(() => {
+    if (isGuest && !captchaGenerated) {
+      generateCaptcha()
+    }
+  }, [isGuest, captchaGenerated])
+
+  const generateCaptcha = () => {
+    const num1 = Math.floor(Math.random() * 10) + 1
+    const num2 = Math.floor(Math.random() * 10) + 1
+    const answer = num1 + num2
+    setCaptchaQuestion(`${num1} + ${num2} = ?`)
+    setCaptchaAnswer(answer.toString())
+    setCaptchaInput('')
+    setCaptchaGenerated(true)
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+    }))
+  }
+
+  const handleEditorChange = (contentHtml: string) => {
+    setFormData(prev => ({
+      ...prev,
+      contentHtml: contentHtml,
+      content: contentHtml // HTML을 텍스트로도 저장
     }))
   }
 
@@ -73,29 +108,55 @@ export default function BoardWritePage() {
       return
     }
     
-    if (!formData.content.trim()) {
+    if (!formData.contentHtml.trim()) {
       setError('내용을 입력해주세요.')
       return
+    }
+
+    // 비회원 작성인 경우 추가 검증
+    if (isGuest) {
+      if (!formData.authorName.trim()) {
+        setError('작성자명을 입력해주세요.')
+        return
+      }
+      if (!formData.password.trim()) {
+        setError('비밀번호를 입력해주세요.')
+        return
+      }
+      if (!captchaInput || captchaAnswer !== captchaInput.trim()) {
+        setError('스팸 방지 문제를 올바르게 입력해주세요.')
+        return
+      }
     }
 
     try {
       setLoading(true)
       setError('')
 
-      const token = localStorage.getItem('token')
-      if (!token) {
-        setError('로그인이 필요합니다.')
-        setLoading(false)
-        return
+      const requestData = {
+        ...formData,
+        isGuest: isGuest
+      }
+
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      }
+
+      // 회원 작성인 경우에만 토큰 추가
+      if (!isGuest) {
+        const token = localStorage.getItem('token')
+        if (!token) {
+          setError('로그인이 필요합니다.')
+          setLoading(false)
+          return
+        }
+        headers['Authorization'] = `Bearer ${token}`
       }
 
       const response = await fetch(`/api/board/${boardId}/write`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
+        headers,
+        body: JSON.stringify(requestData)
       })
 
       const data = await response.json()
@@ -192,15 +253,113 @@ export default function BoardWritePage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 내용
               </label>
-              <textarea
-                name="content"
-                value={formData.content}
-                onChange={handleInputChange}
+              <CKEditor5
+                value={formData.contentHtml}
+                onChange={handleEditorChange}
                 placeholder="내용을 입력하세요"
-                rows={15}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               />
             </div>
+
+            {/* Q&A 게시판인 경우 비회원 작성 옵션 */}
+            {board?.type === 'QNA' && (
+              <>
+                <div className="border-t pt-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">작성자 정보</h3>
+                  
+                  <div className="mb-4">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={isGuest}
+                        onChange={(e) => setIsGuest(e.target.checked)}
+                        className="mr-2"
+                      />
+                      <span className="text-sm text-gray-700">비회원으로 작성하기</span>
+                    </label>
+                  </div>
+
+                  {isGuest && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          작성자명 <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="authorName"
+                          value={formData.authorName}
+                          onChange={handleInputChange}
+                          placeholder="작성자명을 입력하세요"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          required={isGuest}
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          비밀번호 <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="password"
+                          name="password"
+                          value={formData.password}
+                          onChange={handleInputChange}
+                          placeholder="글 수정/삭제용 비밀번호"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          required={isGuest}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 스팸 방지 CAPTCHA */}
+                  {isGuest && captchaQuestion && (
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        스팸 방지 <span className="text-red-500">*</span>
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <div className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg font-mono text-lg">
+                          {captchaQuestion}
+                        </div>
+                        <input
+                          type="text"
+                          value={captchaInput}
+                          onChange={(e) => setCaptchaInput(e.target.value)}
+                          placeholder="답을 입력하세요"
+                          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-32"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={generateCaptcha}
+                          className="px-3 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                        >
+                          새로고침
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">간단한 수학 문제를 풀어주세요.</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="border-t pt-6">
+                  <div className="mb-4">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="isSecret"
+                        checked={formData.isSecret}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                      />
+                      <span className="text-sm text-gray-700">비밀글로 작성하기</span>
+                    </label>
+                    <p className="text-xs text-gray-500 mt-1">비밀글은 작성자와 관리자만 볼 수 있습니다.</p>
+                  </div>
+                </div>
+              </>
+            )}
 
             <div className="flex justify-end gap-3">
               <Link

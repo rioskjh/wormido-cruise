@@ -77,6 +77,8 @@ export default function PopupManager() {
     if (!isAdminPage && isMainPage) {
       loadPopups()
     } else {
+      // 메인 페이지가 아닌 경우 팝업 숨기기
+      setPopups([])
       setLoading(false)
     }
   }, [pathname, isAdminPage, isMainPage])

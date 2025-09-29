@@ -5,11 +5,13 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
+import CKEditor5 from '@/components/CKEditor5'
 
 interface Post {
   id: number
   title: string
   content: string
+  contentHtml?: string
   authorId: number
 }
 
@@ -25,7 +27,8 @@ export default function BoardEditPage() {
   const [post, setPost] = useState<Post | null>(null)
   const [formData, setFormData] = useState({
     title: '',
-    content: ''
+    content: '',
+    contentHtml: ''
   })
 
   // 게시판 정보
@@ -69,7 +72,8 @@ export default function BoardEditPage() {
         setPost(data.data)
         setFormData({
           title: data.data.title,
-          content: data.data.content
+          content: data.data.content,
+          contentHtml: data.data.contentHtml || data.data.content
         })
       } else {
         setError(data.error)
@@ -90,6 +94,14 @@ export default function BoardEditPage() {
     }))
   }
 
+  const handleEditorChange = (contentHtml: string) => {
+    setFormData(prev => ({
+      ...prev,
+      contentHtml: contentHtml,
+      content: contentHtml // HTML을 텍스트로도 저장
+    }))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -98,7 +110,7 @@ export default function BoardEditPage() {
       return
     }
     
-    if (!formData.content.trim()) {
+    if (!formData.contentHtml.trim()) {
       setError('내용을 입력해주세요.')
       return
     }
@@ -216,13 +228,10 @@ export default function BoardEditPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   내용
                 </label>
-                <textarea
-                  name="content"
-                  value={formData.content}
-                  onChange={handleInputChange}
+                <CKEditor5
+                  value={formData.contentHtml}
+                  onChange={handleEditorChange}
                   placeholder="내용을 입력하세요"
-                  rows={15}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                 />
               </div>
 

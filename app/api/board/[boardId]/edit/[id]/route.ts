@@ -58,6 +58,13 @@ export async function GET(
       where: {
         id: postId,
         type: boardType
+      },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        contentHtml: true,
+        authorId: true
       }
     })
 
@@ -143,7 +150,8 @@ export async function PUT(
     const body = await request.json()
     const schema = z.object({
       title: z.string().min(1, '제목을 입력해주세요.').max(200, '제목은 200자 이하로 입력해주세요.'),
-      content: z.string().min(1, '내용을 입력해주세요.')
+      content: z.string().min(1, '내용을 입력해주세요.'),
+      contentHtml: z.string().optional()
     })
 
     const validatedData = schema.parse(body)
@@ -175,7 +183,8 @@ export async function PUT(
       where: { id: postId },
       data: {
         title: validatedData.title,
-        content: validatedData.content
+        content: validatedData.content,
+        contentHtml: validatedData.contentHtml || validatedData.content
       }
     })
 
