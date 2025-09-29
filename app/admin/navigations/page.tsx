@@ -45,13 +45,15 @@ function SortableNavigationItem({
   level, 
   onDelete, 
   onToggleActive, 
-  getTypeLabel 
+  getTypeLabel,
+  isUpdatingOrder = false
 }: {
   nav: Navigation
   level: number
   onDelete: (id: number) => void
   onToggleActive: (id: number, isActive: boolean) => void
   getTypeLabel: (type: string) => string
+  isUpdatingOrder?: boolean
 }) {
   const {
     attributes,
@@ -80,10 +82,14 @@ function SortableNavigationItem({
         <div className="flex items-center gap-3">
           {/* 드래그 핸들 */}
           <div
-            {...attributes}
-            {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded"
-            title="드래그하여 순서 변경"
+            {...(isUpdatingOrder ? {} : attributes)}
+            {...(isUpdatingOrder ? {} : listeners)}
+            className={`p-1 rounded ${
+              isUpdatingOrder 
+                ? 'cursor-not-allowed opacity-50' 
+                : 'cursor-grab active:cursor-grabbing hover:bg-gray-100'
+            }`}
+            title={isUpdatingOrder ? "순서 업데이트 중입니다" : "드래그하여 순서 변경"}
           >
             <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8h16M4 16h16" />
@@ -112,23 +118,35 @@ function SortableNavigationItem({
         <div className="flex items-center gap-2">
           <button
             onClick={() => onToggleActive(nav.id, nav.isActive)}
+            disabled={isUpdatingOrder}
             className={`px-3 py-1 text-sm rounded ${
-              nav.isActive 
-                ? 'bg-red-100 text-red-800 hover:bg-red-200' 
-                : 'bg-green-100 text-green-800 hover:bg-green-200'
+              isUpdatingOrder
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : nav.isActive 
+                  ? 'bg-red-100 text-red-800 hover:bg-red-200' 
+                  : 'bg-green-100 text-green-800 hover:bg-green-200'
             }`}
           >
             {nav.isActive ? '비활성화' : '활성화'}
           </button>
           <Link
             href={`/admin/navigations/${nav.id}/edit`}
-            className="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded hover:bg-blue-200"
+            className={`px-3 py-1 text-sm rounded ${
+              isUpdatingOrder
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed pointer-events-none'
+                : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+            }`}
           >
             수정
           </Link>
           <button
             onClick={() => onDelete(nav.id)}
-            className="px-3 py-1 text-sm bg-red-100 text-red-800 rounded hover:bg-red-200"
+            disabled={isUpdatingOrder}
+            className={`px-3 py-1 text-sm rounded ${
+              isUpdatingOrder
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-red-100 text-red-800 hover:bg-red-200'
+            }`}
           >
             삭제
           </button>
@@ -156,23 +174,35 @@ function SortableNavigationItem({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => onToggleActive(child.id, child.isActive)}
+                    disabled={isUpdatingOrder}
                     className={`px-2 py-1 text-xs rounded ${
-                      child.isActive 
-                        ? 'bg-red-100 text-red-800 hover:bg-red-200' 
-                        : 'bg-green-100 text-green-800 hover:bg-green-200'
+                      isUpdatingOrder
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : child.isActive 
+                          ? 'bg-red-100 text-red-800 hover:bg-red-200' 
+                          : 'bg-green-100 text-green-800 hover:bg-green-200'
                     }`}
                   >
                     {child.isActive ? '비활성화' : '활성화'}
                   </button>
                   <Link
                     href={`/admin/navigations/${child.id}/edit`}
-                    className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded hover:bg-blue-200"
+                    className={`px-2 py-1 text-xs rounded ${
+                      isUpdatingOrder
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed pointer-events-none'
+                        : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+                    }`}
                   >
                     수정
                   </Link>
                   <button
                     onClick={() => onDelete(child.id)}
-                    className="px-2 py-1 text-xs bg-red-100 text-red-800 rounded hover:bg-red-200"
+                    disabled={isUpdatingOrder}
+                    className={`px-2 py-1 text-xs rounded ${
+                      isUpdatingOrder
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'bg-red-100 text-red-800 hover:bg-red-200'
+                    }`}
                   >
                     삭제
                   </button>
@@ -194,9 +224,14 @@ export default function AdminNavigationsPage() {
   const [navigations, setNavigations] = useState<Navigation[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [isUpdatingOrder, setIsUpdatingOrder] = useState(false)
   
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 8px 이상 드래그해야 활성화
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -308,6 +343,9 @@ export default function AdminNavigationsPage() {
       const newIndex = navigations.findIndex((nav) => nav.id === over.id)
 
       if (oldIndex !== -1 && newIndex !== -1) {
+        // 로딩 상태 시작
+        setIsUpdatingOrder(true)
+        
         // 로컬 상태 업데이트
         const newNavigations = arrayMove(navigations, oldIndex, newIndex)
         setNavigations(newNavigations)
@@ -341,6 +379,9 @@ export default function AdminNavigationsPage() {
           // 실패 시 원래 상태로 복원
           fetchNavigations()
           alert('네비게이션 순서 업데이트 중 오류가 발생했습니다.')
+        } finally {
+          // 로딩 상태 종료
+          setIsUpdatingOrder(false)
         }
       }
     }
@@ -361,7 +402,15 @@ export default function AdminNavigationsPage() {
     <AdminLayout title="네비게이션 관리">
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">네비게이션 관리</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-gray-900">네비게이션 관리</h1>
+            {isUpdatingOrder && (
+              <div className="flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                순서 업데이트 중...
+              </div>
+            )}
+          </div>
           <div className="flex gap-3">
             <button
               onClick={() => {
@@ -371,13 +420,22 @@ export default function AdminNavigationsPage() {
                   window.dispatchEvent(new Event('navigation-refresh'))
                 }
               }}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+              disabled={isUpdatingOrder}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                isUpdatingOrder 
+                  ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                  : 'bg-green-600 text-white hover:bg-green-700'
+              }`}
             >
               새로고침
             </button>
             <Link
               href="/admin/navigations/create"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                isUpdatingOrder 
+                  ? 'bg-gray-400 text-gray-200 cursor-not-allowed pointer-events-none' 
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              }`}
             >
               새 메뉴 추가
             </Link>
@@ -404,29 +462,42 @@ export default function AdminNavigationsPage() {
                 등록된 메뉴가 없습니다.
               </div>
             ) : (
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-              >
-                <SortableContext
-                  items={navigations.map(nav => nav.id)}
-                  strategy={verticalListSortingStrategy}
+              <div className={`relative ${isUpdatingOrder ? 'pointer-events-none opacity-50' : ''}`}>
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
                 >
-                  <div className="space-y-2">
-                    {navigations.map((nav) => (
-                      <SortableNavigationItem
-                        key={nav.id}
-                        nav={nav}
-                        level={0}
-                        onDelete={handleDelete}
-                        onToggleActive={handleToggleActive}
-                        getTypeLabel={getTypeLabel}
-                      />
-                    ))}
+                  <SortableContext
+                    items={navigations.map(nav => nav.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <div className="space-y-2">
+                      {navigations.map((nav) => (
+                        <SortableNavigationItem
+                          key={nav.id}
+                          nav={nav}
+                          level={0}
+                          onDelete={handleDelete}
+                          onToggleActive={handleToggleActive}
+                          getTypeLabel={getTypeLabel}
+                          isUpdatingOrder={isUpdatingOrder}
+                        />
+                      ))}
+                    </div>
+                  </SortableContext>
+                </DndContext>
+                
+                {/* 로딩 오버레이 */}
+                {isUpdatingOrder && (
+                  <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center rounded-lg">
+                    <div className="flex items-center gap-3 bg-white px-6 py-4 rounded-lg shadow-lg border">
+                      <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-gray-700 font-medium">순서를 업데이트하고 있습니다...</span>
+                    </div>
                   </div>
-                </SortableContext>
-              </DndContext>
+                )}
+              </div>
             )}
           </div>
         </div>
