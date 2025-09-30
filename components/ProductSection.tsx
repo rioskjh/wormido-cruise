@@ -280,7 +280,7 @@ export default function ProductSection({ products, loading, error }: ProductSect
               <Link 
                 key={product.id} 
                 href={`/products/${product.id}`}
-                className="content-stretch flex flex-col items-center relative shrink-0 w-[380px] hover:transform hover:scale-105 transition-all duration-200 cursor-pointer"
+                className="content-stretch flex flex-col items-center relative shrink-0 w-[380px] hover:transform hover:scale-105 transition-all duration-200 cursor-pointer border border-[#dddddd] rounded-[10px] overflow-hidden"
               >
                 {/* 상품 이미지 영역 */}
                 <div className="h-[350px] relative rounded-tl-[10px] rounded-tr-[10px] shrink-0 w-[380px]">
@@ -294,7 +294,6 @@ export default function ProductSection({ products, loading, error }: ProductSect
               
                 {/* 상품 정보 영역 */}
                 <div className="relative rounded-bl-[10px] rounded-br-[10px] shrink-0 w-full">
-                  <div aria-hidden="true" className="absolute border border-[#dddddd] border-solid inset-0 pointer-events-none rounded-bl-[10px] rounded-br-[10px]" />
                   <div className="flex flex-col items-center size-full">
                     <div className="box-border content-stretch flex flex-col gap-[30px] items-center px-[20px] py-[30px] relative w-full">
                       {/* 상품 제목과 설명 */}
@@ -322,9 +321,9 @@ export default function ProductSection({ products, loading, error }: ProductSect
                       </div>
                       
                       {/* 예약 버튼 */}
-                      <div className="bg-white box-border content-stretch flex gap-[10px] items-center justify-center px-0 py-[10px] relative rounded-[4px] shrink-0 w-full">
+                      <div className="bg-white box-border content-stretch flex gap-[10px] items-center justify-center px-0 py-[10px] relative rounded-[4px] shrink-0 w-full hover:bg-[#222222] transition-colors duration-200 group">
                         <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                        <div className="font-['Pretendard:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[17px] text-center text-nowrap">
+                        <div className="font-['Pretendard:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] group-hover:text-white text-[17px] text-center text-nowrap transition-colors duration-200">
                           <p className="leading-[30px] whitespace-pre">예약하기</p>
                         </div>
                         <div className="flex h-[20px] items-center justify-center relative shrink-0 w-[20px]">
@@ -332,7 +331,7 @@ export default function ProductSection({ products, loading, error }: ProductSect
                             <div className="relative size-[20px]">
                               <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
                                 <g>
-                                  <path d="M5 15l7-7 7 7" stroke="#222222" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                                  <path d="M5 15l7-7 7 7" stroke="#222222" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="group-hover:stroke-white transition-colors duration-200" />
                                 </g>
                               </svg>
                             </div>
