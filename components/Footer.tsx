@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 interface SiteSettings {
@@ -56,49 +57,24 @@ export default function Footer() {
           <div className="content-stretch flex flex-col md:flex-row items-center justify-between relative shrink-0 w-full gap-4 md:gap-0">
             {/* Logo */}
             <div className="h-[46px] overflow-clip relative shrink-0 w-[250px]">
-              <div className="absolute bottom-[17.93%] contents left-[35.98%] right-0 top-[16.72%]">
-                <div className="absolute inset-[59.73%_0.03%_17.93%_36.1%]">
-                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 160 11">
-                    <g>
-                      <path d="M0 0h160v11H0z" fill="var(--fill-0, #333333)" />
-                    </g>
-                  </svg>
-                </div>
-                <div className="absolute bottom-[48.5%] left-[35.98%] right-0 top-[16.72%]">
-                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 161 16">
-                    <g>
-                      <path d="M0 0h161v16H0z" fill="var(--fill-0, #333333)" />
-                    </g>
-                  </svg>
-                </div>
-              </div>
-              <div className="absolute bottom-0 left-0 right-[69.01%] top-[-0.01%]">
-                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 78 46">
-                  <g>
-                    <path d="M0 0h78v46H0z" fill="var(--fill-0, #941680)" />
-                  </g>
-                </svg>
-              </div>
+              <Image
+                src="/images/footer-logo.png"
+                alt="월미도해양관광 로고"
+                width={250}
+                height={46}
+                className="w-full h-full object-contain"
+              />
             </div>
 
             {/* Social Media Icons */}
             <div className="h-[24px] relative shrink-0 w-[146px]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 146 24">
-                <g>
-                  <g>
-                    <path d="M0 0h24v24H0z" fill="var(--fill-0, #222222)" />
-                  </g>
-                  <g clipPath="url(#clip0_1_600)">
-                    <path d="M0 0h18v18H0z" fill="var(--fill-0, black)" />
-                  </g>
-                  <path d="M0 0h24v24H0z" fill="var(--fill-0, #222222)" />
-                </g>
-                <defs>
-                  <clipPath id="clip0_1_600">
-                    <rect fill="white" height="18" transform="translate(64 3)" width="18" />
-                  </clipPath>
-                </defs>
-              </svg>
+              <Image
+                src="/images/social-icons.png"
+                alt="소셜미디어 아이콘"
+                width={146}
+                height={24}
+                className="w-full h-full object-contain"
+              />
             </div>
           </div>
 

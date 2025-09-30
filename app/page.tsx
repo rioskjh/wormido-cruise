@@ -346,97 +346,13 @@ export default function Home() {
                 <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
                   {/* 공지사항 아이콘 */}
                   <div className="h-[51px] overflow-clip relative shrink-0 w-[50px]">
-                    <div className="absolute bottom-[17.19%] contents left-0 right-[56.81%] top-[38.28%]">
-                      <div className="absolute inset-[38.28%_56.81%_22.54%_19.89%]">
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                        </div>
-                      </div>
-                      <div className="absolute bottom-[17.19%] left-0 right-[85.9%] top-[51.77%]">
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="absolute contents inset-[38.28%_56.81%_22.54%_19.89%]">
-                      <div className="absolute inset-[38.28%_56.81%_22.54%_19.89%]">
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="absolute contents inset-[38.28%_56.81%_15.76%_1.21%]">
-                      <div className="absolute inset-[38.28%_56.81%_21.12%_18.6%]">
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                        </div>
-                      </div>
-                      <div className="absolute inset-[38.28%_61.74%_15.76%_1.21%]">
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="absolute contents inset-[77.79%_56.98%_-0.01%_18.28%]">
-                      <div className="absolute inset-[77.79%_56.98%_1.76%_31.42%]">
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                        </div>
-                      </div>
-                      <div className="absolute inset-[77.79%_60.12%_0.12%_18.28%]">
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                        </div>
-                      </div>
-                      <div className="absolute inset-[96.98%_56.98%_-0.01%_37.3%]">
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="absolute bottom-[4.4%] contents left-[28.91%] right-0 top-[-0.01%]">
-                      <div className="absolute contents inset-[6.69%_6.49%_11.55%_36.51%]">
-                        <div className="absolute inset-[6.69%_14.4%_59.33%_36.51%]">
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                          </div>
-                        </div>
-                        <div className="absolute inset-[48.3%_6.49%_11.55%_47.67%]">
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                          </div>
-                        </div>
-                        <div className="absolute inset-[29.87%_7.69%_45.15%_71.36%]">
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="absolute contents inset-[33.06%_17.24%_29.16%_36.54%]">
-                        <div className="absolute inset-[33.06%_18.95%_29.16%_36.54%]">
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                          </div>
-                        </div>
-                        <div className="absolute inset-[33.29%_17.24%_45.22%_67.55%]">
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="absolute contents inset-[3.87%_5.03%_7.88%_50.11%]">
-                        <div className="absolute inset-[3.87%_5.03%_7.88%_50.11%]">
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="absolute bottom-[4.4%] left-[28.91%] right-0 top-[-0.01%]">
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
-                        </div>
-                      </div>
-                    </div>
+                    <Image
+                      src="/images/announcement-icon-1.png"
+                      alt="공지사항 아이콘"
+                      width={50}
+                      height={51}
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                   <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[34px] text-nowrap">
                     <p className="leading-[50px] whitespace-pre">공지사항</p>
@@ -479,65 +395,13 @@ export default function Home() {
                 <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
                   {/* 고객센터 아이콘 */}
                   <div className="h-[52px] overflow-clip relative shrink-0 w-[60px]">
-                    <div className="absolute bottom-[-0.01%] contents left-0 right-[-0.01%] top-[-0.01%]">
-                      <div className="absolute contents inset-[-0.01%_7.55%]">
-                        <div className="absolute inset-[-0.01%_7.55%_3.17%_7.55%]">
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
-                          </div>
-                        </div>
-                        <div className="absolute inset-[89.33%_42.79%_-0.01%_43.48%]">
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="absolute bottom-[31.45%] contents left-0 right-[-0.01%] top-[35.11%]">
-                        <div className="absolute bottom-[31.45%] left-0 right-[84.05%] top-[35.11%]">
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
-                          </div>
-                        </div>
-                        <div className="absolute inset-[35.11%_-0.01%_31.45%_84.05%]">
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="absolute contents inset-[14.21%_20.02%_15.78%_20.01%]">
-                      <div className="absolute contents inset-[14.21%_20.02%_15.78%_20.01%]">
-                        <div className="absolute inset-[70.68%_57.86%_15.78%_22.97%]">
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
-                          </div>
-                        </div>
-                        <div className="absolute inset-[14.21%_20.02%_17.39%_20.01%]">
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="absolute contents inset-[43.56%_34.4%_46.75%_34.4%]">
-                        <div className="absolute contents inset-[43.56%_34.4%_46.75%_34.4%]">
-                          <div className="absolute inset-[43.56%_57.1%_46.75%_34.4%]">
-                            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                              <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
-                            </div>
-                          </div>
-                          <div className="absolute inset-[43.56%_45.76%_46.75%_45.75%]">
-                            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                              <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
-                            </div>
-                          </div>
-                          <div className="absolute inset-[43.56%_34.4%_46.75%_57.1%]">
-                            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                              <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <Image
+                      src="/images/help-icon-1.png"
+                      alt="도와드릴까요 아이콘"
+                      width={60}
+                      height={52}
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                   <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[34px] text-nowrap">
                     <p className="leading-[50px] whitespace-pre">도와드릴까요?</p>
