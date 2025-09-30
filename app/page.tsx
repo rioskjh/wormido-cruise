@@ -123,10 +123,9 @@ export default function Home() {
                 />
               </div>
               
-                {/* 텍스트 오버레이 - 1200px 컨테이너 안에서 왼쪽 정렬 */}
-                <div className="[grid-area:1_/_1] box-border content-stretch flex flex-col gap-[150px] items-start justify-center ml-0 mt-[220.5px] relative">
-                  <div className="container mx-auto px-4 max-w-[1200px] w-full">
-                    <div className="content-stretch flex flex-col gap-[30px] h-[262px] items-start justify-start relative shrink-0 w-[427.534px] text-left">
+                {/* 텍스트 오버레이 - 왼쪽 정렬 */}
+                <div className="[grid-area:1_/_1] box-border content-stretch flex flex-col gap-[150px] items-start justify-center ml-[50px] mt-[220.5px] relative">
+                  <div className="content-stretch flex flex-col gap-[30px] h-[262px] items-start justify-start relative shrink-0 w-[427.534px] text-left">
                   {/* 메인 타이틀 */}
                       <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
                         <div className="font-pretendard leading-[76px] not-italic relative shrink-0 text-[56px] text-nowrap text-white whitespace-pre font-medium" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }}>
@@ -142,7 +141,6 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
