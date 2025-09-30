@@ -69,7 +69,7 @@ export default function Home() {
             {/* 메인 콘텐츠 */}
             <div className="relative w-full flex flex-col md:grid md:grid-cols-[max-content] md:grid-rows-[max-content] md:inline-grid leading-[0] place-items-start shrink-0">
               {/* 크루즈 이미지 - 모바일에서는 숨김 */}
-              <div className="hidden md:block [grid-area:1_/_1] h-[703px] ml-[260px] mt-0 w-[1250px] rounded-lg overflow-hidden">
+              <div className="hidden md:block [grid-area:1_/_1] h-[703px] ml-[260px] mt-0 w-[1250px] overflow-hidden">
                 <Image
                   src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
                   alt="월미도 크루즈"

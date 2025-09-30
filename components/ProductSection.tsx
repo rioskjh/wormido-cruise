@@ -34,223 +34,39 @@ export default function ProductSection({ products, loading, error }: ProductSect
     <div className="box-border content-stretch flex flex-col gap-[30px] items-start pb-[100px] pt-0 px-0 relative size-full">
       {/* 상품소개 제목 */}
       <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
-        {/* 상품소개 아이콘 */}
-        <div className="h-[33px] overflow-clip relative shrink-0 w-[66px]">
-          <div className="absolute bottom-[17.19%] contents left-0 right-[56.81%] top-[38.28%]">
-            <div className="absolute inset-[38.28%_56.81%_22.54%_19.89%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/1a15bbcbe86ba6d2d8330d75f66a8148fe441f81.png" />
-              </div>
-            </div>
-            <div className="absolute bottom-[17.19%] left-0 right-[85.9%] top-[51.77%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/126c3b41b2f5ef7dcb92743e4b07612b9343c994.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[38.28%_56.81%_22.54%_19.89%]">
-            <div className="absolute inset-[38.28%_56.81%_22.54%_19.89%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/e5907e1b5a715f977aea07ae5e25b493aeddfde6.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[38.28%_56.81%_15.76%_1.21%]">
-            <div className="absolute inset-[38.28%_56.81%_21.12%_18.6%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/9ad1433a9f1c0231ef09a1d589a1b1f3302c5020.png" />
-              </div>
-            </div>
-            <div className="absolute inset-[38.28%_61.74%_15.76%_1.21%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/7cc6c66a0e0288a3d9b3f7e0c5e9d8fb2b7723f5.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[77.79%_56.98%_-0.01%_18.28%]">
-            <div className="absolute inset-[77.79%_56.98%_1.76%_31.42%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/ef5a7be33a71a6430a90ad105bd82f3fc2fb2785.png" />
-              </div>
-            </div>
-            <div className="absolute inset-[77.79%_60.12%_0.12%_18.28%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/ce11576de1403d7a121185d99618a35ed2cf52ba.png" />
-              </div>
-            </div>
-            <div className="absolute inset-[96.98%_56.98%_-0.01%_37.3%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/5e6925481fb4c35c53368fba7a22b1465ccd76af.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute bottom-[4.4%] contents left-[28.91%] right-0 top-[-0.01%]">
-            <div className="absolute contents inset-[6.69%_6.49%_11.55%_36.51%]">
-              <div className="absolute inset-[6.69%_14.4%_59.33%_36.51%]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/52692bc62fd62247373fd24e6c8e25a89921229c.png" />
-                </div>
-              </div>
-              <div className="absolute inset-[48.3%_6.49%_11.55%_47.67%]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/2212efd6949f888ec03a200e7ad2019a51653155.png" />
-                </div>
-              </div>
-              <div className="absolute inset-[29.87%_7.69%_45.15%_71.36%]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/e1534539da0090726a87766b9536180e2f96bc59.png" />
-                </div>
-              </div>
-            </div>
-            <div className="absolute contents inset-[33.06%_17.24%_29.16%_36.54%]">
-              <div className="absolute inset-[33.06%_18.95%_29.16%_36.54%]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/6fcce2112dbb1217e32c05dc3a508cc1ae7be6c6.png" />
-                </div>
-              </div>
-              <div className="absolute inset-[33.29%_17.24%_45.22%_67.55%]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/0279006e5653701283e6e34a07b609333312b52a.png" />
-                </div>
-              </div>
-            </div>
-            <div className="absolute contents inset-[3.87%_5.03%_7.88%_50.11%]">
-              <div className="absolute inset-[3.87%_5.03%_7.88%_50.11%]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/4c6a6a8cdc011a3b081abe279fd090ce74e56b6e.png" />
-                </div>
-              </div>
-            </div>
-            <div className="absolute bottom-[4.4%] left-[28.91%] right-0 top-[-0.01%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/c39e6335981ea85dedf9b8b2fea3c10a8f4388ec.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[61.41%_-0.02%_12.89%_-0.09%]">
-            <div className="absolute inset-[61.41%_-0.02%_12.89%_-0.09%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/124957c67163c9992faae5d791090facaefe107b.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[62.06%_61.22%_24.43%_2.57%]">
-            <div className="absolute inset-[62.06%_61.22%_24.43%_2.57%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/36fea03644739a343ebc1f129a559f26b5260364.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[79.7%_2.22%_-0.18%_7.47%]">
-            <div className="absolute inset-[79.7%_2.22%_-0.18%_7.47%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/67c454d75cb7bc19d58e202f929205aa2eff030a.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[72.95%_1.05%_5.27%_4.17%]">
-            <div className="absolute inset-[72.95%_1.05%_5.27%_4.17%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/1ba730d147665a7ff7007bef735e01ed872fc395.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[-0.01%_32.68%_89.99%_45.49%]">
-            <div className="absolute inset-[-0.01%_32.68%_89.99%_45.49%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/bb1d6700850b9e848b70547f6f47359227b48663.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[44.2%_4.56%_24.43%_25.04%]">
-            <div className="absolute inset-[44.2%_4.56%_24.43%_25.04%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/714581e1d5072c9a04ed2645624d579529b29905.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[8.7%_18.3%_71.26%_30.8%]">
-            <div className="absolute inset-[8.7%_18.3%_71.26%_30.8%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/554419256e070f67b901bd627c66e2442e2f9b89.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[26.56%_11.16%_51.44%_27.92%]">
-            <div className="absolute inset-[26.56%_11.16%_51.44%_27.92%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/ec35f3ef156b9a8f70f3287075f9d663e753a88b.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[16.32%_8.5%_39.03%_68.39%]">
-            <div className="absolute contents inset-[16.76%_28.42%_77.14%_68.39%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/395ecb514347a2b67636818efc42e5bc27269325.png" />
-              </div>
-            </div>
-            <div className="absolute contents inset-[16.32%_21.39%_77.58%_75.31%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/17c94b934fb469c9e8305d4e810a5c1b2eda98b4.png" />
-              </div>
-            </div>
-            <div className="absolute contents inset-[35.71%_28.42%_58.19%_68.39%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/ef5a7be33a71a6430a90ad105bd82f3fc2fb2785.png" />
-              </div>
-            </div>
-            <div className="absolute contents inset-[34.84%_21.39%_59.06%_75.31%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/ce11576de1403d7a121185d99618a35ed2cf52ba.png" />
-              </div>
-            </div>
-            <div className="absolute contents inset-[34.18%_14.68%_59.72%_82.23%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/5e6925481fb4c35c53368fba7a22b1465ccd76af.png" />
-              </div>
-            </div>
-            <div className="absolute contents inset-[54.66%_28.31%_39.03%_68.39%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/52692bc62fd62247373fd24e6c8e25a89921229c.png" />
-              </div>
-            </div>
-            <div className="absolute contents inset-[53.35%_21.39%_40.33%_75.31%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/2212efd6949f888ec03a200e7ad2019a51653155.png" />
-              </div>
-            </div>
-            <div className="absolute contents inset-[52.48%_14.57%_41.64%_82.34%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/e1534539da0090726a87766b9536180e2f96bc59.png" />
-              </div>
-            </div>
-            <div className="absolute contents inset-[51.17%_8.5%_42.73%_88.84%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/6fcce2112dbb1217e32c05dc3a508cc1ae7be6c6.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[10.23%_33.32%_83.24%_31.75%]">
-            <div className="absolute contents inset-[10.23%_33.32%_83.24%_31.75%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/0279006e5653701283e6e34a07b609333312b52a.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[27.65%_37.04%_64.07%_28.45%]">
-            <div className="absolute contents inset-[27.65%_37.04%_64.07%_28.45%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/4c6a6a8cdc011a3b081abe279fd090ce74e56b6e.png" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute contents inset-[44.86%_39.7%_44.25%_25.79%]">
-            <div className="absolute contents inset-[44.86%_39.7%_44.25%_25.79%]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/c39e6335981ea85dedf9b8b2fea3c10a8f4388ec.png" />
-              </div>
-            </div>
-          </div>
+        {/* 상품소개 아이콘 - 유람선 */}
+        <div className="h-[33px] relative shrink-0 w-[66px] flex items-center justify-center">
+          <svg className="w-full h-full" viewBox="0 0 66 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* 유람선 선체 (하단) */}
+            <path d="M8 25C8 25 12 28 20 28C28 28 32 25 32 25L35 22C35 22 31 25 20 25C9 25 5 22 5 22L8 25Z" fill="#2D68FF" />
+            {/* 유람선 선체 (상단) */}
+            <path d="M5 22C5 22 9 20 20 20C31 20 35 22 35 22L32 19C32 19 28 17 20 17C12 17 8 19 8 19L5 22Z" fill="#4A90E2" />
+            {/* 유람선 상부 구조물 */}
+            <rect x="12" y="12" width="16" height="8" rx="1" fill="white" />
+            <rect x="14" y="14" width="12" height="6" rx="0.5" fill="#E8F4FD" />
+            {/* 유람선 상부 구조물 (2층) */}
+            <rect x="16" y="8" width="8" height="6" rx="1" fill="white" />
+            <rect x="17" y="9" width="6" height="4" rx="0.5" fill="#E8F4FD" />
+            {/* 유람선 상부 구조물 (3층) */}
+            <rect x="18" y="4" width="4" height="6" rx="1" fill="white" />
+            <rect x="18.5" y="5" width="3" height="4" rx="0.5" fill="#E8F4FD" />
+            {/* 창문들 */}
+            <rect x="15" y="15" width="1.5" height="1.5" fill="#2D68FF" />
+            <rect x="17.5" y="15" width="1.5" height="1.5" fill="#2D68FF" />
+            <rect x="20" y="15" width="1.5" height="1.5" fill="#2D68FF" />
+            <rect x="22.5" y="15" width="1.5" height="1.5" fill="#2D68FF" />
+            <rect x="25" y="15" width="1.5" height="1.5" fill="#2D68FF" />
+            <rect x="27.5" y="15" width="1.5" height="1.5" fill="#2D68FF" />
+            {/* 2층 창문들 */}
+            <rect x="17.5" y="10" width="1" height="1" fill="#2D68FF" />
+            <rect x="19" y="10" width="1" height="1" fill="#2D68FF" />
+            <rect x="20.5" y="10" width="1" height="1" fill="#2D68FF" />
+            <rect x="22" y="10" width="1" height="1" fill="#2D68FF" />
+            {/* 3층 창문들 */}
+            <rect x="19" y="6" width="0.8" height="0.8" fill="#2D68FF" />
+            <rect x="20.2" y="6" width="0.8" height="0.8" fill="#2D68FF" />
+            <rect x="21.4" y="6" width="0.8" height="0.8" fill="#2D68FF" />
+          </svg>
         </div>
         <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[34px] text-nowrap">
           <p className="leading-[50px] whitespace-pre">상품소개</p>
