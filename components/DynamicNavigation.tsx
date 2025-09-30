@@ -25,9 +25,10 @@ interface Category {
 
 interface DynamicNavigationProps {
   className?: string
+  onItemClick?: () => void
 }
 
-export default function DynamicNavigation({ className = '' }: DynamicNavigationProps) {
+export default function DynamicNavigation({ className = '', onItemClick }: DynamicNavigationProps) {
   const [navigations, setNavigations] = useState<NavigationItem[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -181,6 +182,7 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
             href={isProductsMenu ? getProductMenuUrl() : (item.url || '#')}
             target={item.isNewWindow ? '_blank' : '_self'}
             rel={item.isNewWindow ? 'noopener noreferrer' : undefined}
+            onClick={onItemClick}
             className={`block px-4 py-2 text-sm font-medium transition-colors duration-200 ${
               isCurrentPage
                 ? 'text-blue-600 bg-blue-50'
@@ -251,6 +253,7 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
                   href={child.url || '#'}
                   target={child.isNewWindow ? '_blank' : '_self'}
                   rel={child.isNewWindow ? 'noopener noreferrer' : undefined}
+                  onClick={onItemClick}
                   className={`block px-4 py-2 text-sm transition-colors duration-200 ${
                     pathname === child.url
                       ? 'text-blue-600 bg-blue-50'
@@ -267,6 +270,7 @@ export default function DynamicNavigation({ className = '' }: DynamicNavigationP
               <li key={`category-${category.id}`}>
                 <Link
                   href={`/products?category=${category.id}`}
+                  onClick={onItemClick}
                   className={`block px-4 py-2 text-sm transition-colors duration-200 ${
                     pathname === `/products?category=${category.id}`
                       ? 'text-blue-600 bg-blue-50'

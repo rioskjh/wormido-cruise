@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/contexts/ToastContext'
 import DynamicNavigation from './DynamicNavigation'
+import MobileNavigation from './MobileNavigation'
 
 interface User {
   id: number
@@ -132,125 +133,136 @@ export default function UserNavigation() {
   }
 
   return (
-    <header className="bg-white relative w-full">
-      <div className="flex flex-row items-center relative size-full">
-        <div className="box-border content-stretch flex items-center justify-between px-4 md:px-[50px] py-[20px] relative w-full">
-          {/* 로고 */}
-          <div className="h-[46px] overflow-clip relative shrink-0 w-[250px]">
-            <Link href="/" className="flex items-center">
-              <Image
-                src="/images/logo.png"
-                alt="월미도 해양관광"
-                width={200}
-                height={46}
-                className="h-full w-auto object-contain"
-                priority
-              />
-            </Link>
-          </div>
+    <>
+      {/* 모바일 네비게이션 */}
+      <MobileNavigation 
+        user={user}
+        cartItemCount={cartItemCount}
+        onCartClick={handleCartClick}
+        onLogout={handleLogout}
+      />
 
-          {/* 메뉴 - 데스크톱에서만 표시 */}
-          <div className="hidden lg:flex content-stretch font-pretendard items-start justify-start leading-[0] not-italic relative shrink-0 text-design-gray text-[18px] text-nowrap">
-            <DynamicNavigation className="flex gap-[80px]" />
-          </div>
+      {/* 데스크톱 네비게이션 */}
+      <header className="bg-white relative w-full hidden md:block">
+        <div className="flex flex-row items-center relative size-full">
+          <div className="box-border content-stretch flex items-center justify-between px-[50px] py-[20px] relative w-full">
+            {/* 로고 */}
+            <div className="h-[46px] overflow-clip relative shrink-0 w-[250px]">
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/images/logo.png"
+                  alt="월미도 해양관광"
+                  width={200}
+                  height={46}
+                  className="h-full w-auto object-contain"
+                  priority
+                />
+              </Link>
+            </div>
 
-          {/* 우측 버튼들 */}
-          <div className="content-stretch flex gap-2 md:gap-[30px] items-center justify-start relative shrink-0">
-            {/* 장바구니 버튼 */}
-            <button
-              onClick={handleCartClick}
-              className="relative flex items-center gap-2 hover:text-design-blue transition-colors"
-            >
-              <div className="w-5 h-5 flex items-center justify-center">
-                <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
-                </svg>
-              </div>
-              <span className="text-design-gray text-sm font-pretendard hidden sm:inline">장바구니</span>
-              {cartItemCount > 0 && (
-                <div className="absolute -top-2 -right-2 bg-design-purple text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-pretendard font-medium">
-                  {cartItemCount}
+            {/* 메뉴 - 데스크톱에서만 표시 */}
+            <div className="flex content-stretch font-pretendard items-start justify-start leading-[0] not-italic relative shrink-0 text-design-gray text-[18px] text-nowrap">
+              <DynamicNavigation className="flex gap-[80px]" />
+            </div>
+
+            {/* 우측 버튼들 */}
+            <div className="content-stretch flex gap-[30px] items-center justify-start relative shrink-0">
+              {/* 장바구니 버튼 */}
+              <button
+                onClick={handleCartClick}
+                className="relative flex items-center gap-2 hover:text-design-blue transition-colors"
+              >
+                <div className="w-5 h-5 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+                  </svg>
+                </div>
+                <span className="text-design-gray text-sm font-pretendard">장바구니</span>
+                {cartItemCount > 0 && (
+                  <div className="absolute -top-2 -right-2 bg-design-purple text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-pretendard font-medium">
+                    {cartItemCount}
+                  </div>
+                )}
+              </button>
+
+              {user ? (
+                // 로그인된 상태
+                <div className="flex items-center gap-[10px]">
+                  <Link 
+                    href="/profile" 
+                    className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0"
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
+                      <p className="leading-[20px] whitespace-pre">정보수정</p>
+                    </div>
+                  </Link>
+                  <Link 
+                    href="/reservations" 
+                    className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0"
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </div>
+                    <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
+                      <p className="leading-[20px] whitespace-pre">예약조회</p>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0 hover:text-design-blue transition-colors"
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                    </div>
+                    <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
+                      <p className="leading-[20px] whitespace-pre">로그아웃</p>
+                    </div>
+                  </button>
+                </div>
+              ) : (
+                // 로그인되지 않은 상태
+                <div className="flex items-center gap-[10px]">
+                  <Link 
+                    href="/login" 
+                    className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0"
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                      </svg>
+                    </div>
+                    <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
+                      <p className="leading-[20px] whitespace-pre">로그인</p>
+                    </div>
+                  </Link>
+                  <Link 
+                    href="/register" 
+                    className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0"
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </div>
+                    <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
+                      <p className="leading-[20px] whitespace-pre">회원가입</p>
+                    </div>
+                  </Link>
                 </div>
               )}
-            </button>
-
-            {user ? (
-              // 로그인된 상태
-              <div className="flex items-center gap-[10px]">
-                <Link 
-                  href="/profile" 
-                  className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0"
-                >
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                  <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
-                    <p className="leading-[20px] whitespace-pre">정보수정</p>
-                  </div>
-                </Link>
-                <Link 
-                  href="/reservations" 
-                  className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0"
-                >
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                  </div>
-                  <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
-                    <p className="leading-[20px] whitespace-pre">예약조회</p>
-                  </div>
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0 hover:text-design-blue transition-colors"
-                >
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                  </div>
-                  <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
-                    <p className="leading-[20px] whitespace-pre">로그아웃</p>
-                  </div>
-                </button>
-              </div>
-            ) : (
-              // 로그인되지 않은 상태
-              <div className="flex items-center gap-[10px]">
-                <Link 
-                  href="/login" 
-                  className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0"
-                >
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                    </svg>
-                  </div>
-                  <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
-                    <p className="leading-[20px] whitespace-pre">로그인</p>
-                  </div>
-                </Link>
-                <Link 
-                  href="/register" 
-                  className="content-stretch flex gap-[10px] items-center justify-start relative shrink-0"
-                >
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-design-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                  </div>
-                  <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-design-gray text-[15px] text-center text-nowrap">
-                    <p className="leading-[20px] whitespace-pre">회원가입</p>
-                  </div>
-                </Link>
-              </div>
-            )}
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   )
 }
