@@ -7,6 +7,8 @@ import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
 import ProductSection from '@/components/ProductSection'
 import GroupTravelSection from '@/components/GroupTravelSection'
+import MobileAnnouncementSection from '@/components/MobileAnnouncementSection'
+import MobileCustomerServiceSection from '@/components/MobileCustomerServiceSection'
 
 interface Product {
   id: number
@@ -102,38 +104,38 @@ export default function Home() {
 
         {/* 데스크톱 버전 */}
         <div className="hidden md:block h-[703px] relative w-full">
-          <div className="flex flex-row items-center relative size-full">
+        <div className="flex flex-row items-center relative size-full">
             <div className="box-border content-stretch flex h-[703px] items-center justify-between pl-[360px] pr-[50px] py-0 relative w-full">
-              {/* 배경 */}
+            {/* 배경 */}
               <div className="absolute bg-design-purple h-[450px] left-0 top-[127px] w-full" />
-              
-              {/* 메인 콘텐츠 */}
+            
+            {/* 메인 콘텐츠 */}
               <div className="relative w-full grid grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start shrink-0">
                 {/* 크루즈 이미지 */}
                 <div className="[grid-area:1_/_1] h-[703px] ml-[260px] mt-0 w-[1250px] overflow-hidden">
-                  <Image
-                    src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
-                    alt="월미도 크루즈"
-                    width={1250}
-                    height={703}
-                    className="w-full h-full object-cover"
-                    priority
-                  />
-                </div>
-                
+                <Image
+                  src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
+                  alt="월미도 크루즈"
+                  width={1250}
+                  height={703}
+                  className="w-full h-full object-cover"
+                  priority
+                />
+              </div>
+              
                 {/* 텍스트 오버레이 - 1200px 컨테이너 안에서 왼쪽 정렬 */}
                 <div className="[grid-area:1_/_1] box-border content-stretch flex flex-col gap-[150px] items-start justify-center ml-0 mt-[220.5px] relative">
                   <div className="container mx-auto px-4 max-w-[1200px] w-full">
                     <div className="content-stretch flex flex-col gap-[30px] h-[262px] items-start justify-start relative shrink-0 w-[427.534px] text-left">
-                      {/* 메인 타이틀 */}
+                  {/* 메인 타이틀 */}
                       <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
                         <div className="font-pretendard leading-[76px] not-italic relative shrink-0 text-[56px] text-nowrap text-white whitespace-pre font-medium" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }}>
-                          <p className="mb-0">푸른 바다 위에서</p>
-                          <p>만나는 특별한 하루</p>
-                        </div>
-                      </div>
-                      
-                      {/* 서브 타이틀 */}
+                      <p className="mb-0">푸른 바다 위에서</p>
+                      <p>만나는 특별한 하루</p>
+                    </div>
+                  </div>
+                  
+                  {/* 서브 타이틀 */}
                       <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
                         <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-[20px] text-nowrap text-white" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }}>
                           <p className="leading-[32px] whitespace-pre">월미도 해양관광 크루즈와 함께하는 잊지 못할 여행</p>
@@ -267,9 +269,9 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                </div>
-                
-                {/* 텍스트 */}
+                  </div>
+                  
+                  {/* 텍스트 */}
                 <div className="content-stretch flex flex-col gap-[6px] items-start leading-[0] not-italic relative shrink-0 text-nowrap">
                   <div className="font-['Pretendard:Bold',_sans-serif] relative shrink-0 text-[#222222] text-[26px]">
                     <p className="leading-[36px] text-nowrap whitespace-pre">승선권 예매하기</p>
@@ -323,9 +325,9 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                </div>
-                
-                {/* 텍스트 */}
+                  </div>
+                  
+                  {/* 텍스트 */}
                 <div className="content-stretch flex flex-col gap-[6px] items-start justify-center leading-[0] not-italic relative shrink-0 text-nowrap">
                   <div className="font-['Pretendard:Bold',_sans-serif] relative shrink-0 text-[#222222] text-[26px]">
                     <p className="leading-[36px] text-nowrap whitespace-pre">예약확인 및 취소</p>
@@ -369,7 +371,14 @@ export default function Home() {
       <section className="w-full py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-[1200px] mx-auto">
-            <div className="box-border content-stretch flex flex-col lg:flex-row items-center justify-between px-0 py-[100px] relative w-full gap-8 lg:gap-0">
+            {/* 모바일 버전 */}
+            <div className="md:hidden box-border content-stretch flex flex-col gap-[40px] items-start px-0 py-[40px] relative w-full">
+              <MobileAnnouncementSection />
+              <MobileCustomerServiceSection />
+            </div>
+
+            {/* 데스크톱 버전 */}
+            <div className="hidden md:block box-border content-stretch flex flex-col lg:flex-row items-center justify-between px-0 py-[100px] relative w-full gap-8 lg:gap-0">
               
               {/* 공지사항 섹션 */}
               <div className="content-stretch flex flex-col gap-[50px] items-start relative shrink-0 w-full lg:w-[550px]">
@@ -500,7 +509,7 @@ export default function Home() {
                     <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#666666] text-[16px] text-nowrap">
                       <p className="leading-[26px] whitespace-pre">2025-06-09</p>
                     </div>
-                  </div>
+                      </div>
                     </div>
                   </div>
 
