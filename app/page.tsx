@@ -339,138 +339,270 @@ export default function Home() {
       <section className="w-full py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="box-border content-stretch flex flex-col lg:flex-row items-center justify-between px-0 py-[100px] relative w-full max-w-[1200px] mx-auto gap-8 lg:gap-0">
               
-              {/* 공지사항 카드 */}
-              <div className="group">
-                <div className="bg-white border border-gray-200 rounded-[20px] p-8 hover:shadow-xl transition-all duration-300 hover:border-design-blue">
-                  {/* 헤더 */}
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="w-16 h-16 bg-gradient-to-br from-design-blue to-blue-600 rounded-[16px] flex items-center justify-center shadow-lg">
-                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-design-gray font-pretendard">공지사항</h3>
-                      <p className="text-design-gray-light font-pretendard text-sm">최신 소식을 확인하세요</p>
-                    </div>
-                  </div>
-
-                  {/* 공지사항 목록 */}
-                  <div className="space-y-6">
-                    <div className="flex items-start gap-4 p-4 bg-red-50 rounded-[12px] border-l-4 border-red-500">
-                      <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-semibold text-design-gray font-pretendard text-base">겨울 시즌 운항 안내</h4>
-                          <span className="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full font-pretendard font-medium">중요</span>
+              {/* 공지사항 섹션 */}
+              <div className="content-stretch flex flex-col gap-[50px] items-start relative shrink-0 w-full lg:w-[550px]">
+                <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
+                  {/* 공지사항 아이콘 */}
+                  <div className="h-[51px] overflow-clip relative shrink-0 w-[50px]">
+                    <div className="absolute bottom-[17.19%] contents left-0 right-[56.81%] top-[38.28%]">
+                      <div className="absolute inset-[38.28%_56.81%_22.54%_19.89%]">
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
                         </div>
-                        <p className="text-design-gray-light font-pretendard text-sm">2024.12.01</p>
+                      </div>
+                      <div className="absolute bottom-[17.19%] left-0 right-[85.9%] top-[51.77%]">
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                        </div>
                       </div>
                     </div>
-
-                    <div className="flex items-start gap-4 p-4 hover:bg-gray-50 rounded-[12px] transition-colors">
-                      <div className="w-2 h-2 bg-design-blue rounded-full mt-2 flex-shrink-0"></div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-design-gray font-pretendard text-base mb-1">신규 크루즈 코스 오픈</h4>
-                        <p className="text-design-gray-light font-pretendard text-sm">2024.11.25</p>
+                    <div className="absolute contents inset-[38.28%_56.81%_22.54%_19.89%]">
+                      <div className="absolute inset-[38.28%_56.81%_22.54%_19.89%]">
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                        </div>
                       </div>
                     </div>
-
-                    <div className="flex items-start gap-4 p-4 hover:bg-gray-50 rounded-[12px] transition-colors">
-                      <div className="w-2 h-2 bg-gray-300 rounded-full mt-2 flex-shrink-0"></div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-design-gray font-pretendard text-base mb-1">예약 시스템 점검 안내</h4>
-                        <p className="text-design-gray-light font-pretendard text-sm">2024.11.20</p>
+                    <div className="absolute contents inset-[38.28%_56.81%_15.76%_1.21%]">
+                      <div className="absolute inset-[38.28%_56.81%_21.12%_18.6%]">
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                        </div>
+                      </div>
+                      <div className="absolute inset-[38.28%_61.74%_15.76%_1.21%]">
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute contents inset-[77.79%_56.98%_-0.01%_18.28%]">
+                      <div className="absolute inset-[77.79%_56.98%_1.76%_31.42%]">
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                        </div>
+                      </div>
+                      <div className="absolute inset-[77.79%_60.12%_0.12%_18.28%]">
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                        </div>
+                      </div>
+                      <div className="absolute inset-[96.98%_56.98%_-0.01%_37.3%]">
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-[4.4%] contents left-[28.91%] right-0 top-[-0.01%]">
+                      <div className="absolute contents inset-[6.69%_6.49%_11.55%_36.51%]">
+                        <div className="absolute inset-[6.69%_14.4%_59.33%_36.51%]">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                          </div>
+                        </div>
+                        <div className="absolute inset-[48.3%_6.49%_11.55%_47.67%]">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                          </div>
+                        </div>
+                        <div className="absolute inset-[29.87%_7.69%_45.15%_71.36%]">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="absolute contents inset-[33.06%_17.24%_29.16%_36.54%]">
+                        <div className="absolute inset-[33.06%_18.95%_29.16%_36.54%]">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                          </div>
+                        </div>
+                        <div className="absolute inset-[33.29%_17.24%_45.22%_67.55%]">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="absolute contents inset-[3.87%_5.03%_7.88%_50.11%]">
+                        <div className="absolute inset-[3.87%_5.03%_7.88%_50.11%]">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="absolute bottom-[4.4%] left-[28.91%] right-0 top-[-0.01%]">
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                          <div className="absolute left-0 max-w-none size-full top-0 bg-design-blue rounded-md"></div>
+                        </div>
                       </div>
                     </div>
                   </div>
-
-                  {/* 더보기 버튼 */}
-                  <div className="mt-8 text-center">
-                    <Link 
-                      href="/board/notice" 
-                      className="inline-flex items-center gap-2 text-design-blue hover:text-blue-600 font-pretendard text-base font-medium transition-colors"
-                    >
-                      더보기
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
+                  <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[34px] text-nowrap">
+                    <p className="leading-[50px] whitespace-pre">공지사항</p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col gap-[20px] items-start relative shrink-0 w-full">
+                  {/* 공지사항 목록 */}
+                  <div className="box-border content-stretch flex items-center justify-between pb-[20px] pt-0 px-0 relative shrink-0 w-full">
+                    <div aria-hidden="true" className="absolute border-[#dddddd] border-[0px_0px_1px] border-solid inset-0 pointer-events-none" />
+                    <div className="font-['Pretendard:Medium',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[18px] text-nowrap">
+                      <p className="leading-[30px] whitespace-pre">2025 여름 불꽃크루즈!! 7월19일부터 매주 토요일</p>
+                    </div>
+                    <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#666666] text-[16px] text-nowrap">
+                      <p className="leading-[26px] whitespace-pre">2025-06-09</p>
+                    </div>
+                  </div>
+                  <div className="box-border content-stretch flex items-center justify-between pb-[20px] pt-0 px-0 relative shrink-0 w-full">
+                    <div aria-hidden="true" className="absolute border-[#dddddd] border-[0px_0px_1px] border-solid inset-0 pointer-events-none" />
+                    <div className="font-['Pretendard:Medium',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[18px] text-nowrap">
+                      <p className="leading-[30px] whitespace-pre">2025년 정기검사 휴항안내</p>
+                    </div>
+                    <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#666666] text-[16px] text-nowrap">
+                      <p className="leading-[26px] whitespace-pre">2025-06-09</p>
+                    </div>
+                  </div>
+                  <div className="box-border content-stretch flex items-center justify-between pb-[20px] pt-0 px-0 relative shrink-0 w-full">
+                    <div aria-hidden="true" className="absolute border-[#dddddd] border-[0px_0px_1px] border-solid inset-0 pointer-events-none" />
+                    <div className="font-['Pretendard:Medium',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[18px] text-nowrap">
+                      <p className="leading-[30px] whitespace-pre">(예고편)덕적도&월미도 유람선_ 찾아가는 국악버</p>
+                    </div>
+                    <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#666666] text-[16px] text-nowrap">
+                      <p className="leading-[26px] whitespace-pre">2025-06-09</p>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* 고객센터 카드 */}
-              <div className="group">
-                <div className="bg-white border border-gray-200 rounded-[20px] p-8 hover:shadow-xl transition-all duration-300 hover:border-design-purple">
-                  {/* 헤더 */}
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="w-16 h-16 bg-gradient-to-br from-design-purple to-purple-600 rounded-[16px] flex items-center justify-center shadow-lg">
-                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 100 19.5 9.75 9.75 0 000-19.5z" />
-                      </svg>
+              {/* 고객센터 섹션 */}
+              <div className="content-stretch flex flex-col gap-[50px] h-auto lg:h-[290px] items-start relative shrink-0 w-full lg:w-[550px]">
+                <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
+                  {/* 고객센터 아이콘 */}
+                  <div className="h-[52px] overflow-clip relative shrink-0 w-[60px]">
+                    <div className="absolute bottom-[-0.01%] contents left-0 right-[-0.01%] top-[-0.01%]">
+                      <div className="absolute contents inset-[-0.01%_7.55%]">
+                        <div className="absolute inset-[-0.01%_7.55%_3.17%_7.55%]">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
+                          </div>
+                        </div>
+                        <div className="absolute inset-[89.33%_42.79%_-0.01%_43.48%]">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="absolute bottom-[31.45%] contents left-0 right-[-0.01%] top-[35.11%]">
+                        <div className="absolute bottom-[31.45%] left-0 right-[84.05%] top-[35.11%]">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
+                          </div>
+                        </div>
+                        <div className="absolute inset-[35.11%_-0.01%_31.45%_84.05%]">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-design-gray font-pretendard">도와드릴까요?</h3>
-                      <p className="text-design-gray-light font-pretendard text-sm">언제든지 문의해주세요</p>
+                    <div className="absolute contents inset-[14.21%_20.02%_15.78%_20.01%]">
+                      <div className="absolute contents inset-[14.21%_20.02%_15.78%_20.01%]">
+                        <div className="absolute inset-[70.68%_57.86%_15.78%_22.97%]">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
+                          </div>
+                        </div>
+                        <div className="absolute inset-[14.21%_20.02%_17.39%_20.01%]">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="absolute contents inset-[43.56%_34.4%_46.75%_34.4%]">
+                        <div className="absolute contents inset-[43.56%_34.4%_46.75%_34.4%]">
+                          <div className="absolute inset-[43.56%_57.1%_46.75%_34.4%]">
+                            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                              <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
+                            </div>
+                          </div>
+                          <div className="absolute inset-[43.56%_45.76%_46.75%_45.75%]">
+                            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                              <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
+                            </div>
+                          </div>
+                          <div className="absolute inset-[43.56%_34.4%_46.75%_57.1%]">
+                            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                              <div className="absolute left-0 max-w-none size-full top-0 bg-design-purple rounded-md"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-
-                  {/* 고객센터 옵션 */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-[16px] hover:from-blue-100 hover:to-blue-200 transition-all duration-200">
-                      <div className="w-14 h-14 bg-design-blue rounded-[12px] flex items-center justify-center shadow-md">
-                        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
+                  <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[34px] text-nowrap">
+                    <p className="leading-[50px] whitespace-pre">도와드릴까요?</p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col lg:flex-row items-end justify-between relative shrink-0 w-full gap-6 lg:gap-0">
+                  <div className="content-stretch flex flex-col gap-[20px] items-start leading-[0] not-italic relative shrink-0 text-nowrap">
+                    <div className="content-stretch flex flex-col font-['Pretendard:Bold',_sans-serif] gap-[4px] items-start relative shrink-0 text-[#222222]">
+                      <div className="relative shrink-0 text-[16px]">
+                        <p className="leading-[26px] text-nowrap whitespace-pre">예약 및 상담안내</p>
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-design-gray font-pretendard text-lg">전화 문의</h4>
-                        <p className="text-design-gray-light font-pretendard text-base font-medium">032-123-4567</p>
-                        <p className="text-design-gray-light font-pretendard text-sm">평일 09:00 - 18:00</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-purple-50 to-purple-100 rounded-[16px] hover:from-purple-100 hover:to-purple-200 transition-all duration-200">
-                      <div className="w-14 h-14 bg-design-purple rounded-[12px] flex items-center justify-center shadow-md">
-                        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-design-gray font-pretendard text-lg">카카오톡 상담</h4>
-                        <p className="text-design-gray-light font-pretendard text-base font-medium">@월미도크루즈</p>
-                        <p className="text-design-gray-light font-pretendard text-sm">24시간 자동응답</p>
+                      <div className="relative shrink-0 text-[34px]">
+                        <p className="leading-[50px] text-nowrap whitespace-pre">032-765-1171</p>
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-green-50 to-green-100 rounded-[16px] hover:from-green-100 hover:to-green-200 transition-all duration-200">
-                      <div className="w-14 h-14 bg-green-500 rounded-[12px] flex items-center justify-center shadow-md">
-                        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-design-gray font-pretendard text-lg">이메일 문의</h4>
-                        <p className="text-design-gray-light font-pretendard text-base font-medium">info@wormicruise.com</p>
-                        <p className="text-design-gray-light font-pretendard text-sm">24시간 접수</p>
-                      </div>
+                    <div className="font-['Pretendard:Medium',_sans-serif] leading-[26px] relative shrink-0 text-[#666666] text-[16px] whitespace-pre">
+                      <p className="mb-0">평일 · 주말 09시~18시 (연중무휴)</p>
+                      <p>전화문의 주시면 정성껏 답변해드립니다.</p>
                     </div>
                   </div>
-
-                  {/* 더보기 버튼 */}
-                  <div className="mt-8 text-center">
-                    <Link 
-                      href="/board/qna" 
-                      className="inline-flex items-center gap-2 text-design-blue hover:text-blue-600 font-pretendard text-base font-medium transition-colors"
-                    >
-                      자주 묻는 질문
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
+                  <div className="content-stretch flex flex-col gap-[10px] items-start justify-center relative shrink-0 w-full lg:w-[200px]">
+                    {/* 자주 묻는 질문 버튼 */}
+                    <div className="bg-white relative rounded-[4px] shrink-0 w-full">
+                      <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[4px]" />
+                      <div className="flex flex-row items-center size-full">
+                        <div className="box-border content-stretch flex items-center justify-between px-[20px] py-[10px] relative w-full">
+                          <div className="font-['Pretendard:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[17px] text-center text-nowrap">
+                            <p className="leading-[30px] whitespace-pre">자주 묻는 질문</p>
+                          </div>
+                          <div className="flex h-[20px] items-center justify-center relative shrink-0 w-[20px]">
+                            <div className="flex-none rotate-[90deg]">
+                              <div className="relative size-[20px]">
+                                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+                                  <g>
+                                    <path d="M5 15l7-7 7 7" stroke="var(--stroke-0, #222222)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                                  </g>
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* 고객센터 버튼 */}
+                    <div className="bg-white relative rounded-[4px] shrink-0 w-full">
+                      <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[4px]" />
+                      <div className="flex flex-row items-center size-full">
+                        <div className="box-border content-stretch flex items-center justify-between px-[20px] py-[10px] relative w-full">
+                          <div className="font-['Pretendard:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[17px] text-center text-nowrap">
+                            <p className="leading-[30px] whitespace-pre">고객센터</p>
+                          </div>
+                          <div className="flex h-[20px] items-center justify-center relative shrink-0 w-[20px]">
+                            <div className="flex-none rotate-[90deg]">
+                              <div className="relative size-[20px]">
+                                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+                                  <g>
+                                    <path d="M5 15l7-7 7 7" stroke="var(--stroke-0, #222222)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                                  </g>
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

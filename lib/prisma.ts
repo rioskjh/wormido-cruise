@@ -8,6 +8,12 @@ const globalForPrisma = globalThis as unknown as {
 const createPrismaClient = () => {
   // Connection Pooler와의 충돌 방지를 위해 pgbouncer 파라미터 추가
   let databaseUrl = process.env.DATABASE_URL
+  
+  // 빌드 시 환경변수가 없으면 기본값 사용
+  if (!databaseUrl) {
+    databaseUrl = 'postgresql://user:password@localhost:5432/wormi_cruise'
+  }
+  
   if (process.env.NODE_ENV === 'production' && databaseUrl && !databaseUrl.includes('pgbouncer=true')) {
     databaseUrl += (databaseUrl.includes('?') ? '&' : '?') + 'pgbouncer=true'
   }
