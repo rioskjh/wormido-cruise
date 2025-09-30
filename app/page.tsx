@@ -239,7 +239,7 @@ export default function Home() {
           </div>
 
           {/* 데스크톱 버전 */}
-          <div className="hidden md:block box-border content-stretch flex gap-[30px] items-center px-0 py-[100px] relative w-full max-w-[1200px] mx-auto">
+          <div className="hidden md:block box-border content-stretch flex justify-between items-center px-0 py-[100px] relative w-full max-w-[1200px] mx-auto">
             {/* 승선권 예매하기 카드 */}
             <Link 
               href="/reservation" 
