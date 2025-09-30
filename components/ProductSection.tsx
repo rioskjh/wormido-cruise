@@ -31,7 +31,7 @@ interface ProductSectionProps {
 
 export default function ProductSection({ products, loading, error }: ProductSectionProps) {
   return (
-    <div className="box-border content-stretch flex flex-col gap-[30px] items-start pb-[100px] pt-0 px-0 relative size-full md:px-0 px-[15px]">
+    <div className="box-border content-stretch flex flex-col gap-[30px] items-start pb-[100px] pt-0 px-0 relative size-full">
       {/* 상품소개 제목 */}
       <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
         {/* 상품소개 아이콘 - 유람선 */}

@@ -156,7 +156,7 @@ export default function Home() {
           {/* 모바일 버전 */}
           <div className="md:hidden relative w-full">
             <div className="flex flex-row items-center size-full">
-              <div className="box-border content-stretch flex gap-[10px] items-center px-[15px] py-0 relative w-full">
+              <div className="box-border content-stretch flex gap-[10px] items-center px-0 py-0 relative w-full">
                 {/* 승선권 예매하기 카드 */}
                 <Link 
                   href="/reservation" 
