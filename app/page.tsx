@@ -111,8 +111,8 @@ export default function Home() {
             <div className="box-border content-stretch flex items-center justify-between pl-[360px] pr-[50px] py-0 relative size-full">
               {/* 메인 콘텐츠 */}
               <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
-                {/* 크루즈 이미지 */}
-                <div className="[grid-area:1_/_1] h-[703px] ml-[260px] mt-0 relative w-[1250px]">
+                {/* 크루즈 이미지 - 위치 강제 조정 */}
+                <div className="[grid-area:1_/_1] h-[703px] left-[calc(50%-300px)] absolute mt-0 w-[1250px]">
                   <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
                     <Image
                       src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
@@ -126,10 +126,10 @@ export default function Home() {
                   </div>
                 </div>
                 
-                {/* 텍스트 오버레이 - 하단 컨텐츠와 같은 정렬 */}
+                {/* 텍스트 오버레이 - 전체 사이즈 1200px */}
                 <div className="[grid-area:1_/_1] box-border content-stretch flex flex-col gap-[150px] items-start justify-center ml-0 mt-0 relative h-full w-full">
                   <div className="container mx-auto px-4">
-                    <div className="content-stretch flex flex-col gap-[30px] h-[262px] items-start relative shrink-0 w-[427.534px]">
+                    <div className="content-stretch flex flex-col gap-[30px] h-[262px] items-start relative shrink-0 w-[1200px]">
                       {/* 메인 타이틀 */}
                       <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
                         <div className="font-['Pretendard:ExtraBold',_sans-serif] leading-[76px] not-italic relative shrink-0 text-[56px] text-nowrap text-white whitespace-pre">
