@@ -36,37 +36,13 @@ export default function ProductSection({ products, loading, error }: ProductSect
       <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
         {/* 상품소개 아이콘 - 유람선 */}
         <div className="h-[33px] relative shrink-0 w-[66px] flex items-center justify-center">
-          <svg className="w-full h-full" viewBox="0 0 66 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-            {/* 유람선 선체 (하단) */}
-            <path d="M8 25C8 25 12 28 20 28C28 28 32 25 32 25L35 22C35 22 31 25 20 25C9 25 5 22 5 22L8 25Z" fill="#2D68FF" />
-            {/* 유람선 선체 (상단) */}
-            <path d="M5 22C5 22 9 20 20 20C31 20 35 22 35 22L32 19C32 19 28 17 20 17C12 17 8 19 8 19L5 22Z" fill="#4A90E2" />
-            {/* 유람선 상부 구조물 */}
-            <rect x="12" y="12" width="16" height="8" rx="1" fill="white" />
-            <rect x="14" y="14" width="12" height="6" rx="0.5" fill="#E8F4FD" />
-            {/* 유람선 상부 구조물 (2층) */}
-            <rect x="16" y="8" width="8" height="6" rx="1" fill="white" />
-            <rect x="17" y="9" width="6" height="4" rx="0.5" fill="#E8F4FD" />
-            {/* 유람선 상부 구조물 (3층) */}
-            <rect x="18" y="4" width="4" height="6" rx="1" fill="white" />
-            <rect x="18.5" y="5" width="3" height="4" rx="0.5" fill="#E8F4FD" />
-            {/* 창문들 */}
-            <rect x="15" y="15" width="1.5" height="1.5" fill="#2D68FF" />
-            <rect x="17.5" y="15" width="1.5" height="1.5" fill="#2D68FF" />
-            <rect x="20" y="15" width="1.5" height="1.5" fill="#2D68FF" />
-            <rect x="22.5" y="15" width="1.5" height="1.5" fill="#2D68FF" />
-            <rect x="25" y="15" width="1.5" height="1.5" fill="#2D68FF" />
-            <rect x="27.5" y="15" width="1.5" height="1.5" fill="#2D68FF" />
-            {/* 2층 창문들 */}
-            <rect x="17.5" y="10" width="1" height="1" fill="#2D68FF" />
-            <rect x="19" y="10" width="1" height="1" fill="#2D68FF" />
-            <rect x="20.5" y="10" width="1" height="1" fill="#2D68FF" />
-            <rect x="22" y="10" width="1" height="1" fill="#2D68FF" />
-            {/* 3층 창문들 */}
-            <rect x="19" y="6" width="0.8" height="0.8" fill="#2D68FF" />
-            <rect x="20.2" y="6" width="0.8" height="0.8" fill="#2D68FF" />
-            <rect x="21.4" y="6" width="0.8" height="0.8" fill="#2D68FF" />
-          </svg>
+          <Image
+            src="/images/ship-icon.png"
+            alt="유람선 아이콘"
+            width={66}
+            height={33}
+            className="w-full h-full object-contain"
+          />
         </div>
         <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[34px] text-nowrap">
           <p className="leading-[50px] whitespace-pre">상품소개</p>
