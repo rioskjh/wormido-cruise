@@ -358,8 +358,8 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="max-w-[1200px] mx-auto">
             <ProductSection products={products} loading={loading} error={error} />
-          </div>
-        </div>
+              </div>
+            </div>
       </section>
 
       {/* 단체여행 섹션 */}
@@ -376,7 +376,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="max-w-[1200px] mx-auto">
             {/* 모바일 버전 */}
-            <div className="md:hidden box-border content-stretch flex flex-col gap-[40px] items-start px-0 py-[40px] relative w-full">
+            <div className="md:hidden box-border content-stretch flex flex-col gap-[40px] items-start px-[15px] py-[40px] relative w-full">
               <MobileAnnouncementSection />
               <MobileCustomerServiceSection />
             </div>

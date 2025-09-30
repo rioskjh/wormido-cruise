@@ -6,7 +6,7 @@ export default function GroupTravelSection() {
   return (
     <>
       {/* 모바일 버전 */}
-      <div className="md:hidden relative rounded-[10px] size-full">
+      <div className="md:hidden relative rounded-[10px] size-full px-[15px]">
         <div aria-hidden="true" className="absolute inset-0 pointer-events-none rounded-[10px]">
           <Image
             src="/images/554419256e070f67b901bd627c66e2442e2f9b89.png"

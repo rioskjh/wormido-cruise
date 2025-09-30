@@ -56,24 +56,21 @@ export default function Footer() {
           {/* 모바일 버전 */}
           <div className="md:hidden content-stretch flex flex-col gap-[20px] items-center justify-center relative shrink-0 w-full">
             {/* SNS 아이콘들 */}
-            <div className="h-[20px] relative shrink-0 w-[106px] flex items-center justify-between">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 106 20">
-                <g id="sns">
-                  <g id="Vector">
-                    <path d="M2 2h20v20H2z" fill="#222222" />
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="#222222" />
-                    <path d="M17.5 6.5h.01" stroke="#222222" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </g>
-                  <g clipPath="url(#clip0_4_2965)" id="simple-icons:naver">
-                    <path d="M46 3h14v14H46z" fill="black" id="Vector_2" />
-                  </g>
-                  <path d="M80 2C72.27 2 66 5.64 66 10c0 2.49 1.62 4.69 4.07 6.05L67 20l4.18-1.1C72.04 19.33 72.97 19.5 74 19.5c8.73 0 15-3.64 15-8S88.73 2 80 2z" fill="#222222" id="Vector_3" />
-                </g>
-                <defs>
-                  <clipPath id="clip0_4_2965">
-                    <rect fill="white" height="14" transform="translate(46 3)" width="14" />
-                  </clipPath>
-                </defs>
+            <div className="h-[24px] relative shrink-0 w-[140px] flex items-center justify-between">
+              {/* Instagram */}
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="#333" strokeWidth="2"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" stroke="#333" strokeWidth="2"/>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="#333" strokeWidth="2"/>
+              </svg>
+              {/* Naver */}
+              <div className="w-6 h-6 flex items-center justify-center">
+                <span className="text-[#333] font-bold text-lg">N</span>
+              </div>
+              {/* KakaoTalk */}
+              <svg className="w-8 h-6" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 2C8.27 2 2 5.64 2 10c0 2.49 1.62 4.69 4.07 6.05L5 20l4.18-1.1C10.04 19.33 10.97 19.5 12 19.5c8.73 0 15-3.64 15-8S24.73 2 16 2z" fill="#333"/>
+                <text x="16" y="14" textAnchor="middle" fill="white" fontSize="7" fontWeight="bold">TALK</text>
               </svg>
             </div>
             
