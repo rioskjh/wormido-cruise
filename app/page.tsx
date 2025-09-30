@@ -243,11 +243,11 @@ export default function Home() {
           </div>
 
           {/* 데스크톱 버전 */}
-          <div className="hidden md:block box-border content-stretch flex justify-between items-center px-0 py-[100px] relative w-full max-w-[1200px] mx-auto">
+          <div className="hidden md:flex box-border content-stretch justify-between items-center px-0 py-[50px] relative w-full max-w-[1200px] mx-auto">
             {/* 승선권 예매하기 카드 */}
             <Link 
               href="/reservation" 
-              className="bg-[#d7dfff] box-border content-stretch flex items-center justify-between px-[50px] py-[40px] relative rounded-[10px] shrink-0 w-[585px]"
+              className="bg-[#d7dfff] box-border content-stretch flex items-center justify-between px-[30px] py-[40px] relative rounded-[10px] shrink-0 w-[580px]"
             >
               <div className="content-stretch flex gap-[40px] items-center relative shrink-0">
                   {/* 아이콘 */}
@@ -297,7 +297,7 @@ export default function Home() {
             {/* 예약확인 및 취소 카드 */}
             <Link 
               href="/reservation/check" 
-              className="bg-[#f6dfed] box-border content-stretch flex items-center justify-between px-[50px] py-[40px] relative rounded-[10px] shrink-0 w-[585px]"
+              className="bg-[#f6dfed] box-border content-stretch flex items-center justify-between px-[30px] py-[40px] relative rounded-[10px] shrink-0 w-[580px]"
             >
               <div className="content-stretch flex gap-[40px] items-center relative shrink-0">
                   {/* 아이콘 */}
@@ -354,21 +354,21 @@ export default function Home() {
       </section>
 
       {/* 상품소개 섹션 */}
-      <section className="w-full py-8">
+      <section className="w-full py-4">
         <div className="container mx-auto px-4 max-w-[1200px]">
           <ProductSection products={products} loading={loading} error={error} />
         </div>
       </section>
 
       {/* 단체여행 섹션 */}
-      <section className="w-full py-16 relative overflow-hidden">
+      <section className="w-full py-8 relative overflow-hidden">
         <div className="container mx-auto px-4 max-w-[1200px]">
           <GroupTravelSection />
         </div>
       </section>
 
       {/* 공지사항 및 고객센터 섹션 */}
-      <section className="w-full py-20 bg-white">
+      <section className="w-full py-10 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-[1200px] mx-auto">
             {/* 모바일 버전 */}

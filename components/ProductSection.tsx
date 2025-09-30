@@ -61,9 +61,8 @@ export default function ProductSection({ products, loading, error }: ProductSect
         </div>
       ) : (
         <>
-          {/* 모바일 버전 - 가로 스크롤 */}
-          <div className="md:hidden w-full overflow-x-auto horizontal-scroll">
-            <div className="flex gap-[20px] items-start pb-4" style={{ width: 'max-content' }}>
+          {/* 모바일 버전 - 세로 배치 */}
+          <div className="md:hidden content-stretch flex flex-col gap-[10px] items-start relative shrink-0 w-full">
               {products.map((product, index) => {
                 // 업로드된 이미지가 있으면 사용, 없으면 기본 이미지 사용
                 const hasUploadedImage = product.images && product.images.length > 0
@@ -75,10 +74,10 @@ export default function ProductSection({ products, loading, error }: ProductSect
                   <Link 
                     key={product.id} 
                     href={`/products/${product.id}`}
-                    className="flex flex-col items-center relative shrink-0 w-[270px] hover:transform hover:scale-105 transition-all duration-200 cursor-pointer border border-[#dddddd] rounded-[10px] overflow-hidden"
+                    className="content-stretch flex flex-col items-center relative shrink-0 w-[330px] hover:transform hover:scale-105 transition-all duration-200 cursor-pointer border border-[#dddddd] rounded-[10px] overflow-hidden"
                   >
                     {/* 상품 이미지 영역 */}
-                    <div className="h-[284px] relative rounded-tl-[10px] rounded-tr-[10px] shrink-0 w-[270px]">
+                    <div className="h-[347px] relative rounded-tl-[10px] rounded-tr-[10px] shrink-0 w-[330px]">
                       <Image
                         src={imageSrc}
                         alt={product.name}
@@ -140,7 +139,6 @@ export default function ProductSection({ products, loading, error }: ProductSect
                   </Link>
                 )
               })}
-            </div>
           </div>
 
           {/* 데스크톱 버전 */}
