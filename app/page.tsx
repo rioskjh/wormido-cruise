@@ -487,8 +487,7 @@ export default function Home() {
                 </div>
                 <div className="content-stretch flex flex-col gap-[20px] items-start relative shrink-0 w-full">
                   {/* 공지사항 목록 */}
-                  <div className="box-border content-stretch flex items-center justify-between pb-[20px] pt-0 px-0 relative shrink-0 w-full">
-                    <div aria-hidden="true" className="absolute border-[#dddddd] border-[0px_0px_1px] border-solid inset-0 pointer-events-none" />
+                  <div className="box-border content-stretch flex items-center justify-between pb-[20px] pt-0 px-0 relative shrink-0 w-full border-b border-[#dddddd]">
                     <div className="font-['Pretendard:Medium',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[18px] text-nowrap">
                       <p className="leading-[30px] whitespace-pre">2025 여름 불꽃크루즈!! 7월19일부터 매주 토요일</p>
                     </div>
@@ -496,8 +495,7 @@ export default function Home() {
                       <p className="leading-[26px] whitespace-pre">2025-06-09</p>
                     </div>
                   </div>
-                  <div className="box-border content-stretch flex items-center justify-between pb-[20px] pt-0 px-0 relative shrink-0 w-full">
-                    <div aria-hidden="true" className="absolute border-[#dddddd] border-[0px_0px_1px] border-solid inset-0 pointer-events-none" />
+                  <div className="box-border content-stretch flex items-center justify-between pb-[20px] pt-0 px-0 relative shrink-0 w-full border-b border-[#dddddd]">
                     <div className="font-['Pretendard:Medium',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[18px] text-nowrap">
                       <p className="leading-[30px] whitespace-pre">2025년 정기검사 휴항안내</p>
                         </div>
@@ -505,8 +503,7 @@ export default function Home() {
                       <p className="leading-[26px] whitespace-pre">2025-06-09</p>
                     </div>
                       </div>
-                  <div className="box-border content-stretch flex items-center justify-between pb-[20px] pt-0 px-0 relative shrink-0 w-full">
-                    <div aria-hidden="true" className="absolute border-[#dddddd] border-[0px_0px_1px] border-solid inset-0 pointer-events-none" />
+                  <div className="box-border content-stretch flex items-center justify-between pb-[20px] pt-0 px-0 relative shrink-0 w-full border-b border-[#dddddd]">
                     <div className="font-['Pretendard:Medium',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[18px] text-nowrap">
                       <p className="leading-[30px] whitespace-pre">(예고편)덕적도&월미도 유람선_ 찾아가는 국악버</p>
                     </div>
