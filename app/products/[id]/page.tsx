@@ -233,7 +233,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <UserNavigation />
       
       <div className="container mx-auto px-4 py-8">
@@ -266,7 +266,7 @@ export default function ProductDetailPage() {
               <div className="space-y-6">
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded">
+                    <span className="bg-[#3c64d6] text-white text-sm font-medium px-3 py-1 rounded">
                       {product.category.name}
                     </span>
                     <span className="text-sm text-gray-500">
@@ -279,33 +279,76 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* 가격 정보 */}
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">가격 정보</h3>
-                  <div className="space-y-3">
-                    <div className="text-center p-3 bg-white rounded-lg">
-                      <div className="text-sm text-gray-600 mb-1">기본 가격</div>
-                      <div className="text-lg font-bold text-gray-900">
-                        {product.basePrice.toLocaleString()}원
+                <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="bg-[#3c64d6] h-[30px] w-[7px] rounded"></div>
+                    <h3 className="text-[26px] font-bold text-gray-900">가격</h3>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {/* 대인 가격 */}
+                    <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[20px] font-bold text-gray-900">대인</span>
+                          <span className="text-[17px] text-gray-600">(중학생 이상~)</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="bg-[#3c64d6] text-white text-[18px] font-bold px-3 py-1 rounded-full">18%</div>
+                          <div className="text-[24px] font-bold text-gray-900">
+                            {(product.basePrice + product.adultPrice).toLocaleString()}원
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[18px] text-gray-500 line-through">
+                          정상가 {(product.basePrice + product.adultPrice + 7000).toLocaleString()}원
+                        </div>
+                        <div className="text-[17px] font-bold text-gray-900">할인가</div>
                       </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="text-center p-3 bg-white rounded-lg">
-                        <div className="text-sm text-gray-600 mb-1">대인 추가</div>
-                        <div className="text-lg font-bold text-gray-900">
-                          +{product.adultPrice.toLocaleString()}원
+                    
+                    {/* 소인 가격 */}
+                    <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[20px] font-bold text-gray-900">소인</span>
+                          <span className="text-[17px] text-gray-600">(48개월 이상~중학생 미만)</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="bg-[#3c64d6] text-white text-[18px] font-bold px-3 py-1 rounded-full">18%</div>
+                          <div className="text-[24px] font-bold text-gray-900">
+                            {(product.basePrice + product.childPrice).toLocaleString()}원
+                          </div>
                         </div>
                       </div>
-                      <div className="text-center p-3 bg-white rounded-lg">
-                        <div className="text-sm text-gray-600 mb-1">소인 추가</div>
-                        <div className="text-lg font-bold text-gray-900">
-                          +{product.childPrice.toLocaleString()}원
+                      <div className="text-right">
+                        <div className="text-[18px] text-gray-500 line-through">
+                          정상가 {(product.basePrice + product.childPrice + 5000).toLocaleString()}원
+                        </div>
+                        <div className="text-[17px] font-bold text-gray-900">할인가</div>
+                      </div>
+                    </div>
+                    
+                    {/* 유아 가격 */}
+                    <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[20px] font-bold text-gray-900">유아</span>
+                          <span className="text-[17px] text-gray-600">(48개월 미만)</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="bg-[#3c64d6] text-white text-[18px] font-bold px-3 py-1 rounded-full">18%</div>
+                          <div className="text-[24px] font-bold text-gray-900">
+                            {(product.basePrice + product.infantPrice).toLocaleString()}원
+                          </div>
                         </div>
                       </div>
-                      <div className="text-center p-3 bg-white rounded-lg">
-                        <div className="text-sm text-gray-600 mb-1">유아 추가</div>
-                        <div className="text-lg font-bold text-gray-900">
-                          +{product.infantPrice.toLocaleString()}원
+                      <div className="text-right">
+                        <div className="text-[18px] text-gray-500 line-through">
+                          정상가 {(product.basePrice + product.infantPrice + 3000).toLocaleString()}원
                         </div>
+                        <div className="text-[17px] font-bold text-gray-900">할인가</div>
                       </div>
                     </div>
                   </div>
@@ -338,59 +381,98 @@ export default function ProductDetailPage() {
                 )}
 
                 {/* 인원 수 선택 */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">인원 선택</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-700">대인</span>
-                      <select
-                        value={reservationData.adults}
-                        onChange={(e) => setReservationData(prev => ({
-                          ...prev,
-                          adults: parseInt(e.target.value)
-                        }))}
-                        className="px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        {Array.from({ length: 11 }, (_, i) => (
-                          <option key={i} value={i}>
-                            대인 {i}명 {i > 0 && `(+${(i * (product.basePrice + product.adultPrice)).toLocaleString()})`}
-                          </option>
-                        ))}
-                      </select>
+                <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="bg-[#3c64d6] h-[30px] w-[7px] rounded"></div>
+                    <h3 className="text-[26px] font-bold text-gray-900">인원 선택</h3>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {/* 대인 선택 */}
+                    <div className="flex items-center justify-between h-[50px]">
+                      <div className="text-[16px] text-gray-900">
+                        <div>대인</div>
+                        <div className="font-semibold">{(product.basePrice + product.adultPrice).toLocaleString()}원</div>
+                      </div>
+                      <div className="flex items-center border border-[#dddddd] rounded">
+                        <button 
+                          onClick={() => setReservationData(prev => ({ ...prev, adults: Math.max(0, prev.adults - 1) }))}
+                          className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd] hover:bg-gray-50"
+                        >
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                          </svg>
+                        </button>
+                        <div className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd]">
+                          <span className="text-[16px]">{reservationData.adults}</span>
+                        </div>
+                        <button 
+                          onClick={() => setReservationData(prev => ({ ...prev, adults: Math.min(10, prev.adults + 1) }))}
+                          className="w-[44px] h-[44px] flex items-center justify-center hover:bg-gray-50"
+                        >
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-700">소인</span>
-                      <select
-                        value={reservationData.children}
-                        onChange={(e) => setReservationData(prev => ({
-                          ...prev,
-                          children: parseInt(e.target.value)
-                        }))}
-                        className="px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        {Array.from({ length: 11 }, (_, i) => (
-                          <option key={i} value={i}>
-                            소인 {i}명 {i > 0 && `(+${(i * (product.basePrice + product.childPrice)).toLocaleString()})`}
-                          </option>
-                        ))}
-                      </select>
+                    
+                    {/* 소인 선택 */}
+                    <div className="flex items-center justify-between h-[50px]">
+                      <div className="text-[16px] text-gray-900">
+                        <div>소인</div>
+                        <div className="font-semibold">{(product.basePrice + product.childPrice).toLocaleString()}원</div>
+                      </div>
+                      <div className="flex items-center border border-[#dddddd] rounded">
+                        <button 
+                          onClick={() => setReservationData(prev => ({ ...prev, children: Math.max(0, prev.children - 1) }))}
+                          className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd] hover:bg-gray-50"
+                        >
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                          </svg>
+                        </button>
+                        <div className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd]">
+                          <span className="text-[16px]">{reservationData.children}</span>
+                        </div>
+                        <button 
+                          onClick={() => setReservationData(prev => ({ ...prev, children: Math.min(10, prev.children + 1) }))}
+                          className="w-[44px] h-[44px] flex items-center justify-center hover:bg-gray-50"
+                        >
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-700">유아(48개월 미만)</span>
-                      <select
-                        value={reservationData.infants}
-                        onChange={(e) => setReservationData(prev => ({
-                          ...prev,
-                          infants: parseInt(e.target.value)
-                        }))}
-                        className="px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        {Array.from({ length: 4 }, (_, i) => (
-                          <option key={i} value={i}>
-                            유아 {i}명 {i > 0 && `(+${(i * (product.basePrice + product.infantPrice)).toLocaleString()})`}
-                          </option>
-                        ))}
-                      </select>
+                    
+                    {/* 유아 선택 */}
+                    <div className="flex items-center justify-between h-[50px]">
+                      <div className="text-[16px] text-gray-900">
+                        <div>유아(48개월 미만)</div>
+                        <div className="font-semibold">{(product.basePrice + product.infantPrice).toLocaleString()}원</div>
+                      </div>
+                      <div className="flex items-center border border-[#dddddd] rounded">
+                        <button 
+                          onClick={() => setReservationData(prev => ({ ...prev, infants: Math.max(0, prev.infants - 1) }))}
+                          className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd] hover:bg-gray-50"
+                        >
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                          </svg>
+                        </button>
+                        <div className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd]">
+                          <span className="text-[16px]">{reservationData.infants}</span>
+                        </div>
+                        <button 
+                          onClick={() => setReservationData(prev => ({ ...prev, infants: Math.min(3, prev.infants + 1) }))}
+                          className="w-[44px] h-[44px] flex items-center justify-center hover:bg-gray-50"
+                        >
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -415,26 +497,28 @@ export default function ProductDetailPage() {
                 )}
 
                 {/* 총 가격 */}
-                <div className="bg-blue-50 p-4 rounded-lg">
+                <div className="bg-[#e4f2ff] border border-[#bfdeff] rounded-lg p-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-semibold text-gray-900">총 가격</span>
-                    <span className="text-2xl font-bold text-blue-600">
+                    <span className="text-[16px] font-semibold text-gray-900">총 가격</span>
+                    <span className="text-[20px] font-bold text-gray-900">
                       {calculateTotalPrice().toLocaleString()}원
                     </span>
                   </div>
                 </div>
 
                 {/* 액션 버튼 */}
-                <div className="flex space-x-4">
+                <div className="flex gap-5">
                   <button
                     onClick={handleAddToCart}
-                    className="flex-1 bg-gray-600 text-white py-3 px-6 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 font-medium"
+                    className="w-[60px] h-[60px] bg-white border border-[#dddddd] rounded-lg flex items-center justify-center hover:bg-gray-50"
                   >
-                    장바구니
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+                    </svg>
                   </button>
                   <button
                     onClick={handleDirectReservation}
-                    className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                    className="flex-1 bg-[#190a6b] text-white h-[60px] rounded-lg hover:bg-[#14085a] focus:outline-none focus:ring-2 focus:ring-[#190a6b] font-semibold text-[17px]"
                   >
                     바로구매
                   </button>
@@ -444,49 +528,74 @@ export default function ProductDetailPage() {
           </div>
 
           {/* 상품 상세 정보 */}
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">상품 상세 정보</h2>
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            {/* 탭 메뉴 */}
+            <div className="border-b border-gray-200">
+              <div className="flex">
+                <button className="flex-1 py-5 px-8 text-center border-b-2 border-[#222222] bg-white">
+                  <span className="text-[20px] font-semibold text-[#222222]">상품 상세 정보</span>
+                </button>
+                <button className="flex-1 py-5 px-8 text-center border-b border-[#dddddd] bg-white">
+                  <span className="text-[20px] font-semibold text-[#666666]">상품 리뷰</span>
+                </button>
+                <button className="flex-1 py-5 px-8 text-center border-b border-[#dddddd] bg-white">
+                  <span className="text-[20px] font-semibold text-[#666666]">상품 문의</span>
+                </button>
+              </div>
+            </div>
             
-            <div className="prose max-w-none">
-              {/* 상품 상세 내용 (에디터로 작성된 내용) */}
-              {product.detailHtml && (
-                <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">상품 상세 내용</h3>
-                  <div 
-                    className="prose max-w-none"
-                    dangerouslySetInnerHTML={{ __html: product.detailHtml }}
-                  />
+            {/* 탭 내용 */}
+            <div className="p-8">
+              <div className="prose max-w-none">
+                {/* 상품 상세 내용 (에디터로 작성된 내용) */}
+                {product.detailHtml && (
+                  <div className="mb-8">
+                    <div 
+                      className="prose max-w-none"
+                      dangerouslySetInnerHTML={{ __html: product.detailHtml }}
+                    />
+                  </div>
+                )}
+                
+                {/* 이용 안내 */}
+                <div className="bg-[#190a6b] p-6 rounded-lg mb-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <h3 className="text-[20px] font-bold text-white">이용 전 유의사항</h3>
+                  </div>
+                  <ul className="space-y-3 text-white text-[17px]">
+                    <li className="flex items-start gap-2">
+                      <svg className="w-6 h-6 text-white mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                      </svg>
+                      <span>유람선 승선시 신분증 지참은 필수입니다. 미지참시 승선이 거부될 수도 있습니다.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <svg className="w-6 h-6 text-white mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                      </svg>
+                      <span>만 48개월 미만 영유아의 경우 증빙서류(등본/의료보험증)지참시 무료 승선가능 (미지참시 소아 요금 적용)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <svg className="w-6 h-6 text-white mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                      </svg>
+                      <span>어린 아기의 경우 청각에 예민하여 놀랄 수 있으므로 귀마개 착용하는 것을 권장드립니다.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <svg className="w-6 h-6 text-white mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                      </svg>
+                      <span>운항시간은 기상 및 기타사정에 의해 변경이 될 수도 있습니다.</span>
+                    </li>
+                  </ul>
                 </div>
-              )}
-              
-              {/* 이용 안내 */}
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">이용 안내</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li>• 운항시간은 기상 및 기타사정에 의해 변경이 될 수도 있습니다.</li>
-                  <li>• 예약 취소는 이용일 1일 전까지 가능합니다.</li>
-                  <li>• 안전을 위해 임산부, 고령자, 심장질환자는 이용에 제한이 있을 수 있습니다.</li>
-                  <li>• 기상 악화 시 운항이 취소될 수 있으며, 이 경우 전액 환불됩니다.</li>
-                </ul>
               </div>
             </div>
           </div>
 
-          {/* 상품 리뷰 */}
-          <div className="bg-white rounded-lg shadow-lg p-8 mt-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">상품 리뷰</h2>
-            <div className="text-center py-8">
-              <p className="text-gray-500">등록된 게시글이 없습니다.</p>
-            </div>
-          </div>
-
-          {/* 상품 문의 */}
-          <div className="bg-white rounded-lg shadow-lg p-8 mt-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">상품 문의</h2>
-            <div className="text-center py-8">
-              <p className="text-gray-500">등록된 게시글이 없습니다.</p>
-            </div>
-          </div>
         </div>
       </div>
       
