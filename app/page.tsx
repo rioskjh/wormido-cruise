@@ -355,15 +355,19 @@ export default function Home() {
 
       {/* 상품소개 섹션 */}
       <section className="w-full py-4">
-        <div className="container mx-auto px-4 max-w-[1200px]">
-          <ProductSection products={products} loading={loading} error={error} />
+        <div className="container mx-auto px-4">
+          <div className="max-w-[1200px] mx-auto">
+            <ProductSection products={products} loading={loading} error={error} />
+          </div>
         </div>
       </section>
 
       {/* 단체여행 섹션 */}
       <section className="w-full py-8 relative overflow-hidden">
-        <div className="container mx-auto px-4 max-w-[1200px]">
-          <GroupTravelSection />
+        <div className="container mx-auto px-4">
+          <div className="max-w-[1200px] mx-auto">
+            <GroupTravelSection />
+          </div>
         </div>
       </section>
 
@@ -378,10 +382,10 @@ export default function Home() {
             </div>
 
             {/* 데스크톱 버전 */}
-            <div className="hidden md:block box-border content-stretch flex flex-col lg:flex-row items-center justify-between px-0 py-[100px] relative w-full gap-8 lg:gap-0">
+            <div className="hidden md:flex box-border content-stretch items-start justify-between px-0 py-[50px] relative w-full gap-[50px]">
               
               {/* 공지사항 섹션 */}
-              <div className="content-stretch flex flex-col gap-[50px] items-start relative shrink-0 w-full lg:w-[550px]">
+              <div className="content-stretch flex flex-col gap-[50px] items-start relative shrink-0 w-[550px]">
                 <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
                   {/* 공지사항 아이콘 */}
         <div className="h-[51px] overflow-clip relative shrink-0 w-[50px]">
@@ -514,7 +518,7 @@ export default function Home() {
                   </div>
 
               {/* 고객센터 섹션 */}
-              <div className="content-stretch flex flex-col gap-[50px] h-auto lg:h-[290px] items-start relative shrink-0 w-full lg:w-[550px]">
+              <div className="content-stretch flex flex-col gap-[50px] h-auto lg:h-[290px] items-start relative shrink-0 w-[550px]">
                 <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
                   {/* 고객센터 아이콘 */}
         <div className="h-[52px] overflow-clip relative shrink-0 w-[60px]">
