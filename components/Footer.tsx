@@ -67,7 +67,7 @@ export default function Footer() {
         </div>
 
             {/* Social Media Icons */}
-            <div className="h-[24px] relative shrink-0 w-[120px] flex items-center justify-between">
+            <div className="h-[24px] relative shrink-0 w-[140px] flex items-center justify-between">
               {/* Instagram */}
               <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="#333" strokeWidth="2"/>
@@ -81,9 +81,9 @@ export default function Footer() {
               </div>
               
               {/* KakaoTalk */}
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 5.64 2 10c0 2.49 1.62 4.69 4.07 6.05L5 20l4.18-1.1C10.04 19.33 10.97 19.5 12 19.5c5.52 0 10-3.64 10-8S17.52 2 12 2z" fill="#333"/>
-                <text x="12" y="14" textAnchor="middle" fill="white" fontSize="8" fontWeight="bold">TALK</text>
+              <svg className="w-8 h-6" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 2C8.27 2 2 5.64 2 10c0 2.49 1.62 4.69 4.07 6.05L5 20l4.18-1.1C10.04 19.33 10.97 19.5 12 19.5c8.73 0 15-3.64 15-8S24.73 2 16 2z" fill="#333"/>
+                <text x="16" y="14" textAnchor="middle" fill="white" fontSize="7" fontWeight="bold">TALK</text>
               </svg>
             </div>
           </div>

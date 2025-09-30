@@ -5,6 +5,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
+import ProductSection from '@/components/ProductSection'
+import GroupTravelSection from '@/components/GroupTravelSection'
 
 interface Product {
   id: number
@@ -180,158 +182,14 @@ export default function Home() {
       {/* 상품소개 섹션 */}
       <section className="w-full py-8">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center mb-8">
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 bg-design-blue rounded-full flex items-center justify-center">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-design-gray font-pretendard">상품소개</h2>
-            </div>
-          </div>
+          <ProductSection products={products} loading={loading} error={error} />
         </div>
       </section>
 
-      {/* 메인 콘텐츠 */}
-      <div className="container mx-auto px-4 pb-8">
-
-        {/* 상품 목록 */}
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-design-blue"></div>
-            <p className="mt-4 text-design-gray-light font-pretendard text-lg">상품을 불러오는 중...</p>
-          </div>
-        ) : error ? (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-[10px] text-center font-pretendard">
-            {error}
-          </div>
-        ) : (
-          <div className="flex flex-col md:flex-row md:flex-wrap gap-[30px] items-start justify-start md:justify-center">
-            {products.map((product, index) => {
-              // 업로드된 이미지가 있으면 사용, 없으면 기본 이미지 사용
-              const hasUploadedImage = product.images && product.images.length > 0
-              const imageSrc = hasUploadedImage 
-                ? product.images[0].filePath 
-                : `/images/0279006e5653701283e6e34a07b609333312b52a.png`
-              
-              return (
-                <Link 
-                  key={product.id} 
-                  href={`/products/${product.id}`}
-                  className="content-stretch flex flex-col items-center justify-start relative shrink-0 w-full md:w-[380px] hover:transform hover:scale-105 transition-all duration-200 cursor-pointer"
-                >
-                  {/* 상품 이미지 영역 */}
-                  <div className="relative rounded-tl-[10px] rounded-tr-[10px] shrink-0 w-full h-[250px]">
-                    <Image
-                      src={imageSrc}
-                      alt={product.name}
-                      fill
-                      className="object-cover rounded-tl-[10px] rounded-tr-[10px]"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-10 rounded-tl-[10px] rounded-tr-[10px]"></div>
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-design-purple text-white text-xs font-medium px-3 py-1 rounded-full font-pretendard">
-                        {product.category.name}
-                      </span>
-                    </div>
-                    <div className="absolute bottom-4 right-4">
-                      <span className="bg-white bg-opacity-90 text-design-gray text-xs font-medium px-2 py-1 rounded font-pretendard">
-                        최대 {product.maxCapacity}명
-                      </span>
-                    </div>
-                  </div>
-                
-                  {/* 상품 정보 영역 */}
-                  <div className="relative rounded-bl-[10px] rounded-br-[10px] shrink-0 w-full h-[280px]">
-                    <div className="absolute border border-[#dddddd] border-solid inset-0 pointer-events-none rounded-bl-[10px] rounded-br-[10px]"></div>
-                    <div className="flex flex-col items-center relative size-full">
-                      <div className="box-border content-stretch flex flex-col items-center justify-between px-[20px] py-[30px] relative w-full h-full">
-                        {/* 상품 제목 */}
-                        <div className="content-stretch flex flex-col gap-[10px] items-center justify-start relative shrink-0 w-full">
-                          <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[20px] text-center">
-                            <p className="leading-[30px] whitespace-pre">{product.name}</p>
-                          </div>
-                          <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#666666] text-[14px] text-center h-[44px] flex items-center justify-center">
-                            <p className="leading-[22px] line-clamp-2">{product.description || '상품 설명이 없습니다.'}</p>
-                          </div>
-                        </div>
-                        
-                        {/* 가격 정보 */}
-                        <div className="content-stretch flex flex-col gap-[15px] items-center justify-start relative shrink-0 w-full">
-                          <div className="flex justify-between items-center w-full">
-                            <span className="font-['Pretendard:Medium',_sans-serif] text-[#222222] text-[16px]">성인</span>
-                            <span className="font-['Pretendard:Bold',_sans-serif] text-[#222222] text-[16px]">{product.adultPrice.toLocaleString()}원</span>
-                          </div>
-                          <div className="flex justify-between items-center w-full">
-                            <span className="font-['Pretendard:Medium',_sans-serif] text-[#222222] text-[16px]">어린이</span>
-                            <span className="font-['Pretendard:Bold',_sans-serif] text-[#222222] text-[16px]">{product.childPrice.toLocaleString()}원</span>
-                          </div>
-                          <div className="flex justify-between items-center w-full">
-                            <span className="font-['Pretendard:Medium',_sans-serif] text-[#222222] text-[16px]">유아</span>
-                            <span className="font-['Pretendard:Bold',_sans-serif] text-[#222222] text-[16px]">{product.infantPrice.toLocaleString()}원</span>
-                          </div>
-                        </div>
-                        
-                        {/* 예약 버튼 */}
-                        <div className="box-border content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[4px] shrink-0 w-full h-[50px] bg-design-blue hover:bg-blue-600 transition-colors duration-200">
-                          <div className="font-['Pretendard:SemiBold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[17px] text-center text-nowrap text-white">
-                            <p className="leading-[30px] whitespace-pre">예약하기</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        )}
-
-        {products.length === 0 && !loading && !error && (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
-            </div>
-            <p className="text-design-gray-light font-pretendard text-lg">등록된 상품이 없습니다.</p>
-          </div>
-        )}
-      </div>
-
-      {/* 배너 섹션 */}
+      {/* 단체여행 섹션 */}
       <section className="w-full py-16 relative overflow-hidden">
-        {/* 배경 이미지 */}
-        <div className="absolute inset-0">
-          <Image
-            src="/images/554419256e070f67b901bd627c66e2442e2f9b89.png"
-            alt="배너 배경"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-left text-white">
-            <h2 className="text-5xl font-bold mb-8 font-pretendard leading-[70px]">
-              <span className="font-normal">단체 여행은</span><br />
-              맞춤형 패키지로 편리하게
-            </h2>
-            
-            {/* 버튼 */}
-            <div className="inline-flex items-center justify-between px-5 py-2.5 border border-white rounded">
-              <span className="font-semibold text-white text-[17px] font-pretendard">
-                단체여행 패키지 보기
-              </span>
-              <div className="w-5 h-5 ml-2">
-                <svg className="w-5 h-5 text-white rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
-                </svg>
-              </div>
-            </div>
-          </div>
+        <div className="container mx-auto px-4">
+          <GroupTravelSection />
         </div>
       </section>
 
