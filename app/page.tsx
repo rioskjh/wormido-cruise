@@ -68,10 +68,10 @@ export default function Home() {
           <div className="relative w-full">
             <div className="size-full">
               <div className="box-border content-stretch flex flex-col items-start pb-0 pt-[20px] px-[15px] relative w-full">
-                {/* 배경 */}
+            {/* 배경 */}
                 <div className="absolute bg-[#190a6b] h-[220px] left-0 top-0 w-[360px]" />
-                
-                {/* 메인 콘텐츠 */}
+            
+            {/* 메인 콘텐츠 */}
                 <div className="content-stretch flex flex-col gap-[20px] items-start relative shrink-0 w-full">
                   {/* 텍스트 */}
                   <div className="content-stretch flex flex-col gap-[6px] items-start leading-[0] not-italic relative shrink-0 text-nowrap text-white">
@@ -104,47 +104,39 @@ export default function Home() {
 
         {/* 데스크톱 버전 */}
         <div className="hidden md:block h-[703px] relative w-full">
-          {/* 배경 - 화면 가로로 꽉 차게 */}
-          <div className="absolute bg-[#190a6b] h-[450px] left-0 top-1/2 -translate-y-1/2 w-full" />
+          {/* 배경 - 파란색 박스와 이미지를 하나로 합쳐서 브라우저 가로 사이즈 꽉 차게 */}
+          <div className="absolute inset-0 w-full h-full">
+            {/* 파란색 배경 */}
+            <div className="absolute bg-[#190a6b] h-[450px] left-0 top-1/2 -translate-y-1/2 w-full" />
+            {/* 크루즈 이미지 - 세로 중앙 정렬 */}
+            <div className="absolute h-[703px] left-[calc(50%-300px)] top-1/2 -translate-y-1/2 w-[1250px] overflow-hidden">
+              <Image
+                src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
+                alt="월미도 크루즈"
+                width={1250}
+                height={703}
+                className="w-full h-full object-cover"
+                priority
+              />
+            </div>
+          </div>
           
-          <div className="flex flex-row items-center relative size-full">
-            <div className="box-border content-stretch flex items-center justify-between pl-[360px] pr-[50px] py-0 relative size-full">
-              {/* 메인 콘텐츠 */}
-              <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
-                {/* 크루즈 이미지 - 위치 강제 조정 */}
-                <div className="[grid-area:1_/_1] h-[703px] left-[calc(50%-300px)] absolute mt-0 w-[1250px]">
-                  <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
-                    <Image
-                      src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
-                      alt="월미도 크루즈"
-                      width={1250}
-                      height={703}
-                      className="absolute max-w-none object-cover size-full"
-                      priority
-                    />
-                    <div className="absolute inset-0" />
+          {/* 텍스트 오버레이 - 1200px 컨텐츠 안에서 하단 컨텐츠들과 중앙 정렬 */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="container mx-auto px-4 max-w-[1200px]">
+              <div className="content-stretch flex flex-col gap-[30px] h-[262px] items-start relative shrink-0 w-full">
+                {/* 메인 타이틀 */}
+                <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
+                  <div className="font-['Pretendard:ExtraBold',_sans-serif] leading-[76px] not-italic relative shrink-0 text-[56px] text-nowrap text-white whitespace-pre">
+                    <p className="mb-0">푸른 바다 위에서</p>
+                    <p>만나는 특별한 하루</p>
                   </div>
                 </div>
                 
-                {/* 텍스트 오버레이 - 전체 사이즈 1200px */}
-                <div className="[grid-area:1_/_1] box-border content-stretch flex flex-col gap-[150px] items-start justify-center ml-0 mt-0 relative h-full w-full">
-                  <div className="container mx-auto px-4">
-                    <div className="content-stretch flex flex-col gap-[30px] h-[262px] items-start relative shrink-0 w-[1200px]">
-                      {/* 메인 타이틀 */}
-                      <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
-                        <div className="font-['Pretendard:ExtraBold',_sans-serif] leading-[76px] not-italic relative shrink-0 text-[56px] text-nowrap text-white whitespace-pre">
-                          <p className="mb-0">푸른 바다 위에서</p>
-                          <p>만나는 특별한 하루</p>
-                        </div>
-                      </div>
-                      
-                      {/* 서브 타이틀 */}
-                      <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
-                        <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[20px] text-nowrap text-white">
-                          <p className="leading-[32px] whitespace-pre">월미도 해양관광 크루즈와 함께하는 잊지 못할 여행</p>
-                        </div>
-                      </div>
-                    </div>
+                {/* 서브 타이틀 */}
+                <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
+                  <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[20px] text-nowrap text-white">
+                    <p className="leading-[32px] whitespace-pre">월미도 해양관광 크루즈와 함께하는 잊지 못할 여행</p>
                   </div>
                 </div>
               </div>
@@ -160,11 +152,11 @@ export default function Home() {
           <div className="md:hidden relative w-full">
             <div className="flex flex-row items-center size-full">
               <div className="box-border content-stretch flex gap-[10px] items-center px-0 py-0 relative w-full">
-                {/* 승선권 예매하기 카드 */}
-                <Link 
-                  href="/reservation" 
+            {/* 승선권 예매하기 카드 */}
+            <Link 
+              href="/reservation" 
                   className="bg-[#d7dfff] box-border content-stretch flex flex-col gap-[10px] items-start px-[17px] py-[20px] relative rounded-[10px] shrink-0 w-[160px]"
-                >
+            >
                   {/* 아이콘 */}
                   <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
                     <div className="[grid-area:1_/_1] ml-0 mt-0 relative size-[40px]">
@@ -180,12 +172,12 @@ export default function Home() {
                               <path d="M8.85417 0C3.96354 0 0 3.96354 0 8.85417V14.1667C0 14.9089 0.523438 15.5495 1.2526 15.6979C2.91406 16.0365 4.16667 17.5078 4.16667 19.2708C4.16667 21.0339 2.91406 22.5052 1.2526 22.8438C0.523438 22.9922 0 23.6328 0 24.375V29.6875C0 34.5781 3.96354 38.5417 8.85417 38.5417H35.9375C40.8281 38.5417 44.7917 34.5781 44.7917 29.6875V24.375C44.7917 23.6328 44.2682 22.9922 43.5391 22.8438C41.8776 22.5052 40.625 21.0339 40.625 19.2708C40.625 17.5078 41.8776 16.0365 43.5391 15.6979C44.2682 15.5495 44.7917 14.9089 44.7917 14.1667V8.85417C44.7917 3.96354 40.8281 0 35.9375 0H8.85417Z" fill="var(--fill-0, #2D68FF)" id="Vector 298" opacity="0.4" />
                               <path clipRule="evenodd" d="M30.2083 1.58946e-07V9.3099C30.2083 10.1719 29.5078 10.8724 28.6458 10.8724C27.7839 10.8724 27.0833 10.1719 27.0833 9.3099V1.58946e-07H30.2083ZM28.6458 14.388C29.5078 14.388 30.2083 15.0885 30.2083 15.9505V22.5911C30.2083 23.4531 29.5078 24.1536 28.6458 24.1536C27.7839 24.1536 27.0833 23.4531 27.0833 22.5911V15.9505C27.0833 15.0885 27.7839 14.388 28.6458 14.388ZM28.6458 27.6693C29.5078 27.6693 30.2083 28.3698 30.2083 29.2318V38.5417H27.0833V29.2318C27.0833 28.3698 27.7839 27.6693 28.6458 27.6693Z" fill="var(--fill-0, #2D68FF)" fillRule="evenodd" id="Vector 299" />
                             </g>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
+                    </svg>
                   </div>
-                  
+                      </div>
+                  </div>
+                </div>
+                
                   {/* 텍스트 */}
                   <div className="content-stretch flex flex-col gap-[4px] items-start leading-[0] not-italic relative shrink-0 text-nowrap">
                     <div className="font-['Pretendard:Bold',_sans-serif] relative shrink-0 text-[#222222] text-[16px]">
@@ -194,13 +186,13 @@ export default function Home() {
                     <div className="font-['Pretendard:Regular',_sans-serif] leading-[19px] relative shrink-0 text-[#444444] text-[11px] whitespace-pre">
                       <p className="mb-0">원하는 일정과 좌석을</p>
                       <p>간편하게 선택</p>
-                    </div>
-                  </div>
-                </Link>
+                </div>
+              </div>
+            </Link>
 
-                {/* 예약확인 및 취소 카드 */}
-                <Link 
-                  href="/reservation/check" 
+            {/* 예약확인 및 취소 카드 */}
+            <Link 
+              href="/reservation/check" 
                   className="bg-[#f6dfed] box-border content-stretch flex flex-col gap-[10px] items-start px-[17px] py-[20px] relative rounded-[10px] shrink-0 w-[160px]"
                 >
                   {/* 아이콘 */}
@@ -324,7 +316,7 @@ export default function Home() {
                               <path d="M6.25 44.7937C6.32552 44.7937 6.40104 44.7911 6.47917 44.7885H6.02344C6.09896 44.7911 6.17448 44.7937 6.2526 44.7937H6.25Z" fill="var(--fill-0, #2D68FF)" id="Vector_5" />
                             </g>
                           </g>
-                        </svg>
+                    </svg>
                       </div>
                     </div>
                   </div>
@@ -361,8 +353,8 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="max-w-[1200px] mx-auto">
             <ProductSection products={products} loading={loading} error={error} />
-              </div>
-            </div>
+          </div>
+        </div>
       </section>
 
       {/* 단체여행 섹션 */}
@@ -450,40 +442,40 @@ export default function Home() {
               <div className="absolute inset-[48.3%_6.49%_11.55%_47.67%]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/df5b5270e64c1efef303cfbe9ab0e0183a05aaeb.png" />
-                          </div>
-                        </div>
+          </div>
+          </div>
               <div className="absolute inset-[29.87%_7.69%_45.15%_71.36%]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/19c2cd15e2a3adcc854a190d984e670fb5257240.png" />
-                          </div>
-                        </div>
-                      </div>
+                    </div>
+                    </div>
+                  </div>
             <div className="absolute contents inset-[33.06%_17.24%_29.16%_36.54%]">
               <div className="absolute inset-[33.06%_18.95%_29.16%_36.54%]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/1c6d3825b4051182a842e6339b1e7398be7a8965.png" />
                     </div>
-                  </div>
+                          </div>
               <div className="absolute inset-[33.29%_17.24%_45.22%_67.55%]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/613c682a9e14cf749100ba778200f67f2fa24120.png" />
-                </div>
-          </div>
-            </div>
+                          </div>
+                        </div>
+                          </div>
             <div className="absolute contents inset-[3.87%_5.03%_7.88%_50.11%]">
               <div className="absolute inset-[3.87%_5.03%_7.88%_50.11%]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/e2cc39b8f39259ab624e968dd44533a7e6c1ccd6.png" />
-          </div>
-      </div>
-        </div>
+                          </div>
+                          </div>
+                        </div>
             <div className="absolute bottom-[4.4%] left-[28.91%] right-0 top-[-0.01%]">
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/20b031043783dfb6cd816eafe71580af4b9d2cd0.png" />
-              </div>
-            </div>
-          </div>
-        </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[34px] text-nowrap">
                     <p className="leading-[50px] whitespace-pre">공지사항</p>
                   </div>
@@ -509,13 +501,13 @@ export default function Home() {
                   <div className="box-border content-stretch flex items-center justify-between pb-[20px] pt-0 px-0 relative shrink-0 w-full border-b border-[#dddddd]">
                     <div className="font-['Pretendard:Medium',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[18px] text-nowrap">
                       <p className="leading-[30px] whitespace-pre">(예고편)덕적도&월미도 유람선_ 찾아가는 국악버</p>
-                    </div>
+                  </div>
                     <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#666666] text-[16px] text-nowrap">
                       <p className="leading-[26px] whitespace-pre">2025-06-09</p>
-                    </div>
-                      </div>
-                    </div>
-                  </div>
+          </div>
+            </div>
+          </div>
+      </div>
 
               {/* 고객센터 섹션 */}
               <div className="content-stretch flex flex-col gap-[50px] h-auto lg:h-[290px] items-start relative shrink-0 w-[550px]">
@@ -540,48 +532,48 @@ export default function Home() {
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/8922df1b2bf0b8b6697fa4c89c1cd63d68f53353.png" />
                 </div>
-              </div>
+        </div>
               <div className="absolute inset-[35.11%_-0.01%_31.45%_84.05%]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/eeb8f520b4bc92348b87a310be89ee94675caeba.png" />
-                </div>
               </div>
             </div>
           </div>
+        </div>
           <div className="absolute contents inset-[14.21%_20.02%_15.78%_20.01%]">
             <div className="absolute contents inset-[14.21%_20.02%_15.78%_20.01%]">
               <div className="absolute inset-[70.68%_57.86%_15.78%_22.97%]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/643e2a0b679e35a1103f8a5dc36de1cfe663bf90.png" />
                 </div>
-              </div>
+                    </div>
               <div className="absolute inset-[14.21%_20.02%_17.39%_20.01%]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/23f3e595ddd0c70c1ad7113d7a273a961cfacec1.png" />
-                </div>
-              </div>
-            </div>
+                    </div>
+                  </div>
+                        </div>
             <div className="absolute contents inset-[43.56%_34.4%_46.75%_34.4%]">
               <div className="absolute contents inset-[43.56%_34.4%_46.75%_34.4%]">
                 <div className="absolute inset-[43.56%_57.1%_46.75%_34.4%]">
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/971357026188be785b9d393d04ae4a0b1f1301ba.png" />
-                  </div>
-                </div>
+                      </div>
+                    </div>
                 <div className="absolute inset-[43.56%_45.76%_46.75%_45.75%]">
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/73483606bdc4217a8cf4a32cc7c3ce86fcc26f37.png" />
-                  </div>
-                </div>
+                      </div>
+                    </div>
                 <div className="absolute inset-[43.56%_34.4%_46.75%_57.1%]">
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/601b9426e9ccb3cd9634d0f1069235b387a2e55b.png" />
+                      </div>
+                    </div>
+                  </div>
                   </div>
                 </div>
               </div>
-            </div>
-                    </div>
-                    </div>
                   <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[34px] text-nowrap">
                     <p className="leading-[50px] whitespace-pre">도와드릴까요?</p>
                   </div>
@@ -619,9 +611,9 @@ export default function Home() {
                                   </g>
                         </svg>
                       </div>
-                            </div>
-                          </div>
-                        </div>
+                      </div>
+                    </div>
+                      </div>
                       </div>
                     </div>
                     {/* 고객센터 버튼 */}
@@ -643,9 +635,9 @@ export default function Home() {
                       </div>
                             </div>
                           </div>
-                        </div>
                       </div>
                     </div>
+                  </div>
                   </div>
                 </div>
               </div>
