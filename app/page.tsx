@@ -104,11 +104,11 @@ export default function Home() {
 
         {/* 데스크톱 버전 */}
         <div className="hidden md:block h-[703px] relative w-full">
+          {/* 배경 - 화면 가로로 꽉 차게 */}
+          <div className="absolute bg-[#190a6b] h-[450px] left-0 top-1/2 -translate-y-1/2 w-full" />
+          
           <div className="flex flex-row items-center relative size-full">
             <div className="box-border content-stretch flex items-center justify-between pl-[360px] pr-[50px] py-0 relative size-full">
-              {/* 배경 */}
-              <div className="absolute bg-[#190a6b] h-[450px] left-0 top-1/2 -translate-y-1/2 w-[1920px]" />
-              
               {/* 메인 콘텐츠 */}
               <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
                 {/* 크루즈 이미지 */}
@@ -126,21 +126,23 @@ export default function Home() {
                   </div>
                 </div>
                 
-                {/* 텍스트 오버레이 */}
-                <div className="[grid-area:1_/_1] box-border content-stretch flex flex-col gap-[150px] items-start justify-center ml-0 mt-0 relative h-full">
-                  <div className="content-stretch flex flex-col gap-[30px] h-[262px] items-start relative shrink-0 w-[427.534px]">
-                    {/* 메인 타이틀 */}
-                    <div className="box-border content-stretch flex gap-[10px] items-center justify-center pl-0 pr-[20px] py-[10px] relative shrink-0">
-                      <div className="font-['Pretendard:ExtraBold',_sans-serif] leading-[76px] not-italic relative shrink-0 text-[56px] text-nowrap text-white whitespace-pre">
-                        <p className="mb-0">푸른 바다 위에서</p>
-                        <p>만나는 특별한 하루</p>
+                {/* 텍스트 오버레이 - 하단 컨텐츠와 같은 정렬 */}
+                <div className="[grid-area:1_/_1] box-border content-stretch flex flex-col gap-[150px] items-start justify-center ml-0 mt-0 relative h-full w-full">
+                  <div className="container mx-auto px-4">
+                    <div className="content-stretch flex flex-col gap-[30px] h-[262px] items-start relative shrink-0 w-[427.534px]">
+                      {/* 메인 타이틀 */}
+                      <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
+                        <div className="font-['Pretendard:ExtraBold',_sans-serif] leading-[76px] not-italic relative shrink-0 text-[56px] text-nowrap text-white whitespace-pre">
+                          <p className="mb-0">푸른 바다 위에서</p>
+                          <p>만나는 특별한 하루</p>
+                        </div>
                       </div>
-                    </div>
-                    
-                    {/* 서브 타이틀 */}
-                    <div className="box-border content-stretch flex gap-[10px] items-center justify-center pl-0 pr-[20px] py-[10px] relative shrink-0">
-                      <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[20px] text-nowrap text-white">
-                        <p className="leading-[32px] whitespace-pre">월미도 해양관광 크루즈와 함께하는 잊지 못할 여행</p>
+                      
+                      {/* 서브 타이틀 */}
+                      <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
+                        <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[20px] text-nowrap text-white">
+                          <p className="leading-[32px] whitespace-pre">월미도 해양관광 크루즈와 함께하는 잊지 못할 여행</p>
+                        </div>
                       </div>
                     </div>
                   </div>
