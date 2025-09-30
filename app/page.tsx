@@ -104,42 +104,43 @@ export default function Home() {
 
         {/* 데스크톱 버전 */}
         <div className="hidden md:block h-[703px] relative w-full">
-        <div className="flex flex-row items-center relative size-full">
-            <div className="box-border content-stretch flex h-[703px] items-center justify-between pl-[360px] pr-[50px] py-0 relative w-full">
-            {/* 배경 */}
-              <div className="absolute bg-design-purple h-[450px] left-0 top-[127px] w-full" />
-            
-            {/* 메인 콘텐츠 */}
-              <div className="relative w-full grid grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start shrink-0">
-                {/* 크루즈 이미지 - 화면 중앙에서 300px 왼쪽으로 이동 */}
-                <div className="[grid-area:1_/_1] h-[703px] left-[calc(50%-300px)] absolute mt-0 w-[1250px] overflow-hidden">
-                <Image
-                  src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
-                  alt="월미도 크루즈"
-                  width={1250}
-                  height={703}
-                  className="w-full h-full object-cover"
-                  priority
-                />
-              </div>
+          <div className="flex flex-row items-center relative size-full">
+            <div className="box-border content-stretch flex items-center justify-between pl-[360px] pr-[50px] py-0 relative size-full">
+              {/* 배경 */}
+              <div className="absolute bg-[#190a6b] h-[450px] left-0 top-1/2 -translate-y-1/2 w-[1920px]" />
               
-                {/* 텍스트 오버레이 - 하단 섹션들과 같은 정렬 */}
-                <div className="[grid-area:1_/_1] box-border content-stretch flex flex-col gap-[150px] items-start justify-center mt-[220.5px] relative w-full">
-                  <div className="container mx-auto px-4">
-                    <div className="content-stretch flex flex-col gap-[30px] h-[262px] items-start justify-start relative shrink-0 w-[427.534px] text-left">
-                  {/* 메인 타이틀 */}
-                      <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
-                        <div className="font-pretendard leading-[76px] not-italic relative shrink-0 text-[56px] text-nowrap text-white whitespace-pre font-medium" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }}>
-                      <p className="mb-0">푸른 바다 위에서</p>
-                      <p>만나는 특별한 하루</p>
-                    </div>
+              {/* 메인 콘텐츠 */}
+              <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
+                {/* 크루즈 이미지 */}
+                <div className="[grid-area:1_/_1] h-[703px] ml-[260px] mt-0 relative w-[1250px]">
+                  <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
+                    <Image
+                      src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
+                      alt="월미도 크루즈"
+                      width={1250}
+                      height={703}
+                      className="absolute max-w-none object-cover size-full"
+                      priority
+                    />
+                    <div className="absolute inset-0" />
                   </div>
-                  
-                  {/* 서브 타이틀 */}
-                      <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
-                        <div className="font-pretendard leading-[0] not-italic relative shrink-0 text-[20px] text-nowrap text-white" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }}>
-                          <p className="leading-[32px] whitespace-pre">월미도 해양관광 크루즈와 함께하는 잊지 못할 여행</p>
-                        </div>
+                </div>
+                
+                {/* 텍스트 오버레이 */}
+                <div className="[grid-area:1_/_1] box-border content-stretch flex flex-col gap-[150px] items-start justify-center ml-0 mt-0 relative h-full">
+                  <div className="content-stretch flex flex-col gap-[30px] h-[262px] items-start relative shrink-0 w-[427.534px]">
+                    {/* 메인 타이틀 */}
+                    <div className="box-border content-stretch flex gap-[10px] items-center justify-center pl-0 pr-[20px] py-[10px] relative shrink-0">
+                      <div className="font-['Pretendard:ExtraBold',_sans-serif] leading-[76px] not-italic relative shrink-0 text-[56px] text-nowrap text-white whitespace-pre">
+                        <p className="mb-0">푸른 바다 위에서</p>
+                        <p>만나는 특별한 하루</p>
+                      </div>
+                    </div>
+                    
+                    {/* 서브 타이틀 */}
+                    <div className="box-border content-stretch flex gap-[10px] items-center justify-center pl-0 pr-[20px] py-[10px] relative shrink-0">
+                      <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[20px] text-nowrap text-white">
+                        <p className="leading-[32px] whitespace-pre">월미도 해양관광 크루즈와 함께하는 잊지 못할 여행</p>
                       </div>
                     </div>
                   </div>
