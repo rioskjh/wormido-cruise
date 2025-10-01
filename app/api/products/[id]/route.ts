@@ -70,6 +70,34 @@ export async function GET(
       }, { status: 400 })
     }
 
+    // 이용 가능한 날짜 생성
+    const generateAvailableDates = (startDate: Date | null, endDate: Date | null): string[] => {
+      if (!startDate || !endDate) {
+        // 날짜가 설정되지 않은 경우, 향후 30일간의 날짜를 생성
+        const dates: string[] = []
+        const today = new Date()
+        for (let i = 0; i < 30; i++) {
+          const date = new Date(today)
+          date.setDate(today.getDate() + i)
+          dates.push(date.toISOString().split('T')[0])
+        }
+        return dates
+      }
+
+      const dates: string[] = []
+      const current = new Date(startDate)
+      const end = new Date(endDate)
+      
+      while (current <= end) {
+        dates.push(current.toISOString().split('T')[0])
+        current.setDate(current.getDate() + 1)
+      }
+      
+      return dates
+    }
+
+    const availableDates = generateAvailableDates(product.startDate, product.endDate)
+
     // 응답 데이터 구성
     const responseData = {
       product: {
@@ -84,6 +112,7 @@ export async function GET(
         maxCapacity: product.maxCapacity,
         currentBookings: product.currentBookings,
         useOptions: product.useOptions,
+        availableDates,
         category: product.category,
         images: product.images.map(image => ({
           id: image.id,

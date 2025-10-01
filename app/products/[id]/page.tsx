@@ -21,6 +21,7 @@ interface Product {
   maxCapacity: number
   currentBookings: number
   useOptions: boolean
+  availableDates: string[] // 이용 가능한 날짜들
   category: {
     name: string
   }
@@ -163,6 +164,12 @@ export default function ProductDetailPage() {
       return false
     }
 
+    // 이용 가능한 날짜 검증
+    if (product?.availableDates && !product.availableDates.includes(selectedDate)) {
+      showError('이용일자 선택 오류', '선택하신 날짜는 이용이 불가능한 날짜입니다.')
+      return false
+    }
+
     // 출항시간 검증
     if (!selectedTime) {
       showError('출항시간 선택 오류', '출항시간을 선택해주세요.')
@@ -213,7 +220,7 @@ export default function ProductDetailPage() {
 
   const handleDirectReservation = () => {
     if (!validateReservationData()) {
-      return
+          return
     }
 
     // 예약 페이지로 이동
@@ -528,18 +535,46 @@ export default function ProductDetailPage() {
                     <h3 className="text-[26px] font-bold text-gray-900">이용일자</h3>
                   </div>
                   
-                  <div className="flex items-center justify-between h-[50px]">
-                    <div className="text-[16px] text-gray-900">
-                      <div>이용일자</div>
-                      <div className="font-semibold">{selectedDate || '날짜를 선택해주세요'}</div>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between h-[50px]">
+                      <div className="text-[16px] text-gray-900">
+                        <div>이용일자</div>
+                        <div className="font-semibold">{selectedDate || '날짜를 선택해주세요'}</div>
+                      </div>
+                      <input
+                        type="date"
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                        min={new Date().toISOString().split('T')[0]}
+                        className="px-3 py-2 border border-[#dddddd] rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6]"
+                      />
                     </div>
-                    <input
-                      type="date"
-                      value={selectedDate}
-                      onChange={(e) => setSelectedDate(e.target.value)}
-                      min={new Date().toISOString().split('T')[0]}
-                      className="px-3 py-2 border border-[#dddddd] rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6]"
-                    />
+                    
+                    {/* 이용 가능한 날짜 목록 */}
+                    {product?.availableDates && product.availableDates.length > 0 && (
+                      <div className="mt-4">
+                        <div className="text-sm text-gray-600 mb-2">이용 가능한 날짜:</div>
+                        <div className="flex flex-wrap gap-2">
+                          {product.availableDates.map((date) => (
+                            <button
+                              key={date}
+                              onClick={() => setSelectedDate(date)}
+                              className={`px-3 py-1 text-sm rounded border transition-colors ${
+                                selectedDate === date
+                                  ? 'bg-[#3c64d6] text-white border-[#3c64d6]'
+                                  : 'bg-white text-gray-700 border-gray-300 hover:border-[#3c64d6] hover:text-[#3c64d6]'
+                              }`}
+                            >
+                              {new Date(date).toLocaleDateString('ko-KR', {
+                                month: 'long',
+                                day: 'numeric',
+                                weekday: 'short'
+                              })}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -656,18 +691,18 @@ export default function ProductDetailPage() {
             
             {/* 탭 내용 */}
             <div className="p-8">
-              <div className="prose max-w-none">
-                {/* 상품 상세 내용 (에디터로 작성된 내용) */}
-                {product.detailHtml && (
-                  <div className="mb-8">
-                    <div 
-                      className="prose max-w-none"
-                      dangerouslySetInnerHTML={{ __html: product.detailHtml }}
-                    />
-                  </div>
-                )}
-                
-                {/* 이용 안내 */}
+            <div className="prose max-w-none">
+              {/* 상품 상세 내용 (에디터로 작성된 내용) */}
+              {product.detailHtml && (
+                <div className="mb-8">
+                  <div 
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: product.detailHtml }}
+                  />
+                </div>
+              )}
+              
+              {/* 이용 안내 */}
                 <div className="bg-[#190a6b] p-6 rounded-lg mb-6">
                   <div className="flex items-center gap-3 mb-4">
                     <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -700,7 +735,7 @@ export default function ProductDetailPage() {
                       </svg>
                       <span>운항시간은 기상 및 기타사정에 의해 변경이 될 수도 있습니다.</span>
                     </li>
-                  </ul>
+                </ul>
                 </div>
               </div>
             </div>
