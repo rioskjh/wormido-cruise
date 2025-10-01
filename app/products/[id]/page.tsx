@@ -23,6 +23,7 @@ interface Product {
   currentBookings: number
   useOptions: boolean
   availableDates: string[] // 이용 가능한 날짜들
+  availableTimes: string[] // 이용 가능한 시간들
   category: {
     name: string
   }
@@ -61,12 +62,27 @@ export default function ProductDetailPage() {
   })
   const [selectedDate, setSelectedDate] = useState<string>('')
   const [selectedTime, setSelectedTime] = useState<string>('')
+  const [isStickyVisible, setIsStickyVisible] = useState(false)
 
   useEffect(() => {
     if (params.id) {
       fetchProduct()
     }
   }, [params.id])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+      
+      // 스크롤이 일정 지점을 넘으면 고정 옵션 선택창 표시
+      setIsStickyVisible(scrollY > 400)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const fetchProduct = async () => {
     try {
@@ -634,17 +650,11 @@ export default function ProductDetailPage() {
                         className="px-3 py-2 border-0 rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6] bg-white"
                       >
                         <option value="">선택</option>
-                        <option value="10:00">10:00</option>
-                        <option value="11:00">11:00</option>
-                        <option value="12:00">12:00</option>
-                        <option value="13:00">13:00</option>
-                        <option value="14:00">14:00</option>
-                        <option value="15:00">15:00</option>
-                        <option value="16:00">16:00</option>
-                        <option value="17:00">17:00</option>
-                        <option value="18:00">18:00</option>
-                        <option value="19:00">19:00</option>
-                        <option value="20:00">20:00</option>
+                        {product?.availableTimes?.map((time) => (
+                          <option key={time} value={time}>
+                            {time}
+                          </option>
+                        ))}
                       </select>
                       <div className="px-2">
                         <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -690,13 +700,9 @@ export default function ProductDetailPage() {
                     onClick={handleAddToCart}
                     className="w-[60px] h-[60px] bg-white border border-[#dddddd] rounded-lg flex items-center justify-center hover:bg-gray-50"
                   >
-                    <Image
-                      src="/images/cart-icon.png"
-                      alt="장바구니"
-                      width={24}
-                      height={24}
-                      className="w-6 h-6"
-                    />
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+                    </svg>
                   </button>
                   <button
                     onClick={handleDirectReservation}
@@ -780,6 +786,61 @@ export default function ProductDetailPage() {
 
         </div>
       </div>
+      
+      {/* 스크롤시 고정 옵션 선택창 */}
+      {isStickyVisible && (
+        <div className="fixed bottom-0 right-0 w-[400px] bg-white border-t border-l border-[#dddddd] shadow-lg z-50 p-4">
+          <div className="space-y-4">
+            {/* 인원 수 선택 (간소화) */}
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-900">인원</span>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">대인 {reservationData.adults}</span>
+                <span className="text-sm text-gray-600">소인 {reservationData.children}</span>
+                <span className="text-sm text-gray-600">유아 {reservationData.infants}</span>
+              </div>
+            </div>
+
+            {/* 이용일자 */}
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-900">이용일자</span>
+              <span className="text-sm text-gray-600">{selectedDate || '미선택'}</span>
+            </div>
+
+            {/* 출항시간 */}
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-900">출항시간</span>
+              <span className="text-sm text-gray-600">{selectedTime || '미선택'}</span>
+            </div>
+
+            {/* 총 가격 */}
+            <div className="flex items-center justify-between border-t pt-2">
+              <span className="text-sm font-medium text-gray-900">총 가격</span>
+              <span className="text-lg font-bold text-[#190a6b]">
+                {calculateTotalPrice().toLocaleString()}원
+              </span>
+            </div>
+
+            {/* 액션 버튼 */}
+            <div className="flex gap-2">
+              <button
+                onClick={handleAddToCart}
+                className="w-[50px] h-[50px] bg-white border border-[#dddddd] rounded flex items-center justify-center hover:bg-gray-50"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+                </svg>
+              </button>
+              <button
+                onClick={handleDirectReservation}
+                className="flex-1 bg-[#190a6b] text-white h-[50px] rounded hover:bg-[#14085a] focus:outline-none focus:ring-2 focus:ring-[#190a6b] font-semibold text-sm"
+              >
+                바로구매
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Footer */}
       <Footer />

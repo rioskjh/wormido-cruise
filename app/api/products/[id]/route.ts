@@ -96,24 +96,31 @@ export async function GET(
       return dates
     }
 
-    const availableDates = generateAvailableDates(product.startDate, product.endDate)
+          const availableDates = generateAvailableDates(product.startDate, product.endDate)
+          
+          // 이용 가능한 시간 생성 (기본 시간들)
+          const availableTimes = [
+            '10:00', '11:00', '12:00', '13:00', '14:00', 
+            '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'
+          ]
 
-    // 응답 데이터 구성
-    const responseData = {
-      product: {
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        detailHtml: product.detailHtml,
-        basePrice: product.basePrice,
-        adultPrice: product.adultPrice,
-        childPrice: product.childPrice,
-        infantPrice: product.infantPrice,
-        maxCapacity: product.maxCapacity,
-        currentBookings: product.currentBookings,
-        useOptions: product.useOptions,
-        availableDates,
-        category: product.category,
+          // 응답 데이터 구성
+          const responseData = {
+            product: {
+              id: product.id,
+              name: product.name,
+              description: product.description,
+              detailHtml: product.detailHtml,
+              basePrice: product.basePrice,
+              adultPrice: product.adultPrice,
+              childPrice: product.childPrice,
+              infantPrice: product.infantPrice,
+              maxCapacity: product.maxCapacity,
+              currentBookings: product.currentBookings,
+              useOptions: product.useOptions,
+              availableDates,
+              availableTimes,
+              category: product.category,
         images: product.images.map(image => ({
           id: image.id,
           fileName: image.fileName,
