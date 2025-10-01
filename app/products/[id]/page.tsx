@@ -64,6 +64,14 @@ export default function ProductDetailPage() {
   const [selectedTime, setSelectedTime] = useState<string>('')
   const [isStickyVisible, setIsStickyVisible] = useState(false)
 
+  // 첫 번째 옵션의 날짜 데이터를 기반으로 선택 가능한 날짜 확인
+  const isDateSelectable = (date: string): boolean => {
+    if (!product?.options || product.options.length === 0) return false
+    const firstOption = product.options[0]
+    if (!firstOption || !firstOption.values) return false
+    return firstOption.values.some(value => value.value === date)
+  }
+
   useEffect(() => {
     if (params.id) {
       fetchProduct()
@@ -181,9 +189,9 @@ export default function ProductDetailPage() {
       return false
     }
 
-    // 이용 가능한 날짜 검증
-    if (product?.availableDates && !product.availableDates.includes(selectedDate)) {
-      showError('이용일자 선택 오류', '선택하신 날짜는 이용이 불가능한 날짜입니다.')
+    // 이용 가능한 날짜 검증 (첫 번째 옵션의 날짜 데이터 사용)
+    if (!isDateSelectable(selectedDate)) {
+      showError('운행날짜 선택 오류', '선택하신 날짜는 이용이 불가능한 날짜입니다.')
       return false
     }
 
@@ -327,8 +335,8 @@ export default function ProductDetailPage() {
             ]}
           />
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto">
           {/* 상품 정보 섹션 */}
           <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
@@ -365,7 +373,7 @@ export default function ProductDetailPage() {
 
 
                 {/* 예약 옵션 통합 섹션 */}
-                <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
+                <div className="bg-white rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
                   <div className="space-y-6">
                     {/* 인원 수 선택 */}
                     <div className="space-y-4">
@@ -467,8 +475,16 @@ export default function ProductDetailPage() {
                         <input
                           type="date"
                           value={selectedDate}
-                          onChange={(e) => setSelectedDate(e.target.value)}
+                          onChange={(e) => {
+                            const selectedDateValue = e.target.value
+                            if (isDateSelectable(selectedDateValue)) {
+                              setSelectedDate(selectedDateValue)
+                            } else {
+                              showError('날짜 선택 오류', '선택하신 날짜는 이용이 불가능한 날짜입니다.')
+                            }
+                          }}
                           min={new Date().toISOString().split('T')[0]}
+                          max={product.options[0].values.length > 0 ? product.options[0].values[product.options[0].values.length - 1].value : undefined}
                           className="px-3 py-2 border border-[#dddddd] rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6]"
                         />
                       </div>
@@ -608,8 +624,8 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* 상품 상세 정보 */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                {/* 상품 상세 정보 */}
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl mx-auto">
             {/* 탭 메뉴 */}
             <div className="border-b border-gray-200">
               <div className="flex">
