@@ -457,45 +457,49 @@ export default function ProductDetailPage() {
                       </div>
                     </div>
 
-                    {/* 운행날짜 선택 */}
-                    <div className="flex items-center justify-between h-[50px]">
-                      <div className="text-[16px] text-gray-900">
-                        <div>운행날짜</div>
-                        <div className="font-semibold">{selectedDate || '날짜를 선택해주세요'}</div>
+                    {/* 운행날짜 선택 (첫 번째 옵션의 날짜 데이터 사용) */}
+                    {product?.options && product.options.length > 0 && product.options[0] && (
+                      <div className="flex items-center justify-between h-[50px]">
+                        <div className="text-[16px] text-gray-900">
+                          <div>운행날짜</div>
+                          <div className="font-semibold">{selectedDate || '날짜를 선택해주세요'}</div>
+                        </div>
+                        <input
+                          type="date"
+                          value={selectedDate}
+                          onChange={(e) => setSelectedDate(e.target.value)}
+                          min={new Date().toISOString().split('T')[0]}
+                          className="px-3 py-2 border border-[#dddddd] rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6]"
+                        />
                       </div>
-                      <input
-                        type="date"
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                        min={new Date().toISOString().split('T')[0]}
-                        className="px-3 py-2 border border-[#dddddd] rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6]"
-                      />
-                    </div>
+                    )}
 
-                    {/* 운행시간 선택 */}
-                    <div className="space-y-2">
-                      <div className="text-[16px] text-gray-900 font-medium">운행시간</div>
-                      <div className="flex flex-wrap gap-2">
-                        {product?.availableTimes?.map((time) => (
-                          <button
-                            key={time}
-                            onClick={() => setSelectedTime(time)}
-                            className={`px-4 py-2 text-sm rounded border transition-colors ${
-                              selectedTime === time
-                                ? 'bg-[#3c64d6] text-white border-[#3c64d6]'
-                                : 'bg-white text-gray-700 border-gray-300 hover:border-[#3c64d6] hover:text-[#3c64d6]'
-                            }`}
-                          >
-                            {time}
-                          </button>
-                        ))}
+                    {/* 운행시간 선택 (두 번째 옵션의 시간 데이터 사용) */}
+                    {product?.options && product.options.length > 1 && product.options[1] && (
+                      <div className="space-y-2">
+                        <div className="text-[16px] text-gray-900 font-medium">운행시간</div>
+                        <div className="flex flex-wrap gap-2">
+                          {product.options[1].values.map((timeValue) => (
+                            <button
+                              key={timeValue.id}
+                              onClick={() => setSelectedTime(timeValue.value)}
+                              className={`px-4 py-2 text-sm rounded border transition-colors ${
+                                selectedTime === timeValue.value
+                                  ? 'bg-[#3c64d6] text-white border-[#3c64d6]'
+                                  : 'bg-white text-gray-700 border-gray-300 hover:border-[#3c64d6] hover:text-[#3c64d6]'
+                              }`}
+                            >
+                              {timeValue.value}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
-                    {/* 옵션 선택 */}
-                    {product.useOptions && product.options && product.options.length > 0 && (
+                    {/* 옵션 선택 (첫 번째, 두 번째 옵션 제외) */}
+                    {product.useOptions && product.options && product.options.length > 2 && (
                       <div className="space-y-4">
-                        {product.options.map((option) => (
+                        {product.options.slice(2).map((option) => (
                           <div key={option.id} className="flex items-center justify-between h-[50px]">
                             <div className="text-[16px] text-gray-900">
                               <div>{option.name}</div>
@@ -691,30 +695,34 @@ export default function ProductDetailPage() {
             </div>
 
             {/* 운행날짜 */}
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-900">운행날짜</span>
-              <span className="text-sm text-gray-600">{selectedDate || '미선택'}</span>
-            </div>
+            {product?.options && product.options.length > 0 && (
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-900">운행날짜</span>
+                <span className="text-sm text-gray-600">{selectedDate || '미선택'}</span>
+              </div>
+            )}
 
             {/* 운행시간 */}
-            <div className="space-y-2">
-              <span className="text-sm font-medium text-gray-900">운행시간</span>
-              <div className="flex flex-wrap gap-1">
-                {product?.availableTimes?.slice(0, 6).map((time) => (
-                  <button
-                    key={time}
-                    onClick={() => setSelectedTime(time)}
-                    className={`px-2 py-1 text-xs rounded border transition-colors ${
-                      selectedTime === time
-                        ? 'bg-[#3c64d6] text-white border-[#3c64d6]'
-                        : 'bg-white text-gray-700 border-gray-300 hover:border-[#3c64d6] hover:text-[#3c64d6]'
-                    }`}
-                  >
-                    {time}
-                  </button>
-                ))}
+            {product?.options && product.options.length > 1 && (
+              <div className="space-y-2">
+                <span className="text-sm font-medium text-gray-900">운행시간</span>
+                <div className="flex flex-wrap gap-1">
+                  {product.options[1].values.slice(0, 6).map((timeValue) => (
+                    <button
+                      key={timeValue.id}
+                      onClick={() => setSelectedTime(timeValue.value)}
+                      className={`px-2 py-1 text-xs rounded border transition-colors ${
+                        selectedTime === timeValue.value
+                          ? 'bg-[#3c64d6] text-white border-[#3c64d6]'
+                          : 'bg-white text-gray-700 border-gray-300 hover:border-[#3c64d6] hover:text-[#3c64d6]'
+                      }`}
+                    >
+                      {timeValue.value}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* 총 가격 */}
             <div className="flex items-center justify-between border-t pt-2">
