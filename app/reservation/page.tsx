@@ -4,6 +4,8 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
+import PageBanner from '@/components/PageBanner'
+import Breadcrumb from '@/components/Breadcrumb'
 import { useToast } from '@/contexts/ToastContext'
 
 interface ReservationData {
@@ -185,12 +187,22 @@ function ReservationContent() {
     <div className="min-h-screen bg-gray-50">
       <UserNavigation />
       
+      {/* 페이지 배너 */}
+      <PageBanner 
+        title="예약하기"
+        subtitle="예약자 정보를 입력하고 결제를 진행해주세요"
+      />
+      
+      {/* 경로 네비게이션 */}
+      <Breadcrumb 
+        items={[
+          { label: '상품예약', href: '/products' },
+          { label: '예약하기' }
+        ]}
+      />
+      
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">예약하기</h1>
-            <p className="text-gray-600">예약자 정보를 입력하고 결제를 진행해주세요.</p>
-          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* 좌측: 예약 정보 요약 */}

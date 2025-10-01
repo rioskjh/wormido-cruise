@@ -5,6 +5,8 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
+import PageBanner from '@/components/PageBanner'
+import Breadcrumb from '@/components/Breadcrumb'
 import { useToast } from '@/contexts/ToastContext'
 
 interface Product {
@@ -235,6 +237,21 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-white">
       <UserNavigation />
+      
+      {/* 페이지 배너 */}
+      <PageBanner 
+        title={product.name}
+        subtitle={product.description}
+      />
+      
+      {/* 경로 네비게이션 */}
+      <Breadcrumb 
+        items={[
+          { label: '상품예약', href: '/products' },
+          { label: product.category.name },
+          { label: product.name }
+        ]}
+      />
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">

@@ -6,6 +6,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
+import PageBanner from '@/components/PageBanner'
+import Breadcrumb from '@/components/Breadcrumb'
 
 interface Product {
   id: number
@@ -113,13 +115,21 @@ function ProductsContent() {
     <div className="min-h-screen bg-gray-50">
       <UserNavigation />
       
+      {/* 페이지 배너 */}
+      <PageBanner 
+        title="상품 예약"
+        subtitle="원하는 상품을 선택하여 예약하세요"
+      />
+      
+      {/* 경로 네비게이션 */}
+      <Breadcrumb 
+        items={[
+          { label: '상품예약' }
+        ]}
+      />
+      
       <div className="py-8">
         <div className="container mx-auto px-4">
-          {/* 페이지 헤더 */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-design-gray font-pretendard mb-2">상품 예약</h1>
-            <p className="text-design-gray-light font-pretendard">원하는 상품을 선택하여 예약하세요</p>
-          </div>
 
           {/* 카테고리 탭 */}
           <div className="mb-8">
