@@ -6,6 +6,7 @@ import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
 import PageBanner from '@/components/PageBanner'
 import Breadcrumb from '@/components/Breadcrumb'
+import SubNavigation from '@/components/SubNavigation'
 import { useToast } from '@/contexts/ToastContext'
 
 interface ReservationData {
@@ -191,6 +192,28 @@ function ReservationContent() {
       <PageBanner 
         title="예약하기"
         subtitle="예약자 정보를 입력하고 결제를 진행해주세요"
+      />
+      
+      {/* 서브 네비게이션 */}
+      <SubNavigation 
+        items={[
+          { 
+            label: '상품예약', 
+            href: '/products',
+            children: [
+              { label: '불꽃크루즈', href: '/products?category=불꽃크루즈' },
+              { label: '일반크루즈', href: '/products?category=일반크루즈' },
+              { label: '특별크루즈', href: '/products?category=특별크루즈' }
+            ]
+          },
+          { 
+            label: '예약하기',
+            children: [
+              { label: '예약확인', href: '/reservation/check' },
+              { label: '예약취소', href: '/reservation/cancel' }
+            ]
+          }
+        ]}
       />
       
       {/* 경로 네비게이션 */}

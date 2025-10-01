@@ -7,6 +7,7 @@ import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
 import PageBanner from '@/components/PageBanner'
 import Breadcrumb from '@/components/Breadcrumb'
+import SubNavigation from '@/components/SubNavigation'
 import { useToast } from '@/contexts/ToastContext'
 
 interface Product {
@@ -269,23 +270,46 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <UserNavigation />
-      
-      {/* 페이지 배너 */}
-      <PageBanner 
-        title={product.name}
-        subtitle={product.description}
-      />
-      
-      {/* 경로 네비게이션 */}
-      <Breadcrumb 
-        items={[
-          { label: '상품예약', href: '/products' },
-          { label: product.category.name },
-          { label: product.name }
-        ]}
-      />
+        <div className="min-h-screen bg-white">
+          <UserNavigation />
+          
+          {/* 페이지 배너 */}
+          <PageBanner 
+            title={product.name}
+            subtitle={product.description}
+          />
+          
+          {/* 서브 네비게이션 */}
+          <SubNavigation 
+            items={[
+              { 
+                label: '상품예약', 
+                href: '/products',
+                children: [
+                  { label: '불꽃크루즈', href: '/products?category=불꽃크루즈' },
+                  { label: '일반크루즈', href: '/products?category=일반크루즈' },
+                  { label: '특별크루즈', href: '/products?category=특별크루즈' }
+                ]
+              },
+              { 
+                label: product.category.name,
+                children: [
+                  { label: '상품 목록', href: '/products' },
+                  { label: '예약하기', href: '/reservation' },
+                  { label: '예약확인', href: '/reservation/check' }
+                ]
+              }
+            ]}
+          />
+          
+          {/* 경로 네비게이션 */}
+          <Breadcrumb 
+            items={[
+              { label: '상품예약', href: '/products' },
+              { label: product.category.name },
+              { label: product.name }
+            ]}
+          />
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
@@ -304,12 +328,6 @@ export default function ProductDetailPage() {
                     height={400}
                     className="w-full h-full object-cover"
                   />
-                </div>
-                
-                {/* 관련 상품 */}
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-gray-900 mb-2">관련 상품</h3>
-                  <p className="text-sm text-gray-500">등록된 상품이 없습니다.</p>
                 </div>
               </div>
 
@@ -407,27 +425,46 @@ export default function ProductDetailPage() {
 
                 {/* 옵션 선택 */}
                 {product.useOptions && product.options && product.options.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">옵션 선택</h3>
-                    {product.options.map((option) => (
-                      <div key={option.id} className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {option.name} <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          value={selectedOptions[option.id] || ''}
-                          onChange={(e) => handleOptionChange(option.id, parseInt(e.target.value))}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                          <option value="">선택하세요</option>
-                          {option.values.map((value) => (
-                            <option key={value.id} value={value.id}>
-                              {value.value} {value.price > 0 && `(+${value.price.toLocaleString()}원)`}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    ))}
+                  <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="bg-[#3c64d6] h-[30px] w-[7px] rounded"></div>
+                      <h3 className="text-[26px] font-bold text-gray-900">옵션 선택</h3>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      {product.options.map((option) => (
+                        <div key={option.id} className="flex items-center justify-between h-[50px]">
+                          <div className="text-[16px] text-gray-900">
+                            <div>{option.name}</div>
+                            <div className="font-semibold">
+                              {selectedOptions[option.id] 
+                                ? option.values.find(v => v.id === selectedOptions[option.id])?.value || '선택하세요'
+                                : '선택하세요'
+                              }
+                            </div>
+                          </div>
+                          <div className="flex items-center border border-[#dddddd] rounded">
+                            <select
+                              value={selectedOptions[option.id] || ''}
+                              onChange={(e) => handleOptionChange(option.id, parseInt(e.target.value))}
+                              className="px-3 py-2 border-0 rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6] bg-white"
+                            >
+                              <option value="">선택</option>
+                              {option.values.map((value) => (
+                                <option key={value.id} value={value.id}>
+                                  {value.value} {value.price > 0 && `(+${value.price.toLocaleString()}원)`}
+                                </option>
+                              ))}
+                            </select>
+                            <div className="px-2">
+                              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
 
