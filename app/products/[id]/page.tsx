@@ -457,10 +457,10 @@ export default function ProductDetailPage() {
                       </div>
                     </div>
 
-                    {/* 이용일자 선택 */}
+                    {/* 운행날짜 선택 */}
                     <div className="flex items-center justify-between h-[50px]">
                       <div className="text-[16px] text-gray-900">
-                        <div>이용일자</div>
+                        <div>운행날짜</div>
                         <div className="font-semibold">{selectedDate || '날짜를 선택해주세요'}</div>
                       </div>
                       <input
@@ -472,10 +472,10 @@ export default function ProductDetailPage() {
                       />
                     </div>
 
-                    {/* 출항시간 선택 */}
-                    <div className="flex items-center gap-4">
-                      <div className="text-[16px] text-gray-900 font-medium">출항시간</div>
-                      <div className="flex gap-2">
+                    {/* 운행시간 선택 */}
+                    <div className="space-y-2">
+                      <div className="text-[16px] text-gray-900 font-medium">운행시간</div>
+                      <div className="flex flex-wrap gap-2">
                         {product?.availableTimes?.map((time) => (
                           <button
                             key={time}
@@ -700,7 +700,7 @@ export default function ProductDetailPage() {
             <div className="space-y-2">
               <span className="text-sm font-medium text-gray-900">운행시간</span>
               <div className="flex flex-wrap gap-1">
-                {product?.availableTimes?.slice(0, 4).map((time) => (
+                {product?.availableTimes?.slice(0, 6).map((time) => (
                   <button
                     key={time}
                     onClick={() => setSelectedTime(time)}
