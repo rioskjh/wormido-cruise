@@ -1,0 +1,8 @@
+# 줄바꿈 문자 설정
+*.env* text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.sql text eol=lf
