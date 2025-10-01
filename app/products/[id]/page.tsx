@@ -57,6 +57,8 @@ export default function ProductDetailPage() {
     children: 0,
     infants: 0,
   })
+  const [selectedDate, setSelectedDate] = useState<string>('')
+  const [selectedTime, setSelectedTime] = useState<string>('')
 
   useEffect(() => {
     if (params.id) {
@@ -147,15 +149,42 @@ export default function ProductDetailPage() {
     return optionsPrice
   }
 
-  const handleAddToCart = () => {
+  const validateReservationData = () => {
+    // 인원 검증
+    const totalPersons = reservationData.adults + reservationData.children + reservationData.infants
+    if (totalPersons === 0) {
+      showError('인원 선택 오류', '대인, 소인, 유아 중 하나 이상을 선택해주세요.')
+      return false
+    }
+
+    // 이용일자 검증
+    if (!selectedDate) {
+      showError('이용일자 선택 오류', '이용일자를 선택해주세요.')
+      return false
+    }
+
+    // 출항시간 검증
+    if (!selectedTime) {
+      showError('출항시간 선택 오류', '출항시간을 선택해주세요.')
+      return false
+    }
+
     // 옵션이 있는 상품인 경우 옵션 선택 검증
     if (product?.useOptions && product.options) {
       for (const option of product.options) {
         if (!selectedOptions[option.id]) {
           showError('옵션 선택 오류', `${option.name}을(를) 선택해주세요.`)
-          return
+          return false
         }
       }
+    }
+
+    return true
+  }
+
+  const handleAddToCart = () => {
+    if (!validateReservationData()) {
+      return
     }
 
     // 장바구니에 추가 (로컬 스토리지 사용)
@@ -166,6 +195,8 @@ export default function ProductDetailPage() {
       children: reservationData.children,
       infants: reservationData.infants,
       selectedOptions,
+      selectedDate,
+      selectedTime,
       totalPrice: calculateTotalPrice(),
       addedAt: new Date().toISOString()
     }
@@ -181,14 +212,8 @@ export default function ProductDetailPage() {
   }
 
   const handleDirectReservation = () => {
-    // 옵션이 있는 상품인 경우 옵션 선택 검증
-    if (product?.useOptions && product.options) {
-      for (const option of product.options) {
-        if (!selectedOptions[option.id]) {
-          showError('옵션 선택 오류', `${option.name}을(를) 선택해주세요.`)
-          return
-        }
-      }
+    if (!validateReservationData()) {
+      return
     }
 
     // 예약 페이지로 이동
@@ -197,6 +222,8 @@ export default function ProductDetailPage() {
       adults: reservationData.adults.toString(),
       children: reservationData.children.toString(),
       infants: reservationData.infants.toString(),
+      selectedDate,
+      selectedTime,
       totalPrice: calculateTotalPrice().toString(),
       ...Object.keys(selectedOptions).reduce((acc, key) => {
         acc[`option_${key}`] = selectedOptions[parseInt(key)].toString()
@@ -494,6 +521,68 @@ export default function ProductDetailPage() {
                   </div>
                 </div>
 
+                {/* 이용일자 선택 */}
+                <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="bg-[#3c64d6] h-[30px] w-[7px] rounded"></div>
+                    <h3 className="text-[26px] font-bold text-gray-900">이용일자</h3>
+                  </div>
+                  
+                  <div className="flex items-center justify-between h-[50px]">
+                    <div className="text-[16px] text-gray-900">
+                      <div>이용일자</div>
+                      <div className="font-semibold">{selectedDate || '날짜를 선택해주세요'}</div>
+                    </div>
+                    <input
+                      type="date"
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      min={new Date().toISOString().split('T')[0]}
+                      className="px-3 py-2 border border-[#dddddd] rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6]"
+                    />
+                  </div>
+                </div>
+
+                {/* 출항시간 선택 */}
+                <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="bg-[#3c64d6] h-[30px] w-[7px] rounded"></div>
+                    <h3 className="text-[26px] font-bold text-gray-900">출항시간</h3>
+                  </div>
+                  
+                  <div className="flex items-center justify-between h-[50px]">
+                    <div className="text-[16px] text-gray-900">
+                      <div>출항시간</div>
+                      <div className="font-semibold">{selectedTime || '시간을 선택해주세요'}</div>
+                    </div>
+                    <div className="flex items-center border border-[#dddddd] rounded">
+                      <select
+                        value={selectedTime}
+                        onChange={(e) => setSelectedTime(e.target.value)}
+                        className="px-3 py-2 border-0 rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6] bg-white"
+                      >
+                        <option value="">선택</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                      </select>
+                      <div className="px-2">
+                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* 선택된 옵션 가격 */}
                 {getSelectedOptionsPrice().length > 0 && (
                   <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
@@ -529,9 +618,13 @@ export default function ProductDetailPage() {
                     onClick={handleAddToCart}
                     className="w-[60px] h-[60px] bg-white border border-[#dddddd] rounded-lg flex items-center justify-center hover:bg-gray-50"
                   >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
-                    </svg>
+                    <Image
+                      src="/images/cart-icon.png"
+                      alt="장바구니"
+                      width={24}
+                      height={24}
+                      className="w-6 h-6"
+                    />
                   </button>
                   <button
                     onClick={handleDirectReservation}
@@ -621,4 +714,5 @@ export default function ProductDetailPage() {
     </div>
   )
 }
+
 
