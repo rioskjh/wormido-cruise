@@ -335,14 +335,6 @@ export default function ProductDetailPage() {
         ]}
       />
       
-      {/* 경로 네비게이션 */}
-      <Breadcrumb 
-        items={[
-          { label: '상품예약', href: '/products' },
-          { label: product.category.name },
-          { label: product.name }
-        ]}
-      />
       
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* 상품 메인 섹션 (이미지 + 선택옵션) - 1200px */}
