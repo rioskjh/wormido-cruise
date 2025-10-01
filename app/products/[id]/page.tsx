@@ -336,9 +336,10 @@ export default function ProductDetailPage() {
       />
       
       
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <div className="w-full">
         {/* 상품 메인 섹션 (이미지 + 선택옵션) - 1200px */}
-        <div id="main-product-section" className="mb-8">
+        <div id="main-product-section" className="w-full py-8">
+          <div className="container mx-auto px-4 max-w-6xl">
           <div className="bg-white rounded-lg overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-[70px] p-4 lg:p-0">
               {/* 좌측: 상품 이미지 */}
@@ -623,10 +624,12 @@ export default function ProductDetailPage() {
               </div>
             </div>
           </div>
+          </div>
         </div>
 
         {/* 상품 상세 정보 섹션 - 1200px */}
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full bg-[#f8f8f8] py-8">
+          <div className="container mx-auto px-4 max-w-6xl">
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             {/* 탭 메뉴 */}
             <div className="border-b border-gray-200">
@@ -693,6 +696,7 @@ export default function ProductDetailPage() {
                 </div>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
