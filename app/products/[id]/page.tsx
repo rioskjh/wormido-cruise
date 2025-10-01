@@ -625,19 +625,19 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* 상품 상세 정보 섹션 - 800px */}
-        <div className="max-w-4xl mx-auto">
+        {/* 상품 상세 정보 섹션 - 1200px */}
+        <div className="max-w-6xl mx-auto">
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             {/* 탭 메뉴 */}
             <div className="border-b border-gray-200">
-              <div className="flex">
-                <button className="flex-1 py-5 px-8 text-center border-b-2 border-[#222222] bg-white">
+              <div className="flex justify-start">
+                <button className="py-5 px-8 text-left border-b-2 border-[#222222] bg-white">
                   <span className="text-[20px] font-semibold text-[#222222]">상품 상세 정보</span>
                 </button>
-                <button className="flex-1 py-5 px-8 text-center border-b border-[#dddddd] bg-white">
+                <button className="py-5 px-8 text-left border-b border-[#dddddd] bg-white">
                   <span className="text-[20px] font-semibold text-[#666666]">상품 리뷰</span>
                 </button>
-                <button className="flex-1 py-5 px-8 text-center border-b border-[#dddddd] bg-white">
+                <button className="py-5 px-8 text-left border-b border-[#dddddd] bg-white">
                   <span className="text-[20px] font-semibold text-[#666666]">상품 문의</span>
                 </button>
               </div>
