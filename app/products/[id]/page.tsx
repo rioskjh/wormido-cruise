@@ -349,7 +349,7 @@ export default function ProductDetailPage() {
 
               {/* 우측: 상품 정보 */}
               <div className="space-y-6">
-                <div>
+                <div className="border-b border-[#ddd] pb-6 mb-6">
                   <div className="flex items-center justify-between mb-4">
                     <span className="bg-[#3c64d6] text-white text-sm font-medium px-3 py-1 rounded">
                       {product.category.name}
@@ -363,232 +363,101 @@ export default function ProductDetailPage() {
                   <p className="text-gray-600 text-lg leading-relaxed">{product.description}</p>
                 </div>
 
-                {/* 가격 정보 */}
-                <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="bg-[#3c64d6] h-[30px] w-[7px] rounded"></div>
-                    <h3 className="text-[26px] font-bold text-gray-900">가격</h3>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    {/* 대인 가격 */}
-                    <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[20px] font-bold text-gray-900">대인</span>
-                          <span className="text-[17px] text-gray-600">(중학생 이상~)</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="bg-[#3c64d6] text-white text-[18px] font-bold px-3 py-1 rounded-full">18%</div>
-                          <div className="text-[24px] font-bold text-gray-900">
-                            {(product.basePrice + product.adultPrice).toLocaleString()}원
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-[18px] text-gray-500 line-through">
-                          정상가 {(product.basePrice + product.adultPrice + 7000).toLocaleString()}원
-                        </div>
-                        <div className="text-[17px] font-bold text-gray-900">할인가</div>
-                      </div>
-                    </div>
-                    
-                    {/* 소인 가격 */}
-                    <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[20px] font-bold text-gray-900">소인</span>
-                          <span className="text-[17px] text-gray-600">(48개월 이상~중학생 미만)</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="bg-[#3c64d6] text-white text-[18px] font-bold px-3 py-1 rounded-full">18%</div>
-                          <div className="text-[24px] font-bold text-gray-900">
-                            {(product.basePrice + product.childPrice).toLocaleString()}원
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-[18px] text-gray-500 line-through">
-                          정상가 {(product.basePrice + product.childPrice + 5000).toLocaleString()}원
-                        </div>
-                        <div className="text-[17px] font-bold text-gray-900">할인가</div>
-                      </div>
-                    </div>
-                    
-                    {/* 유아 가격 */}
-                    <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[20px] font-bold text-gray-900">유아</span>
-                          <span className="text-[17px] text-gray-600">(48개월 미만)</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="bg-[#3c64d6] text-white text-[18px] font-bold px-3 py-1 rounded-full">18%</div>
-                          <div className="text-[24px] font-bold text-gray-900">
-                            {(product.basePrice + product.infantPrice).toLocaleString()}원
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-[18px] text-gray-500 line-through">
-                          정상가 {(product.basePrice + product.infantPrice + 3000).toLocaleString()}원
-                        </div>
-                        <div className="text-[17px] font-bold text-gray-900">할인가</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
-                {/* 옵션 선택 */}
-                {product.useOptions && product.options && product.options.length > 0 && (
-                  <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="bg-[#3c64d6] h-[30px] w-[7px] rounded"></div>
-                      <h3 className="text-[26px] font-bold text-gray-900">옵션 선택</h3>
-                    </div>
-                    
+                {/* 예약 옵션 통합 섹션 */}
+                <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
+                  <div className="space-y-6">
+                    {/* 인원 수 선택 */}
                     <div className="space-y-4">
-                      {product.options.map((option) => (
-                        <div key={option.id} className="flex items-center justify-between h-[50px]">
-                          <div className="text-[16px] text-gray-900">
-                            <div>{option.name}</div>
-                            <div className="font-semibold">
-                              {selectedOptions[option.id] 
-                                ? option.values.find(v => v.id === selectedOptions[option.id])?.value || '선택하세요'
-                                : '선택하세요'
-                              }
-                            </div>
+                      {/* 대인 선택 */}
+                      <div className="flex items-center justify-between h-[50px]">
+                        <div className="text-[16px] text-gray-900">
+                          <div>대인</div>
+                          <div className="font-semibold">{(product.basePrice + product.adultPrice).toLocaleString()}원</div>
+                        </div>
+                        <div className="flex items-center border border-[#dddddd] rounded">
+                          <button 
+                            onClick={() => setReservationData(prev => ({ ...prev, adults: Math.max(0, prev.adults - 1) }))}
+                            className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd] hover:bg-gray-50"
+                          >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                            </svg>
+                          </button>
+                          <div className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd]">
+                            <span className="text-[16px]">{reservationData.adults}</span>
                           </div>
-                          <div className="flex items-center border border-[#dddddd] rounded">
-                            <select
-                              value={selectedOptions[option.id] || ''}
-                              onChange={(e) => handleOptionChange(option.id, parseInt(e.target.value))}
-                              className="px-3 py-2 border-0 rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6] bg-white"
-                            >
-                              <option value="">선택</option>
-                              {option.values.map((value) => (
-                                <option key={value.id} value={value.id}>
-                                  {value.value} {value.price > 0 && `(+${value.price.toLocaleString()}원)`}
-                                </option>
-                              ))}
-                            </select>
-                            <div className="px-2">
-                              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                              </svg>
-                            </div>
+                          <button 
+                            onClick={() => setReservationData(prev => ({ ...prev, adults: Math.min(10, prev.adults + 1) }))}
+                            className="w-[44px] h-[44px] flex items-center justify-center hover:bg-gray-50"
+                          >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      
+                      {/* 소인 선택 */}
+                      <div className="flex items-center justify-between h-[50px]">
+                        <div className="text-[16px] text-gray-900">
+                          <div>소인</div>
+                          <div className="font-semibold">{(product.basePrice + product.childPrice).toLocaleString()}원</div>
+                        </div>
+                        <div className="flex items-center border border-[#dddddd] rounded">
+                          <button 
+                            onClick={() => setReservationData(prev => ({ ...prev, children: Math.max(0, prev.children - 1) }))}
+                            className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd] hover:bg-gray-50"
+                          >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                            </svg>
+                          </button>
+                          <div className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd]">
+                            <span className="text-[16px]">{reservationData.children}</span>
                           </div>
+                          <button 
+                            onClick={() => setReservationData(prev => ({ ...prev, children: Math.min(10, prev.children + 1) }))}
+                            className="w-[44px] h-[44px] flex items-center justify-center hover:bg-gray-50"
+                          >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                          </button>
                         </div>
-                      ))}
+                      </div>
+                      
+                      {/* 유아 선택 */}
+                      <div className="flex items-center justify-between h-[50px]">
+                        <div className="text-[16px] text-gray-900">
+                          <div>유아(48개월 미만)</div>
+                          <div className="font-semibold">{(product.basePrice + product.infantPrice).toLocaleString()}원</div>
+                        </div>
+                        <div className="flex items-center border border-[#dddddd] rounded">
+                          <button 
+                            onClick={() => setReservationData(prev => ({ ...prev, infants: Math.max(0, prev.infants - 1) }))}
+                            className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd] hover:bg-gray-50"
+                          >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                            </svg>
+                          </button>
+                          <div className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd]">
+                            <span className="text-[16px]">{reservationData.infants}</span>
+                          </div>
+                          <button 
+                            onClick={() => setReservationData(prev => ({ ...prev, infants: Math.min(3, prev.infants + 1) }))}
+                            className="w-[44px] h-[44px] flex items-center justify-center hover:bg-gray-50"
+                          >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                )}
 
-                {/* 인원 수 선택 */}
-                <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="bg-[#3c64d6] h-[30px] w-[7px] rounded"></div>
-                    <h3 className="text-[26px] font-bold text-gray-900">인원 선택</h3>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    {/* 대인 선택 */}
-                    <div className="flex items-center justify-between h-[50px]">
-                      <div className="text-[16px] text-gray-900">
-                        <div>대인</div>
-                        <div className="font-semibold">{(product.basePrice + product.adultPrice).toLocaleString()}원</div>
-                      </div>
-                      <div className="flex items-center border border-[#dddddd] rounded">
-                        <button 
-                          onClick={() => setReservationData(prev => ({ ...prev, adults: Math.max(0, prev.adults - 1) }))}
-                          className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd] hover:bg-gray-50"
-                        >
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                          </svg>
-                        </button>
-                        <div className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd]">
-                          <span className="text-[16px]">{reservationData.adults}</span>
-                        </div>
-                        <button 
-                          onClick={() => setReservationData(prev => ({ ...prev, adults: Math.min(10, prev.adults + 1) }))}
-                          className="w-[44px] h-[44px] flex items-center justify-center hover:bg-gray-50"
-                        >
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                    
-                    {/* 소인 선택 */}
-                    <div className="flex items-center justify-between h-[50px]">
-                      <div className="text-[16px] text-gray-900">
-                        <div>소인</div>
-                        <div className="font-semibold">{(product.basePrice + product.childPrice).toLocaleString()}원</div>
-                      </div>
-                      <div className="flex items-center border border-[#dddddd] rounded">
-                        <button 
-                          onClick={() => setReservationData(prev => ({ ...prev, children: Math.max(0, prev.children - 1) }))}
-                          className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd] hover:bg-gray-50"
-                        >
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                          </svg>
-                        </button>
-                        <div className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd]">
-                          <span className="text-[16px]">{reservationData.children}</span>
-                        </div>
-                        <button 
-                          onClick={() => setReservationData(prev => ({ ...prev, children: Math.min(10, prev.children + 1) }))}
-                          className="w-[44px] h-[44px] flex items-center justify-center hover:bg-gray-50"
-                        >
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                    
-                    {/* 유아 선택 */}
-                    <div className="flex items-center justify-between h-[50px]">
-                      <div className="text-[16px] text-gray-900">
-                        <div>유아(48개월 미만)</div>
-                        <div className="font-semibold">{(product.basePrice + product.infantPrice).toLocaleString()}원</div>
-                      </div>
-                      <div className="flex items-center border border-[#dddddd] rounded">
-                        <button 
-                          onClick={() => setReservationData(prev => ({ ...prev, infants: Math.max(0, prev.infants - 1) }))}
-                          className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd] hover:bg-gray-50"
-                        >
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                          </svg>
-                        </button>
-                        <div className="w-[44px] h-[44px] flex items-center justify-center border-r border-[#dddddd]">
-                          <span className="text-[16px]">{reservationData.infants}</span>
-                        </div>
-                        <button 
-                          onClick={() => setReservationData(prev => ({ ...prev, infants: Math.min(3, prev.infants + 1) }))}
-                          className="w-[44px] h-[44px] flex items-center justify-center hover:bg-gray-50"
-                        >
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 이용일자 선택 */}
-                <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="bg-[#3c64d6] h-[30px] w-[7px] rounded"></div>
-                    <h3 className="text-[26px] font-bold text-gray-900">이용일자</h3>
-                  </div>
-                  
-                  <div className="space-y-4">
+                    {/* 이용일자 선택 */}
                     <div className="flex items-center justify-between h-[50px]">
                       <div className="text-[16px] text-gray-900">
                         <div>이용일자</div>
@@ -602,66 +471,64 @@ export default function ProductDetailPage() {
                         className="px-3 py-2 border border-[#dddddd] rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6]"
                       />
                     </div>
-                    
-                    {/* 이용 가능한 날짜 목록 */}
-                    {product?.availableDates && product.availableDates.length > 0 && (
-                      <div className="mt-4">
-                        <div className="text-sm text-gray-600 mb-2">이용 가능한 날짜:</div>
-                        <div className="flex flex-wrap gap-2">
-                          {product.availableDates.map((date) => (
-                            <button
-                              key={date}
-                              onClick={() => setSelectedDate(date)}
-                              className={`px-3 py-1 text-sm rounded border transition-colors ${
-                                selectedDate === date
-                                  ? 'bg-[#3c64d6] text-white border-[#3c64d6]'
-                                  : 'bg-white text-gray-700 border-gray-300 hover:border-[#3c64d6] hover:text-[#3c64d6]'
-                              }`}
-                            >
-                              {new Date(date).toLocaleDateString('ko-KR', {
-                                month: 'long',
-                                day: 'numeric',
-                                weekday: 'short'
-                              })}
-                            </button>
-                          ))}
-                        </div>
+
+                    {/* 출항시간 선택 */}
+                    <div className="flex items-center gap-4">
+                      <div className="text-[16px] text-gray-900 font-medium">출항시간</div>
+                      <div className="flex gap-2">
+                        {product?.availableTimes?.map((time) => (
+                          <button
+                            key={time}
+                            onClick={() => setSelectedTime(time)}
+                            className={`px-4 py-2 text-sm rounded border transition-colors ${
+                              selectedTime === time
+                                ? 'bg-[#3c64d6] text-white border-[#3c64d6]'
+                                : 'bg-white text-gray-700 border-gray-300 hover:border-[#3c64d6] hover:text-[#3c64d6]'
+                            }`}
+                          >
+                            {time}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 옵션 선택 */}
+                    {product.useOptions && product.options && product.options.length > 0 && (
+                      <div className="space-y-4">
+                        {product.options.map((option) => (
+                          <div key={option.id} className="flex items-center justify-between h-[50px]">
+                            <div className="text-[16px] text-gray-900">
+                              <div>{option.name}</div>
+                              <div className="font-semibold">
+                                {selectedOptions[option.id] 
+                                  ? option.values.find(v => v.id === selectedOptions[option.id])?.value || '선택하세요'
+                                  : '선택하세요'
+                                }
+                              </div>
+                            </div>
+                            <div className="flex items-center border border-[#dddddd] rounded">
+                              <select
+                                value={selectedOptions[option.id] || ''}
+                                onChange={(e) => handleOptionChange(option.id, parseInt(e.target.value))}
+                                className="px-3 py-2 border-0 rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6] bg-white"
+                              >
+                                <option value="">선택</option>
+                                {option.values.map((value) => (
+                                  <option key={value.id} value={value.id}>
+                                    {value.value} {value.price > 0 && `(+${value.price.toLocaleString()}원)`}
+                                  </option>
+                                ))}
+                              </select>
+                              <div className="px-2">
+                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     )}
-                  </div>
-                </div>
-
-                {/* 출항시간 선택 */}
-                <div className="bg-white border border-[#42a3ff] rounded-lg shadow-[0px_3px_0px_0px_rgba(0,0,0,0.07)] p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="bg-[#3c64d6] h-[30px] w-[7px] rounded"></div>
-                    <h3 className="text-[26px] font-bold text-gray-900">출항시간</h3>
-                  </div>
-                  
-                  <div className="flex items-center justify-between h-[50px]">
-                    <div className="text-[16px] text-gray-900">
-                      <div>출항시간</div>
-                      <div className="font-semibold">{selectedTime || '시간을 선택해주세요'}</div>
-                    </div>
-                    <div className="flex items-center border border-[#dddddd] rounded">
-                      <select
-                        value={selectedTime}
-                        onChange={(e) => setSelectedTime(e.target.value)}
-                        className="px-3 py-2 border-0 rounded focus:outline-none focus:ring-2 focus:ring-[#3c64d6] bg-white"
-                      >
-                        <option value="">선택</option>
-                        {product?.availableTimes?.map((time) => (
-                          <option key={time} value={time}>
-                            {time}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="px-2">
-                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                    </div>
                   </div>
                 </div>
 
@@ -700,8 +567,30 @@ export default function ProductDetailPage() {
                     onClick={handleAddToCart}
                     className="w-[60px] h-[60px] bg-white border border-[#dddddd] rounded-lg flex items-center justify-center hover:bg-gray-50"
                   >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+                    <svg className="w-6 h-6" fill="none" preserveAspectRatio="none" viewBox="0 0 23 22">
+                      <g>
+                        <path 
+                          d="M17.95 20.95C18.5023 20.95 18.95 20.5023 18.95 19.95C18.95 19.3977 18.5023 18.95 17.95 18.95C17.3977 18.95 16.95 19.3977 16.95 19.95C16.95 20.5023 17.3977 20.95 17.95 20.95Z" 
+                          stroke="#222222" 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth="2" 
+                        />
+                        <path 
+                          d="M6.95 20.95C7.50228 20.95 7.95 20.5023 7.95 19.95C7.95 19.3977 7.50228 18.95 6.95 18.95C6.39772 18.95 5.95 19.3977 5.95 19.95C5.95 20.5023 6.39772 20.95 6.95 20.95Z" 
+                          stroke="#222222" 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth="2" 
+                        />
+                        <path 
+                          d="M1 1H3L5.66 13.42C5.75758 13.8749 6.01067 14.2815 6.37571 14.5699C6.74075 14.8582 7.19491 15.0103 7.66 15H17.44C17.8952 14.9993 18.3365 14.8433 18.691 14.5578C19.0456 14.2724 19.2921 13.8745 19.39 13.43L21.04 6H4.07" 
+                          stroke="#222222" 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth="2" 
+                        />
+                      </g>
                     </svg>
                   </button>
                   <button
@@ -801,16 +690,30 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* 이용일자 */}
+            {/* 운행날짜 */}
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-900">이용일자</span>
+              <span className="text-sm font-medium text-gray-900">운행날짜</span>
               <span className="text-sm text-gray-600">{selectedDate || '미선택'}</span>
             </div>
 
-            {/* 출항시간 */}
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-900">출항시간</span>
-              <span className="text-sm text-gray-600">{selectedTime || '미선택'}</span>
+            {/* 운행시간 */}
+            <div className="space-y-2">
+              <span className="text-sm font-medium text-gray-900">운행시간</span>
+              <div className="flex flex-wrap gap-1">
+                {product?.availableTimes?.slice(0, 4).map((time) => (
+                  <button
+                    key={time}
+                    onClick={() => setSelectedTime(time)}
+                    className={`px-2 py-1 text-xs rounded border transition-colors ${
+                      selectedTime === time
+                        ? 'bg-[#3c64d6] text-white border-[#3c64d6]'
+                        : 'bg-white text-gray-700 border-gray-300 hover:border-[#3c64d6] hover:text-[#3c64d6]'
+                    }`}
+                  >
+                    {time}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* 총 가격 */}
@@ -827,8 +730,30 @@ export default function ProductDetailPage() {
                 onClick={handleAddToCart}
                 className="w-[50px] h-[50px] bg-white border border-[#dddddd] rounded flex items-center justify-center hover:bg-gray-50"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+                <svg className="w-5 h-5" fill="none" preserveAspectRatio="none" viewBox="0 0 23 22">
+                  <g>
+                    <path 
+                      d="M17.95 20.95C18.5023 20.95 18.95 20.5023 18.95 19.95C18.95 19.3977 18.5023 18.95 17.95 18.95C17.3977 18.95 16.95 19.3977 16.95 19.95C16.95 20.5023 17.3977 20.95 17.95 20.95Z" 
+                      stroke="#222222" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth="2" 
+                    />
+                    <path 
+                      d="M6.95 20.95C7.50228 20.95 7.95 20.5023 7.95 19.95C7.95 19.3977 7.50228 18.95 6.95 18.95C6.39772 18.95 5.95 19.3977 5.95 19.95C5.95 20.5023 6.39772 20.95 6.95 20.95Z" 
+                      stroke="#222222" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth="2" 
+                    />
+                    <path 
+                      d="M1 1H3L5.66 13.42C5.75758 13.8749 6.01067 14.2815 6.37571 14.5699C6.74075 14.8582 7.19491 15.0103 7.66 15H17.44C17.8952 14.9993 18.3365 14.8433 18.691 14.5578C19.0456 14.2724 19.2921 13.8745 19.39 13.43L21.04 6H4.07" 
+                      stroke="#222222" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth="2" 
+                    />
+                  </g>
                 </svg>
               </button>
               <button

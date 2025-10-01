@@ -110,30 +110,30 @@ export default function Home() {
             <div className="absolute bg-[#190a6b] h-[450px] left-0 top-1/2 -translate-y-1/2 w-full" />
             {/* 크루즈 이미지 - 세로 중앙 정렬 */}
             <div className="absolute h-[703px] left-[calc(50%-300px)] top-1/2 -translate-y-1/2 w-[1250px] overflow-hidden">
-              <Image
-                src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
-                alt="월미도 크루즈"
-                width={1250}
-                height={703}
-                className="w-full h-full object-cover"
-                priority
-              />
+                <Image
+                  src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
+                  alt="월미도 크루즈"
+                  width={1250}
+                  height={703}
+                  className="w-full h-full object-cover"
+                  priority
+                />
             </div>
-          </div>
-          
+              </div>
+              
           {/* 텍스트 오버레이 - 1200px 컨텐츠 안에서 하단 컨텐츠들과 중앙 정렬 */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="container mx-auto px-4 max-w-[1200px]">
               <div className="content-stretch flex flex-col gap-[30px] h-[262px] items-start relative shrink-0 w-full">
-                {/* 메인 타이틀 */}
+                  {/* 메인 타이틀 */}
                 <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
                   <div className="font-['Pretendard:ExtraBold',_sans-serif] leading-[76px] not-italic relative shrink-0 text-[56px] text-nowrap text-white whitespace-pre">
-                    <p className="mb-0">푸른 바다 위에서</p>
-                    <p>만나는 특별한 하루</p>
+                      <p className="mb-0">푸른 바다 위에서</p>
+                      <p>만나는 특별한 하루</p>
+                    </div>
                   </div>
-                </div>
-                
-                {/* 서브 타이틀 */}
+                  
+                  {/* 서브 타이틀 */}
                 <div className="box-border content-stretch flex gap-[10px] items-center pl-0 pr-[20px] py-[10px] relative shrink-0">
                   <div className="font-['Pretendard:Regular',_sans-serif] leading-[0] not-italic relative shrink-0 text-[20px] text-nowrap text-white">
                     <p className="leading-[32px] whitespace-pre">월미도 해양관광 크루즈와 함께하는 잊지 못할 여행</p>
