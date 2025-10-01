@@ -344,11 +344,11 @@ export default function ProductDetailPage() {
         ]}
       />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* 상품 메인 섹션 (이미지 + 선택옵션) - 1200px */}
-        <div id="main-product-section" className="max-w-6xl mx-auto mb-8">
+        <div id="main-product-section" className="mb-8">
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-4 lg:p-0">
               {/* 좌측: 상품 이미지 */}
               <div className="space-y-4">
                 <div className="aspect-square rounded-lg overflow-hidden">
