@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { useToast } from '@/contexts/ToastContext'
 import DynamicNavigation from './DynamicNavigation'
 import MobileNavigation from './MobileNavigation'
+import { LoginIcon } from './icons/LoginIcon'
+import { CalendarIcon } from './icons/CalendarIcon'
 
 interface User {
   id: number
@@ -177,14 +179,7 @@ export default function UserNavigation() {
                     className="content-stretch flex gap-[10px] items-center relative shrink-0"
                   >
                     <div className="h-[20px] relative shrink-0 w-[18px]" data-name="Group">
-                      <div className="absolute inset-[-5%_-5.56%]">
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 22">
-                          <g id="Group">
-                            <path d="M10 9a3 3 0 100-6 3 3 0 000 6z" id="Vector" stroke="var(--stroke-0, #222222)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-                            <path d="M6.168 15.849A4 4 0 0110 13c1.876 0 3.416 1.679 3.832 3.849" id="Vector_2" stroke="var(--stroke-0, #222222)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-                          </g>
-                        </svg>
-                      </div>
+                      <LoginIcon className="size-full" color="#222222" strokeWidth={2} />
                     </div>
                     <p className="font-['Pretendard:SemiBold',_sans-serif] leading-[20px] not-italic relative shrink-0 text-[#222222] text-[15px] text-center text-nowrap whitespace-pre">정보수정</p>
                   </Link>
@@ -193,13 +188,7 @@ export default function UserNavigation() {
                     className="content-stretch flex gap-[10px] items-center relative shrink-0"
                   >
                     <div className="relative shrink-0 size-[20px]" data-name="Group">
-                      <div className="absolute inset-[-5%]">
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 22 22">
-                          <g id="Group">
-                            <path d="M7 1V5M15 1V5M1 9H21" id="Vector" stroke="var(--stroke-0, #222222)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-                          </g>
-                        </svg>
-                      </div>
+                      <CalendarIcon className="size-full" color="#222222" strokeWidth={2} />
                     </div>
                     <p className="font-['Pretendard:SemiBold',_sans-serif] leading-[20px] not-italic relative shrink-0 text-[#222222] text-[15px] text-center text-nowrap whitespace-pre">예약조회</p>
                   </Link>
@@ -212,28 +201,16 @@ export default function UserNavigation() {
                     className="content-stretch flex gap-[10px] items-center relative shrink-0"
                   >
                     <div className="h-[20px] relative shrink-0 w-[18px]" data-name="Group">
-                      <div className="absolute inset-[-5%_-5.56%]">
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 22">
-                          <g id="Group">
-                            <path d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" id="Vector" stroke="var(--stroke-0, #222222)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-                          </g>
-                        </svg>
-                      </div>
+                      <LoginIcon className="size-full" color="#222222" strokeWidth={2} />
                     </div>
                     <p className="font-['Pretendard:SemiBold',_sans-serif] leading-[20px] not-italic relative shrink-0 text-[#222222] text-[15px] text-center text-nowrap whitespace-pre">로그인</p>
                   </Link>
                   <Link 
-                    href="/register" 
+                    href="/reservation/lookup" 
                     className="content-stretch flex gap-[10px] items-center relative shrink-0"
                   >
                     <div className="relative shrink-0 size-[20px]" data-name="Group">
-                      <div className="absolute inset-[-5%]">
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 22 22">
-                          <g id="Group">
-                            <path d="M7 1V5M15 1V5M1 9H21" id="Vector" stroke="var(--stroke-0, #222222)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-                          </g>
-                        </svg>
-                      </div>
+                      <CalendarIcon className="size-full" color="#222222" strokeWidth={2} />
                     </div>
                     <p className="font-['Pretendard:SemiBold',_sans-serif] leading-[20px] not-italic relative shrink-0 text-[#222222] text-[15px] text-center text-nowrap whitespace-pre">예약조회</p>
                   </Link>
