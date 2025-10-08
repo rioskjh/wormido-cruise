@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+// import Image from 'next/image' // 이미지 최적화 비활성화
 
 export default function GroupTravelSection() {
   return (
@@ -8,11 +8,10 @@ export default function GroupTravelSection() {
       {/* 모바일 버전 */}
       <div className="md:hidden relative rounded-[10px] size-full">
         <div aria-hidden="true" className="absolute inset-0 pointer-events-none rounded-[10px]">
-          <Image
+          <img
             src="/images/554419256e070f67b901bd627c66e2442e2f9b89.png"
             alt="단체여행 배경"
-            fill
-            className="object-cover rounded-[10px]"
+            className="w-full h-full object-cover rounded-[10px]"
           />
           <div className="absolute bg-[rgba(0,0,0,0.2)] inset-0 rounded-[10px]" />
         </div>
@@ -48,11 +47,10 @@ export default function GroupTravelSection() {
       {/* 데스크톱 버전 */}
       <div className="hidden md:block relative rounded-[10px] size-full">
         <div aria-hidden="true" className="absolute inset-0 pointer-events-none rounded-[10px]">
-          <Image
+          <img
             src="/images/554419256e070f67b901bd627c66e2442e2f9b89.png"
             alt="단체여행 배경"
-            fill
-            className="object-cover rounded-[10px]"
+            className="w-full h-full object-cover rounded-[10px]"
           />
           <div className="absolute bg-[rgba(0,0,0,0.2)] inset-0 rounded-[10px]" />
         </div>

@@ -3,11 +3,8 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
-import PageBanner from '@/components/PageBanner'
-import Breadcrumb from '@/components/Breadcrumb'
 import SubNavigation from '@/components/SubNavigation'
 
 interface Product {
@@ -35,6 +32,15 @@ interface Category {
   id: number
   name: string
   sortOrder: number
+}
+
+// 디자인 파일의 SVG 아이콘들
+function ArrowUpIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
+    </svg>
+  )
 }
 
 function ProductsContent() {
@@ -113,199 +119,265 @@ function ProductsContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white min-h-screen">
+      {/* 헤더 */}
       <UserNavigation />
       
-      {/* 페이지 배너 */}
-      <PageBanner 
-        title="상품 예약"
-        subtitle="원하는 상품을 선택하여 예약하세요"
-      />
-      
+      {/* 비주얼 섹션 */}
+      <div className="relative w-full h-[370px] flex items-center justify-center overflow-hidden rounded-[10px] mx-auto max-w-[1820px]">
+        <div className="absolute inset-0">
+          <img 
+            alt="상품예약 배너" 
+            className="w-full h-full object-cover rounded-[10px]" 
+            src="/images/design-assets/aeefcb7185f8ec781f75ece941d96ec57ad9dad5.png" 
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40 rounded-[10px]" />
+        </div>
+        <h1 className="relative z-10 text-white text-[50px] font-bold font-['Pretendard:Bold'] leading-[60px]">
+          상품예약
+        </h1>
+      </div>
+
       {/* 서브 네비게이션 */}
       <SubNavigation 
         items={[
           { 
-            label: '상품예약', 
-            href: '/products',
-            children: [
-              { label: '불꽃크루즈', href: '/products?category=불꽃크루즈' },
-              { label: '일반크루즈', href: '/products?category=일반크루즈' },
-              { label: '특별크루즈', href: '/products?category=특별크루즈' }
-            ]
+            label: '상품예약',
+            href: '/products'
+          },
+          { 
+            label: selectedCategory?.name || '전체'
           }
         ]}
       />
-      
-      {/* 경로 네비게이션 */}
-      <Breadcrumb 
-        items={[
-          { label: '상품예약' }
-        ]}
-      />
-      
-      <div className="py-8">
-        <div className="container mx-auto px-4">
 
-          {/* 카테고리 탭 */}
-          <div className="mb-8">
-            <div className="flex flex-wrap gap-4">
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => handleCategoryChange(category)}
-                  className={`px-6 py-3 rounded-lg font-pretendard font-medium transition-all duration-200 ${
-                    selectedCategory?.id === category.id
-                      ? 'bg-design-blue text-white shadow-lg'
-                      : 'bg-white text-design-gray border border-gray-200 hover:border-design-blue hover:text-design-blue'
-                  }`}
+      {/* 메인 콘텐츠 */}
+      <div className="flex flex-col items-center px-0 py-[100px] w-[1200px] mx-auto">
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#222222]"></div>
+            <p className="mt-4 text-[#666666] font-['Pretendard'] text-lg">상품을 불러오는 중...</p>
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg text-center font-['Pretendard']">
+            {error}
+          </div>
+        ) : (
+          <div className="flex gap-[30px] items-start">
+            {products.slice(0, 3).map((product, index) => {
+              // 업로드된 이미지가 있으면 사용, 없으면 기본 이미지 사용
+              const hasUploadedImage = product.images && product.images.length > 0
+              const imageSrc = hasUploadedImage 
+                ? product.images[0].filePath 
+                : `/images/design-assets/${index === 0 ? '395ecb514347a2b67636818efc42e5bc27269325.png' : index === 1 ? '17c94b934fb469c9e8305d4e810a5c1b2eda98b4.png' : 'ec35f3ef156b9a8f70f3287075f9d663e753a88b.png'}`
+              
+              return (
+                <Link 
+                  key={product.id} 
+                  href={`/products/${product.id}`}
+                  className="flex flex-col items-center w-[380px] group"
                 >
-                  {category.name}
-                </button>
-              ))}
+                  {/* 상품 이미지 */}
+                  <div className="h-[350px] w-[380px] rounded-tl-[10px] rounded-tr-[10px] overflow-hidden">
+                    <img
+                      src={imageSrc}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+
+                  {/* 상품 정보 */}
+                  <div className="relative rounded-bl-[10px] rounded-br-[10px] w-full border border-[#dddddd]">
+                    <div className="flex flex-col items-center px-[20px] py-[30px] gap-[30px]">
+                      {/* 상품 제목 및 설명 */}
+                      <div className="flex flex-col gap-[10px] items-center text-center">
+                        <h3 className="text-[#222222] text-[26px] font-bold font-['Pretendard:Bold'] leading-[36px]">
+                          {product.name}
+                        </h3>
+                        <div className="text-[#444444] text-[18px] font-['Pretendard:Regular'] leading-[30px]">
+                          <p className="mb-0">{product.description || '상품 설명이 없습니다.'}</p>
+                        </div>
+                      </div>
+
+                      {/* 가격 정보 */}
+                      <div className="flex gap-[10px] items-center justify-center">
+                        {product.basePrice > product.adultPrice ? (
+                          <>
+                            <p className="line-through text-[#666666] text-[17px] font-['Pretendard:Regular'] leading-[28px]">
+                              {product.basePrice.toLocaleString()}원
+                            </p>
+                            <p className="text-[#222222] text-[24px] font-bold font-['Pretendard:Bold'] leading-[34px]">
+                              {product.adultPrice.toLocaleString()}원
+                            </p>
+                          </>
+                        ) : (
+                          <p className="text-[#222222] text-[24px] font-bold font-['Pretendard:Bold'] leading-[34px]">
+                            {product.adultPrice.toLocaleString()}원
+                          </p>
+                        )}
+                      </div>
+
+                      {/* 예약 버튼 */}
+                      <div className="bg-white border border-[#222222] rounded-[4px] w-full">
+                        <div className="flex gap-[10px] items-center justify-center px-0 py-[10px]">
+                          <p className="text-[#222222] text-[17px] font-semibold font-['Pretendard:SemiBold'] leading-[30px] text-center">
+                            예약하기
+                          </p>
+                          <div className="flex h-[20px] items-center justify-center w-[20px]">
+                            <div className="rotate-90">
+                              <ArrowUpIcon />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        )}
+
+        {/* 상품이 없는 경우 */}
+        {!loading && !error && products.length === 0 && (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+            <p className="text-[#666666] font-['Pretendard'] text-lg">
+              {selectedCategory?.name} 카테고리에 등록된 상품이 없습니다.
+            </p>
+          </div>
+        )}
+      </div>
+      
+      {/* 푸터 */}
+      <Footer />
+
+      {/* 퀵 메뉴 */}
+      <div className="fixed bottom-[422px] right-[30px] w-[110px] h-[493px] z-50">
+        {/* 고려고속훼리 배너 */}
+        <div className="absolute bottom-[48.08%] left-0 right-0 top-0 bg-white border border-[#dddddd] rounded-[4px]">
+          <div className="absolute top-[16px] left-1/2 transform -translate-x-1/2 w-[90px] h-[54px]">
+            <img 
+              alt="고려고속훼리" 
+              className="w-full h-full object-cover" 
+              src="/images/design-assets/7e657e35e06dc5205bd4b4fc008cd681ce75869e.png" 
+            />
+          </div>
+          <div className="absolute bg-[#4c9de8] bottom-0 left-0 right-0 top-[27.09%] flex items-center justify-center">
+            <div className="flex flex-col gap-[4px] items-center">
+              <p className="text-white text-[15px] font-bold font-['Pretendard:Bold'] leading-[26px] text-center tracking-[-0.75px]">
+                고려고속훼리(주)
+              </p>
+              <div className="bg-white rounded-[4px] px-[10px] py-0">
+                <p className="text-[#4c9de8] text-[15px] font-bold font-['Pretendard:Bold'] leading-[26px] text-center tracking-[-0.75px]">
+                  바로가기
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 퀵 버튼들 */}
+        <div className="absolute bottom-0 left-[22.73%] right-[22.73%] top-[54.85%] flex flex-col gap-[10px] items-start">
+          {/* 카카오톡 버튼 */}
+          <div className="relative w-[60px] h-[60px]">
+            <div className="absolute inset-[-6.67%_-16.67%_-20%_-10%]">
+              <svg className="w-full h-full" fill="none" viewBox="0 0 76 76">
+                <g filter="url(#filter0_d_1_942)">
+                  <circle cx="36" cy="34" fill="white" r="30" stroke="#DDDDDD" strokeWidth="1" />
+                </g>
+                <g>
+                  <path d="M30 25h12v2H30v-2zm0 4h12v2H30v-2zm0 4h8v2h-8v-2z" fill="#222222" />
+                </g>
+                <defs>
+                  <filter id="filter0_d_1_942" x="0" y="0" width="76" height="76">
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+                    <feOffset dx="2" dy="4" />
+                    <feGaussianBlur stdDeviation="4" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0" />
+                    <feBlend in2="BackgroundImageFix" mode="normal" result="effect1_dropShadow_1_942" />
+                    <feBlend in="SourceGraphic" in2="effect1_dropShadow_1_942" mode="normal" result="shape" />
+                  </filter>
+                </defs>
+              </svg>
             </div>
           </div>
 
-          {/* 상품 목록 */}
-          {loading ? (
-            <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-design-blue"></div>
-              <p className="mt-4 text-design-gray-light font-pretendard text-lg">상품을 불러오는 중...</p>
+          {/* 네이버 버튼 */}
+          <div className="relative w-[60px] h-[60px]">
+            <div className="absolute inset-[-6.67%_-16.67%_-20%_-10%]">
+              <svg className="w-full h-full" fill="none" viewBox="0 0 76 76">
+                <g filter="url(#filter0_d_1_972)">
+                  <circle cx="36" cy="34" fill="white" r="30" stroke="#DDDDDD" strokeWidth="1" />
+                </g>
+                <g clipPath="url(#clip0_1_972)">
+                  <path d="M27 25h18v18H27V25z" fill="black" />
+                </g>
+                <defs>
+                  <filter id="filter0_d_1_972" x="0" y="0" width="76" height="76">
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+                    <feOffset dx="2" dy="4" />
+                    <feGaussianBlur stdDeviation="4" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0" />
+                    <feBlend in2="BackgroundImageFix" mode="normal" result="effect1_dropShadow_1_972" />
+                    <feBlend in="SourceGraphic" in2="effect1_dropShadow_1_972" mode="normal" result="shape" />
+                  </filter>
+                  <clipPath id="clip0_1_972">
+                    <rect fill="white" height="18" width="18" x="27" y="25" />
+                  </clipPath>
+                </defs>
+              </svg>
             </div>
-          ) : error ? (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg text-center font-pretendard">
-              {error}
+          </div>
+
+          {/* 맨 위로 버튼 */}
+          <div className="relative w-[60px] h-[60px]">
+            <div className="absolute inset-[-6.67%_-16.67%_-20%_-10%]">
+              <svg className="w-full h-full" fill="none" viewBox="0 0 76 76">
+                <g filter="url(#filter0_d_1_937)">
+                  <circle cx="36" cy="34" fill="white" r="30" stroke="#DDDDDD" strokeWidth="1" />
+                </g>
+                <g>
+                  <path d="M30 30l6-6 6 6" stroke="black" strokeLinecap="square" strokeWidth="2" />
+                </g>
+                <defs>
+                  <filter id="filter0_d_1_937" x="0" y="0" width="76" height="76">
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+                    <feOffset dx="2" dy="4" />
+                    <feGaussianBlur stdDeviation="4" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0" />
+                    <feBlend in2="BackgroundImageFix" mode="normal" result="effect1_dropShadow_1_937" />
+                    <feBlend in="SourceGraphic" in2="effect1_dropShadow_1_937" mode="normal" result="shape" />
+                  </filter>
+                </defs>
+              </svg>
             </div>
-          ) : (
-            <>
-              {/* 선택된 카테고리 정보 */}
-              {selectedCategory && (
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-design-gray font-pretendard">
-                    {selectedCategory.name}
-                  </h2>
-                  <p className="text-design-gray-light font-pretendard">
-                    총 {products.length}개의 상품이 있습니다
-                  </p>
-                </div>
-              )}
-
-              {/* 3x3 그리드 레이아웃 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {products.map((product) => {
-                  // 업로드된 이미지가 있으면 사용, 없으면 기본 이미지 사용
-                  const hasUploadedImage = product.images && product.images.length > 0
-                  const imageSrc = hasUploadedImage 
-                    ? product.images[0].filePath 
-                    : `/images/0279006e5653701283e6e34a07b609333312b52a.png`
-                  
-                  return (
-                    <Link 
-                      key={product.id} 
-                      href={`/products/${product.id}`}
-                      className="group bg-white rounded-[16px] shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden hover:transform hover:scale-105"
-                    >
-                      {/* 상품 이미지 */}
-                      <div className="relative h-[250px] overflow-hidden">
-                        <Image
-                          src={imageSrc}
-                          alt={product.name}
-                          fill
-                          className="object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-10"></div>
-                        
-                        {/* 카테고리 배지 */}
-                        <div className="absolute top-4 left-4">
-                          <span className="bg-design-purple text-white text-xs font-medium px-3 py-1 rounded-full font-pretendard">
-                            {product.category.name}
-                          </span>
-                        </div>
-                        
-                        {/* 최대 인원 배지 */}
-                        <div className="absolute bottom-4 right-4">
-                          <span className="bg-white bg-opacity-90 text-design-gray text-xs font-medium px-2 py-1 rounded font-pretendard">
-                            최대 {product.maxCapacity}명
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* 상품 정보 */}
-                      <div className="p-6">
-                        {/* 상품 제목 */}
-                        <h3 className="font-bold text-design-gray font-pretendard text-xl mb-2 line-clamp-2">
-                          {product.name}
-                        </h3>
-                        
-                        {/* 상품 설명 */}
-                        <p className="text-design-gray-light font-pretendard text-sm mb-4 line-clamp-2">
-                          {product.description || '상품 설명이 없습니다.'}
-                        </p>
-                        
-                        {/* 가격 정보 */}
-                        <div className="space-y-2 mb-4">
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium text-design-gray font-pretendard text-sm">성인</span>
-                            <span className="font-bold text-design-gray font-pretendard text-sm">
-                              {product.adultPrice.toLocaleString()}원
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium text-design-gray font-pretendard text-sm">어린이</span>
-                            <span className="font-bold text-design-gray font-pretendard text-sm">
-                              {product.childPrice.toLocaleString()}원
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium text-design-gray font-pretendard text-sm">유아</span>
-                            <span className="font-bold text-design-gray font-pretendard text-sm">
-                              {product.infantPrice.toLocaleString()}원
-                            </span>
-                          </div>
-                        </div>
-                        
-                        {/* 예약 버튼 */}
-                        <div className="w-full bg-design-blue hover:bg-blue-600 text-white text-center py-3 rounded-lg font-pretendard font-semibold transition-colors duration-200">
-                          예약하기
-                        </div>
-                      </div>
-                    </Link>
-                  )
-                })}
-              </div>
-
-              {/* 상품이 없는 경우 */}
-              {products.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                  </div>
-                  <p className="text-design-gray-light font-pretendard text-lg">
-                    {selectedCategory?.name} 카테고리에 등록된 상품이 없습니다.
-                  </p>
-                </div>
-              )}
-            </>
-          )}
+          </div>
         </div>
       </div>
-      
-      <Footer />
     </div>
   )
 }
 
 function ProductsLoading() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white min-h-screen">
       <UserNavigation />
       <div className="py-8">
         <div className="container mx-auto px-4">
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-design-blue"></div>
-            <p className="mt-4 text-design-gray-light font-pretendard text-lg">상품을 불러오는 중...</p>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#222222]"></div>
+            <p className="mt-4 text-[#666666] font-['Pretendard'] text-lg">상품을 불러오는 중...</p>
           </div>
         </div>
       </div>

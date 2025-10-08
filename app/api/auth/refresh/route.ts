@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const tokenPayload = {
       id: storedToken.member.id,
       username: storedToken.member.username,
-      role: storedToken.member.role,
+      role: storedToken.member.role || 'USER',
     }
 
     const newAccessToken = generateAccessToken(tokenPayload)

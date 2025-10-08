@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Home, ChevronRight } from 'lucide-react'
+import { Home } from 'lucide-react'
 
 interface SubNavigationItem {
   label: string
@@ -92,9 +92,6 @@ export default function SubNavigation({ items }: SubNavigationProps) {
           {/* 메뉴 아이템들 */}
           {items.map((item, index) => (
             <div key={index} className="flex items-center">
-              {index > 0 && (
-                <ChevronRight className="w-4 h-4 mx-2 text-[#666666]" />
-              )}
               {renderMenuItem(item, index, 1)}
             </div>
           ))}

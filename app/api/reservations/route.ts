@@ -16,6 +16,9 @@ export async function POST(request: NextRequest) {
       customerName,
       customerPhone,
       customerEmail,
+      representativeName,
+      representativePhone,
+      representativeEmail,
       totalAmount,
       selectedOptions = {}
     } = body
@@ -25,6 +28,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         ok: false,
         error: '필수 정보가 누락되었습니다.',
+      }, { status: 400 })
+    }
+
+    // 대표 탑승자 정보 검증
+    if (!representativeName || !representativePhone || !representativeEmail) {
+      return NextResponse.json({
+        ok: false,
+        error: '대표 탑승자 정보가 누락되었습니다.',
       }, { status: 400 })
     }
 
@@ -64,7 +75,7 @@ export async function POST(request: NextRequest) {
 
     // 수용 가능 인원 확인
     const totalPersons = adults + children + infants
-    if (product.currentBookings + totalPersons > product.maxCapacity) {
+    if (product.currentBookings + totalPersons > (product.maxCapacity || 0)) {
       return NextResponse.json({
         ok: false,
         error: '예약 가능한 인원을 초과했습니다.',
@@ -104,6 +115,9 @@ export async function POST(request: NextRequest) {
           customerName,
           customerPhone,
           customerEmail,
+          representativeName,
+          representativePhone,
+          representativeEmail,
           adults,
           children,
           infants,

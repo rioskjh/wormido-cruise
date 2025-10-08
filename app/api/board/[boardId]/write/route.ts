@@ -89,7 +89,7 @@ export async function POST(
         title: validatedData.title,
         content: validatedData.content,
         contentHtml: validatedData.contentHtml || validatedData.content, // CKEditor HTML 내용
-        type: board.type,
+        type: board.type || 'NOTICE',
         authorId: authorId,
         authorName: authorName,
         qnaPasswordHash: qnaPasswordHash,

@@ -401,20 +401,34 @@ export default function AdminProductsPage() {
 
   // 이미지 업로드 핸들러
   const handleUploadImages = async (productId: number) => {
-    if (uploadedFiles.length === 0) return
+    console.log('=== handleUploadImages 시작 ===')
+    console.log('uploadedFiles.length:', uploadedFiles.length)
+    console.log('productId:', productId)
+    
+    if (uploadedFiles.length === 0) {
+      console.log('업로드할 파일이 없음 - 조기 반환')
+      return
+    }
 
     setIsUploadingImages(true)
 
     try {
       let adminToken = localStorage.getItem('adminToken')
+      console.log('adminToken 존재:', !!adminToken)
       
-      if (!adminToken) return
+      if (!adminToken) {
+        console.log('adminToken 없음 - 조기 반환')
+        return
+      }
 
       if (isTokenExpired(adminToken)) {
+        console.log('토큰 만료됨 - 새 토큰 요청')
         const newToken = await refreshToken()
         if (newToken) {
           adminToken = newToken
+          console.log('새 토큰 획득 성공')
         } else {
+          console.log('새 토큰 획득 실패 - 조기 반환')
           return
         }
       }
@@ -424,6 +438,7 @@ export default function AdminProductsPage() {
         formData.append('images', file)
       })
 
+      console.log('API 호출 시작:', `/api/admin/products/${productId}/images`)
       const response = await fetch(`/api/admin/products/${productId}/images`, {
         method: 'POST',
         headers: {

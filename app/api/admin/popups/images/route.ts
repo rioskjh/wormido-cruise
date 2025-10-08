@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/admin-auth'
-import { put } from '@vercel/blob'
+import { writeFile, mkdir, chown } from 'fs/promises'
+import path from 'path'
 
 // 팝업용 이미지 업로드
 export async function POST(request: NextRequest) {
@@ -35,20 +36,44 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: '파일 크기는 5MB를 초과할 수 없습니다.' }, { status: 400 })
     }
 
-    // 파일명 생성 (타임스탬프 + 원본 파일명)
+    // 파일명 생성 (타임스탬프 + 랜덤코드 + 원본 파일명)
     const timestamp = Date.now()
-    const fileName = `${timestamp}_${file.name}`
-    const blobPath = `popups/${fileName}`
-
-    // Vercel Blob에 파일 업로드
-    const blob = await put(blobPath, file, {
-      access: 'public',
-    })
+    const randomCode = Math.random().toString(36).substring(2, 8)
+    const fileName = `${timestamp}_${randomCode}_${file.name}`
+    
+    // 로컬 저장 경로 설정
+    // 프로덕션 환경에서는 .next/standalone/public 경로 사용
+    const isProduction = process.env.NODE_ENV === 'production'
+    const publicPath = isProduction ? '.next/standalone/public' : 'public'
+    const uploadDir = path.join(process.cwd(), publicPath, 'images', 'popup')
+    const filePath = path.join(uploadDir, fileName)
+    
+    // 디렉토리가 없으면 생성
+    await mkdir(uploadDir, { recursive: true })
+    
+    // 파일을 로컬에 저장
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+    await writeFile(filePath, buffer)
+    
+    // public 경로에도 복사 (웹 접근용)
+    const publicUploadDir = '/home/wolmido/public_html/public/images/popup'
+    const publicFilePath = path.join(publicUploadDir, fileName)
+    await mkdir(publicUploadDir, { recursive: true })
+    await writeFile(publicFilePath, buffer)
+    
+    // 소유자를 wolmido로 변경 (UID: 1000, GID: 1000)
+    try {
+      await chown(publicFilePath, 1000, 1000)
+      console.log('팝업 이미지 소유자 변경 완료')
+    } catch (chownError) {
+      console.warn('팝업 이미지 소유자 변경 실패 (무시하고 계속 진행):', chownError)
+    }
 
     return NextResponse.json({ 
       ok: true, 
       data: {
-        url: blob.url,
+        url: `/images/popup/${fileName}`,
         fileName: file.name,
         fileSize: file.size
       },

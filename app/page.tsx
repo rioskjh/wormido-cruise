@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
+// import Image from 'next/image' // 이미지 최적화 비활성화
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
 import ProductSection from '@/components/ProductSection'
@@ -87,11 +87,10 @@ export default function Home() {
                   {/* 크루즈 이미지 */}
                   <div className="h-[186px] relative shrink-0 w-[330px]">
                     <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
-                      <Image
+                      <img
                         alt=""
                         className="absolute max-w-none object-50%-50% object-cover size-full"
                         src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
-                        fill
                       />
                       <div className="absolute inset-0" />
                     </div>
@@ -110,13 +109,12 @@ export default function Home() {
             <div className="absolute bg-[#190a6b] h-[450px] left-0 top-1/2 -translate-y-1/2 w-full" />
             {/* 크루즈 이미지 - 세로 중앙 정렬 */}
             <div className="absolute h-[703px] left-[calc(50%-300px)] top-1/2 -translate-y-1/2 w-[1250px] overflow-hidden">
-                <Image
+                <img
                   src="/images/91582b55f45f475993db95e57fe119b1b197944f.png"
                   alt="월미도 크루즈"
                   width={1250}
                   height={703}
                   className="w-full h-full object-cover"
-                  priority
                 />
             </div>
               </div>

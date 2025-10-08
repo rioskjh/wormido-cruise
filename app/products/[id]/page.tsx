@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import Image from 'next/image'
+// import Image from 'next/image' // 이미지 최적화 비활성화
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
 import PageBanner from '@/components/PageBanner'
@@ -192,30 +192,33 @@ export default function ProductDetailPage() {
       return false
     }
 
-    // 운행날짜 검증
-    if (!selectedDate) {
-      showError('운행날짜 선택 오류', '운행날짜를 선택해주세요.')
-      return false
-    }
+    // 옵션이 있는 상품인 경우에만 날짜/시간/옵션 검증
+    if (product?.useOptions && product.options && product.options.length > 0) {
+      // 운행날짜 검증 (첫 번째 옵션이 날짜인 경우)
+      if (!selectedDate) {
+        showError('운행날짜 선택 오류', '운행날짜를 선택해주세요.')
+        return false
+      }
 
-    // 이용 가능한 날짜 검증 (첫 번째 옵션의 날짜 데이터 사용)
-    if (!isDateSelectable(selectedDate)) {
-      showError('운행날짜 선택 오류', '선택하신 날짜는 이용이 불가능한 날짜입니다.')
-      return false
-    }
+      // 이용 가능한 날짜 검증 (첫 번째 옵션의 날짜 데이터 사용)
+      if (selectedDate && !isDateSelectable(selectedDate)) {
+        showError('운행날짜 선택 오류', '선택하신 날짜는 이용이 불가능한 날짜입니다.')
+        return false
+      }
 
-    // 운행시간 검증
-    if (!selectedTime) {
-      showError('운행시간 선택 오류', '운행시간을 선택해주세요.')
-      return false
-    }
+      // 운행시간 검증 (두 번째 옵션이 시간인 경우)
+      if (product.options.length > 1 && !selectedTime) {
+        showError('운행시간 선택 오류', '운행시간을 선택해주세요.')
+        return false
+      }
 
-    // 옵션이 있는 상품인 경우 옵션 선택 검증
-    if (product?.useOptions && product.options) {
-      for (const option of product.options) {
-        if (!selectedOptions[option.id]) {
-          showError('옵션 선택 오류', `${option.name}을(를) 선택해주세요.`)
-          return false
+      // 추가 옵션 선택 검증 (세 번째 옵션부터)
+      if (product.options.length > 2) {
+        for (const option of product.options.slice(2)) {
+          if (!selectedOptions[option.id]) {
+            showError('옵션 선택 오류', `${option.name}을(를) 선택해주세요.`)
+            return false
+          }
         }
       }
     }
@@ -339,13 +342,13 @@ export default function ProductDetailPage() {
       <div className="w-full">
         {/* 상품 메인 섹션 (이미지 + 선택옵션) - 1200px */}
         <div id="main-product-section" className="w-full py-8">
-          <div className="container mx-auto px-4 max-w-6xl">
+          <div className="container mx-auto px-4" style={{ maxWidth: '1200px' }}>
           <div className="bg-white rounded-lg overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-[70px] p-4 lg:p-0">
               {/* 좌측: 상품 이미지 */}
               <div className="space-y-4">
                 <div className="aspect-square rounded-lg overflow-hidden">
-                  <Image
+                  <img
                     src={product.images && product.images.length > 0 
                       ? product.images[0].filePath 
                       : "/images/0279006e5653701283e6e34a07b609333312b52a.png"}
@@ -466,8 +469,8 @@ export default function ProductDetailPage() {
                       </div>
                     </div>
 
-                    {/* 운행날짜 선택 (첫 번째 옵션의 날짜 데이터 사용) */}
-                    {product?.options && product.options.length > 0 && product.options[0] && (
+                    {/* 운행날짜 선택 (옵션이 있는 상품인 경우에만 표시) */}
+                    {product?.useOptions && product?.options && product.options.length > 0 && product.options[0] && (
                       <div className="flex items-center justify-between h-[50px]">
                         <div className="text-[16px] text-gray-900">
                           <div>운행날짜</div>
@@ -491,8 +494,8 @@ export default function ProductDetailPage() {
                       </div>
                     )}
 
-                    {/* 운행시간 선택 (두 번째 옵션의 시간 데이터 사용) */}
-                    {product?.options && product.options.length > 1 && product.options[1] && (
+                    {/* 운행시간 선택 (옵션이 있는 상품인 경우에만 표시) */}
+                    {product?.useOptions && product?.options && product.options.length > 1 && product.options[1] && (
                       <div className="space-y-2">
                         <div className="text-[16px] text-gray-900 font-medium">운행시간</div>
                         <div className="flex flex-wrap gap-2">
@@ -629,7 +632,7 @@ export default function ProductDetailPage() {
 
         {/* 상품 상세 정보 섹션 - 1200px */}
         <div className="w-full bg-[#f8f8f8] py-8">
-          <div className="container mx-auto px-4 max-w-6xl">
+          <div className="container mx-auto px-4" style={{ maxWidth: '1200px' }}>
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             {/* 탭 메뉴 */}
             <div className="border-b border-gray-200">
@@ -714,16 +717,16 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* 운행날짜 */}
-          {product?.options && product.options.length > 0 && (
+          {/* 운행날짜 (옵션이 있는 상품인 경우에만 표시) */}
+          {product?.useOptions && product?.options && product.options.length > 0 && (
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-900">운행날짜</span>
               <span className="text-sm text-gray-600">{selectedDate || '미선택'}</span>
             </div>
           )}
 
-          {/* 운행시간 */}
-          {product?.options && product.options.length > 1 && (
+          {/* 운행시간 (옵션이 있는 상품인 경우에만 표시) */}
+          {product?.useOptions && product?.options && product.options.length > 1 && (
             <div className="space-y-2">
               <span className="text-sm font-medium text-gray-900">운행시간</span>
               <div className="flex flex-wrap gap-1">

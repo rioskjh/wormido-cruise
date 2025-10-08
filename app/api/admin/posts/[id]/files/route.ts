@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyAdminToken } from '@/lib/admin-auth'
-import { put } from '@vercel/blob'
+import { writeFile, mkdir, chown } from 'fs/promises'
+import path from 'path'
 
 export const dynamic = 'force-dynamic'
 
@@ -69,16 +70,44 @@ export async function POST(
       }, { status: 400 })
     }
 
-    // Vercel Blob에 파일 업로드
-    const blob = await put(`posts/${postId}/${file.name}`, file, {
-      access: 'public',
-    })
+    // 파일명 생성 (타임스탬프 + 랜덤코드 + 원본 파일명)
+    const timestamp = Date.now()
+    const randomCode = Math.random().toString(36).substring(2, 8)
+    const fileName = `${timestamp}_${randomCode}_${file.name}`
+    
+    // 로컬 저장 경로 설정 (게시판 첨부파일은 /images/board/ 폴더에 저장)
+    // 프로덕션 환경에서는 .next/standalone/public 경로 사용
+    const isProduction = process.env.NODE_ENV === 'production'
+    const publicPath = isProduction ? '.next/standalone/public' : 'public'
+    const uploadDir = path.join(process.cwd(), publicPath, 'images', 'board')
+    const filePath = path.join(uploadDir, fileName)
+    
+    // 디렉토리가 없으면 생성
+    await mkdir(uploadDir, { recursive: true })
+    
+    // 파일을 로컬에 저장
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+    await writeFile(filePath, buffer)
+    
+    // public 경로에도 복사 (웹 접근용)
+    const publicUploadDir = '/home/wolmido/public_html/public/images/board'
+    const publicFilePath = path.join(publicUploadDir, fileName)
+    await mkdir(publicUploadDir, { recursive: true })
+    await writeFile(publicFilePath, buffer)
+    // 소유자를 wolmido로 변경 (UID: 1000, GID: 1000)
+    try {
+      await chown(publicFilePath, 1000, 1000)
+      console.log('게시글 첨부파일 소유자 변경 완료')
+    } catch (chownError) {
+      console.warn('게시글 첨부파일 소유자 변경 실패 (무시하고 계속 진행):', chownError)
+    }
 
     // 데이터베이스에 파일 정보 저장
     const postFile = await prisma.postFile.create({
       data: {
         postId: postId,
-        storagePath: blob.url,
+        storagePath: `/images/board/${fileName}`, // 로컬 경로 저장
         filename: file.name,
         size: file.size
       }

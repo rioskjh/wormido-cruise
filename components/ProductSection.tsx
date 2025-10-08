@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
+// import Image from 'next/image' // 이미지 최적화 비활성화
 
 interface Product {
   id: number
@@ -36,7 +36,7 @@ export default function ProductSection({ products, loading, error }: ProductSect
       <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
         {/* 상품소개 아이콘 - 유람선 */}
         <div className="h-[33px] relative shrink-0 w-[66px] flex items-center justify-center">
-          <Image
+          <img
             src="/images/ship-icon.png"
             alt="유람선 아이콘"
             width={66}
@@ -78,11 +78,10 @@ export default function ProductSection({ products, loading, error }: ProductSect
                   >
                     {/* 상품 이미지 영역 */}
                     <div className="h-[347px] relative rounded-tl-[10px] rounded-tr-[10px] shrink-0 w-[330px]">
-                      <Image
+                      <img
                         src={imageSrc}
                         alt={product.name}
-                        fill
-                        className="object-cover rounded-tl-[10px] rounded-tr-[10px]"
+                        className="w-full h-full object-cover rounded-tl-[10px] rounded-tr-[10px]"
                       />
                     </div>
                   
@@ -158,11 +157,10 @@ export default function ProductSection({ products, loading, error }: ProductSect
                 >
                   {/* 상품 이미지 영역 */}
                   <div className="h-[350px] relative rounded-tl-[10px] rounded-tr-[10px] shrink-0 w-[380px]">
-                    <Image
+                    <img
                       src={imageSrc}
                       alt={product.name}
-                      fill
-                      className="object-cover rounded-tl-[10px] rounded-tr-[10px]"
+                      className="w-full h-full object-cover rounded-tl-[10px] rounded-tr-[10px]"
                     />
                   </div>
                 

@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 interface SiteSettings {
@@ -162,7 +161,7 @@ export default function Footer() {
             <div className="content-stretch flex flex-col md:flex-row items-center justify-between relative shrink-0 w-full gap-4 md:gap-0">
               {/* Logo */}
               <div className="h-[46px] overflow-clip relative shrink-0 w-[250px]">
-                <Image
+                <img
                   src="/images/logo.png"
                   alt="월미도해양관광 로고"
                   width={250}

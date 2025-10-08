@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyAccessToken } from '@/lib/auth'
-import { put } from '@vercel/blob'
+import { writeFile, mkdir, chown } from 'fs/promises'
+import path from 'path'
 
 // 상품 이미지 목록 조회
 export async function GET(
@@ -47,8 +48,12 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    console.log('=== 이미지 업로드 API 호출됨 ===')
+    console.log('Product ID:', params.id)
+    
     const token = request.headers.get('authorization')?.replace('Bearer ', '')
     if (!token) {
+      console.log('토큰 없음')
       return NextResponse.json({ ok: false, error: '인증이 필요합니다.' }, { status: 401 })
     }
 
@@ -73,8 +78,12 @@ export async function POST(
 
     const formData = await request.formData()
     const files = formData.getAll('images') as File[]
+    
+    console.log('업로드할 파일 개수:', files.length)
+    console.log('파일명들:', files.map(f => f.name))
 
     if (files.length === 0) {
+      console.log('업로드할 이미지가 없음')
       return NextResponse.json({ ok: false, error: '업로드할 이미지가 없습니다.' }, { status: 400 })
     }
 
@@ -106,22 +115,63 @@ export async function POST(
         return NextResponse.json({ ok: false, error: '파일 크기는 5MB를 초과할 수 없습니다.' }, { status: 400 })
       }
 
-      // 파일명 생성 (타임스탬프 + 원본 파일명)
+      // 파일명 생성 (타임스탬프 + 랜덤코드 + 원본 파일명)
       const timestamp = Date.now() + i
-      const fileName = `${timestamp}_${file.name}`
-      const blobPath = `products/${productId}/${fileName}`
-
-      // Vercel Blob에 파일 업로드
-      const blob = await put(blobPath, file, {
-        access: 'public',
-      })
+      const randomCode = Math.random().toString(36).substring(2, 8)
+      const fileName = `${timestamp}_${randomCode}_${file.name}`
+      
+      // 로컬 저장 경로 설정 (상품 이미지는 /images/product/ 폴더에 저장)
+      // 프로덕션 환경에서는 .next/standalone/public 경로 사용
+      const isProduction = process.env.NODE_ENV === 'production'
+      const publicPath = isProduction ? '.next/standalone/public' : 'public'
+      const uploadDir = path.join(process.cwd(), publicPath, 'images', 'product')
+      const filePath = path.join(uploadDir, fileName)
+      
+      // 디렉토리가 없으면 생성
+      await mkdir(uploadDir, { recursive: true })
+      
+            // 파일을 로컬에 저장
+            console.log('파일 저장 시작:', fileName)
+            const bytes = await file.arrayBuffer()
+            const buffer = Buffer.from(bytes)
+            await writeFile(filePath, buffer)
+            console.log('파일 저장 완료:', filePath)
+            
+            // public 경로에도 복사 (웹 접근용)
+            console.log('public 경로 저장 시작...')
+            const publicUploadDir = '/home/wolmido/public_html/public/images/product'
+            const publicFilePath = path.join(publicUploadDir, fileName)
+            console.log('public 경로:', publicUploadDir)
+            console.log('public 파일 경로:', publicFilePath)
+            
+            try {
+              await mkdir(publicUploadDir, { recursive: true })
+              console.log('public 디렉토리 생성/확인 완료')
+              
+              await writeFile(publicFilePath, buffer)
+              console.log('public 파일 쓰기 완료')
+              
+              // 소유자를 wolmido로 변경 (UID: 1000, GID: 1000)
+              try {
+                await chown(publicFilePath, 1000, 1000)
+                console.log('public 파일 소유자 변경 완료')
+              } catch (chownError) {
+                console.warn('소유자 변경 실패 (무시하고 계속 진행):', chownError)
+              }
+              
+              console.log('public 경로에도 저장 완료:', publicFilePath)
+            } catch (publicError) {
+              console.error('public 경로 저장 중 에러:', publicError)
+              // public 경로 저장 실패해도 데이터베이스 저장은 계속 진행
+              console.log('public 경로 저장 실패했지만 데이터베이스 저장은 계속 진행')
+            }
 
       // DB에 이미지 정보 저장
       const image = await prisma.productImage.create({
         data: {
           productId,
           fileName: file.name,
-          filePath: blob.url, // Vercel Blob URL 저장
+          filePath: `/images/product/${fileName}`, // 로컬 경로 저장
           fileSize: file.size,
           sortOrder: currentImageCount + i,
           isActive: true

@@ -460,16 +460,43 @@ export default function AdminBoardEditPage() {
                             </div>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <a
-                              href={file.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                            <button
+                              onClick={async () => {
+                                try {
+                                  const token = localStorage.getItem('adminToken')
+                                  const downloadUrl = `/api/admin/posts/${params.id}/files/${file.id}/download`
+                                  
+                                  const response = await fetch(downloadUrl, {
+                                    headers: {
+                                      'Authorization': `Bearer ${token}`
+                                    }
+                                  })
+                                  
+                                  if (response.ok) {
+                                    const blob = await response.blob()
+                                    const url = window.URL.createObjectURL(blob)
+                                    const link = document.createElement('a')
+                                    link.href = url
+                                    link.download = file.filename
+                                    document.body.appendChild(link)
+                                    link.click()
+                                    document.body.removeChild(link)
+                                    window.URL.revokeObjectURL(url)
+                                  } else {
+                                    showError('다운로드 실패', '파일 다운로드에 실패했습니다.')
+                                  }
+                                } catch (error) {
+                                  console.error('다운로드 오류:', error)
+                                  showError('다운로드 오류', '파일 다운로드 중 오류가 발생했습니다.')
+                                }
+                              }}
                               className="text-blue-500 hover:text-blue-700 p-1"
+                              title="다운로드"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                               </svg>
-                            </a>
+                            </button>
                             <button
                               type="button"
                               onClick={() => removeExistingFile(file.id)}

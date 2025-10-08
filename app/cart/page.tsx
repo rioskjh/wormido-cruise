@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
+// import Image from 'next/image' // 이미지 최적화 비활성화
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
 import { useToast } from '@/contexts/ToastContext'

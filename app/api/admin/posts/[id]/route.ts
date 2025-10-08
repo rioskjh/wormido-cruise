@@ -42,7 +42,7 @@ export async function GET(
     const post = await prisma.post.findUnique({
       where: { id: postId },
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             username: true,
@@ -119,7 +119,7 @@ export async function PATCH(
       where: { id: postId },
       data: updateData,
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             username: true,

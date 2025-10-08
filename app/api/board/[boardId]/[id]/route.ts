@@ -63,7 +63,7 @@ export async function GET(
         type: boardType
       },
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             username: true

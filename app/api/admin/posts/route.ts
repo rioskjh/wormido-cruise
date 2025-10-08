@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
       where,
       orderBy,
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             username: true,
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
         qnaPasswordHash: validatedData.qnaPasswordHash,
       },
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             username: true,

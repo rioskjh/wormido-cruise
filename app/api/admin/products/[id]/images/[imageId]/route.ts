@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyAccessToken } from '@/lib/auth'
-import { del } from '@vercel/blob'
+import { unlink } from 'fs/promises'
+import path from 'path'
 import { z } from 'zod'
 
 // 개별 이미지 정보 조회
@@ -135,13 +136,14 @@ export async function DELETE(
       return NextResponse.json({ ok: false, error: '이미지를 찾을 수 없습니다.' }, { status: 404 })
     }
 
-    // Vercel Blob에서 파일 삭제 (Blob URL인 경우에만)
-    if (existingImage.filePath.startsWith('https://')) {
+    // 로컬 파일 삭제 (로컬 경로인 경우에만)
+    if (existingImage.filePath.startsWith('/images/')) {
       try {
-        await del(existingImage.filePath)
-      } catch (blobError) {
-        console.error('Blob deletion error:', blobError)
-        // Blob 삭제 실패해도 DB에서 삭제는 진행
+        const filePath = path.join(process.cwd(), 'public', existingImage.filePath)
+        await unlink(filePath)
+      } catch (fileError) {
+        console.error('File deletion error:', fileError)
+        // 파일 삭제 실패해도 DB에서 삭제는 진행
       }
     }
 

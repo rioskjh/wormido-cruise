@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/contexts/ToastContext'
 import DynamicNavigation from './DynamicNavigation'
@@ -42,13 +41,12 @@ export default function MobileNavigation({ user, cartItemCount, onCartClick, onL
             {/* 로고 */}
             <div className="h-[30px] overflow-clip relative shrink-0 w-[161px]">
               <Link href="/" className="flex items-center">
-                <Image
+                <img
                   src="/images/logo.png"
                   alt="월미도 해양관광"
                   width={161}
                   height={30}
                   className="h-full w-auto object-contain"
-                  priority
                 />
               </Link>
             </div>

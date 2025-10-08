@@ -67,7 +67,7 @@ export async function GET(
       prisma.post.findMany({
         where,
         include: {
-          author: {
+          members: {
             select: {
               id: true,
               username: true

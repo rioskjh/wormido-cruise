@@ -40,6 +40,24 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
     fetchCategories()
   }, [])
 
+  // 서브메뉴 외부 클릭 시 메뉴 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element
+      if (activeMenu && !target.closest('.relative')) {
+        setActiveMenu(null)
+      }
+    }
+
+    if (activeMenu) {
+      document.addEventListener('click', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [activeMenu])
+
   // 페이지 포커스 시 데이터 새로고침 및 주기적 새로고침
   useEffect(() => {
     const handleFocus = () => {
@@ -141,11 +159,13 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
     }
   }
 
-  const handleMouseEnter = (id: number) => {
-    setActiveMenu(id)
+  const handleMenuClick = (id: number) => {
+    // 같은 메뉴를 클릭하면 토글, 다른 메뉴를 클릭하면 해당 메뉴 열기
+    setActiveMenu(activeMenu === id ? null : id)
   }
 
-  const handleMouseLeave = () => {
+  const handleSubmenuClick = () => {
+    // 서브메뉴 클릭 시 메뉴 닫기
     setActiveMenu(null)
   }
 
@@ -174,19 +194,24 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
       <li
         key={item.id}
         className="relative"
-        onMouseEnter={() => handleMouseEnter(item.id)}
-        onMouseLeave={handleMouseLeave}
       >
         {item.url || (isProductsMenu && Array.isArray(categories) && categories.length === 1) ? (
           <Link
             href={isProductsMenu ? getProductMenuUrl() : (item.url || '#')}
             target={item.isNewWindow ? '_blank' : '_self'}
             rel={item.isNewWindow ? 'noopener noreferrer' : undefined}
-            onClick={onItemClick}
-            className={`block px-4 py-2 text-sm font-medium transition-colors duration-200 ${
+            onClick={(e) => {
+              if (shouldShowDropdown) {
+                e.preventDefault()
+                handleMenuClick(item.id)
+              } else {
+                onItemClick?.()
+              }
+            }}
+            className={`relative shrink-0 font-['Pretendard:SemiBold',_sans-serif] text-[18px] leading-[30px] transition-colors duration-200 ${
               isCurrentPage
-                ? 'text-blue-600 bg-blue-50'
-                : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                ? 'text-blue-600'
+                : 'text-[#222222] hover:text-blue-600'
             }`}
           >
             {item.title}
@@ -210,10 +235,11 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
           </Link>
         ) : (
           <span
-            className={`block px-4 py-2 text-sm font-medium cursor-pointer transition-colors duration-200 ${
+            onClick={() => shouldShowDropdown ? handleMenuClick(item.id) : undefined}
+            className={`relative shrink-0 font-['Pretendard:SemiBold',_sans-serif] text-[18px] leading-[30px] cursor-pointer transition-colors duration-200 ${
               isCurrentPage
-                ? 'text-blue-600 bg-blue-50'
-                : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                ? 'text-blue-600'
+                : 'text-[#222222] hover:text-blue-600'
             }`}
           >
             {item.title}
@@ -240,7 +266,7 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
         {/* 하위 메뉴 */}
         {shouldShowDropdown && (
           <ul
-            className={`absolute top-full left-0 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50 transition-all duration-200 ${
+            className={`absolute top-full left-0 w-56 bg-white border border-gray-200 rounded-lg shadow-xl z-50 transition-all duration-200 ${
               isActive
                 ? 'opacity-100 visible transform translate-y-0'
                 : 'opacity-0 invisible transform -translate-y-2'
@@ -253,11 +279,14 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
                   href={child.url || '#'}
                   target={child.isNewWindow ? '_blank' : '_self'}
                   rel={child.isNewWindow ? 'noopener noreferrer' : undefined}
-                  onClick={onItemClick}
-                  className={`block px-4 py-2 text-sm transition-colors duration-200 ${
+                  onClick={() => {
+                    handleSubmenuClick()
+                    onItemClick?.()
+                  }}
+                  className={`block px-6 py-3 text-[16px] font-['Pretendard:Medium',_sans-serif] transition-colors duration-200 ${
                     pathname === child.url
                       ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                      : 'text-[#222222] hover:text-blue-600 hover:bg-gray-50'
                   }`}
                 >
                   {child.title}
@@ -270,11 +299,14 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
               <li key={`category-${category.id}`}>
                 <Link
                   href={`/products?category=${category.id}`}
-                  onClick={onItemClick}
-                  className={`block px-4 py-2 text-sm transition-colors duration-200 ${
+                  onClick={() => {
+                    handleSubmenuClick()
+                    onItemClick?.()
+                  }}
+                  className={`block px-6 py-3 text-[16px] font-['Pretendard:Medium',_sans-serif] transition-colors duration-200 ${
                     pathname === `/products?category=${category.id}`
                       ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                      : 'text-[#222222] hover:text-blue-600 hover:bg-gray-50'
                   }`}
                 >
                   {category.name}
@@ -290,8 +322,10 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
   if (loading) {
     return (
       <nav className={`${className}`}>
-        <ul className="flex space-x-1">
-          <li className="px-4 py-2 text-sm text-gray-500">로딩 중...</li>
+        <ul className="flex gap-[40px] items-start">
+          <li className="relative shrink-0 font-['Pretendard:SemiBold',_sans-serif] text-[18px] leading-[30px] not-italic text-[#222222] text-nowrap whitespace-pre">
+            로딩 중...
+          </li>
         </ul>
       </nav>
     )
@@ -303,7 +337,7 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
 
   return (
     <nav className={`${className}`}>
-      <ul className="flex space-x-1">
+      <ul className="flex gap-[40px] items-start">
         {navigations.map(renderNavigationItem)}
       </ul>
     </nav>
