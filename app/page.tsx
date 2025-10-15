@@ -59,7 +59,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       {/* 개발자 도구용 디버그 정보 */}
-      <div style={{display: 'none'}} data-debug-info={`페이지 빌드 시간: ${new Date().toISOString()}, 배경색: #4C9DE8`} />
+      <div style={{display: 'none'}} data-debug-info="페이지 빌드 시간: 2025-10-15T11:09:56.279Z, 배경색: #4C9DE8" />
       
       {/* 시각적 디버그 - 개발 모드에서만 표시 */}
       <div style={{
@@ -75,7 +75,7 @@ export default function Home() {
         border: '2px solid #fff'
       }}>
         배경색: #4C9DE8<br/>
-        빌드시간: {new Date().toISOString()}
+        빌드시간: 2025-10-15T11:09:56.279Z
       </div>
       
       {/* 네비게이션 */}

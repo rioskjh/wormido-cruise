@@ -1,152 +1,119 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { verifyAccessToken } from '@/lib/auth'
-import { z } from 'zod'
-import path from 'path'
-import fs from 'fs/promises'
-import { existsSync } from 'fs'
+import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
 
-// 상품 이미지 목록 조회
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    if (!token) {
-      return NextResponse.json({ ok: false, error: '인증이 필요합니다.' }, { status: 401 })
-    }
+const prisma = new PrismaClient()
 
-    const payload = await verifyAccessToken(token)
-    if (!payload) {
-      return NextResponse.json({ ok: false, error: '유효하지 않은 토큰입니다.' }, { status: 401 })
-    }
+async function main() {
+  console.log('🌱 시드 데이터 생성 시작...')
 
-    const productId = parseInt(params.id)
-    if (isNaN(productId)) {
-      return NextResponse.json({ ok: false, error: '유효하지 않은 상품 ID입니다.' }, { status: 400 })
-    }
+  // 관리자 계정 생성
+  const hashedPassword = await bcrypt.hash('admin123!', 12)
+  
+  const admin = await prisma.admin.upsert({
+    where: { username: 'admin' },
+    update: {},
+    create: {
+      username: 'admin',
+      password: hashedPassword,
+      email: 'admin@wolmido.com',
+      name: '관리자',
+      role: 'SUPER_ADMIN',
+      isActive: true,
+    },
+  })
 
-    const images = await prisma.productImage.findMany({
-      where: {
-        productId: productId,
-        isActive: true
-      },
-      orderBy: {
-        sortOrder: 'asc'
-      }
+  console.log('✅ 관리자 계정 생성 완료:', {
+    username: admin.username,
+    email: admin.email,
+    role: admin.role,
+  })
+
+  // 기본 설정 데이터 생성
+  const settings = [
+    {
+      key: 'site_name',
+      value: '월미도 해양관광',
+      description: '사이트 이름',
+      category: 'general',
+    },
+    {
+      key: 'site_description',
+      value: '월미도 크루즈 예약 시스템',
+      description: '사이트 설명',
+      category: 'general',
+    },
+    {
+      key: 'contact_phone',
+      value: '032-765-1171',
+      description: '연락처',
+      category: 'contact',
+    },
+    {
+      key: 'contact_email',
+      value: 'info@wolmido.com',
+      description: '이메일',
+      category: 'contact',
+    },
+  ]
+
+  for (const setting of settings) {
+    await prisma.siteSettings.upsert({
+      where: { key: setting.key },
+      update: {},
+      create: setting,
     })
-
-    return NextResponse.json({ ok: true, data: images })
-  } catch (error) {
-    console.error('Get product images error:', error)
-    return NextResponse.json({ ok: false, error: '이미지 목록을 가져오는데 실패했습니다.' }, { status: 500 })
   }
+
+  console.log('✅ 기본 설정 데이터 생성 완료')
+
+  // 기본 게시판 생성
+  const boards = [
+    {
+      boardId: 'notice',
+      title: '공지사항',
+      description: '월미도 해양관광 공지사항',
+      type: 'NOTICE',
+      isAdminOnly: false,
+    },
+    {
+      boardId: 'faq',
+      title: '자주 묻는 질문',
+      description: 'FAQ 게시판',
+      type: 'FAQ',
+      isAdminOnly: false,
+    },
+    {
+      boardId: 'qna',
+      title: '문의하기',
+      description: '고객 문의 게시판',
+      type: 'QNA',
+      isAdminOnly: false,
+    },
+  ]
+
+  for (const board of boards) {
+    await prisma.board.upsert({
+      where: { boardId: board.boardId },
+      update: {},
+      create: board,
+    })
+  }
+
+  console.log('✅ 기본 게시판 생성 완료')
+
+  console.log('🎉 시드 데이터 생성 완료!')
+  console.log('')
+  console.log('📋 관리자 로그인 정보:')
+  console.log('   사용자명: admin')
+  console.log('   비밀번호: admin123!')
+  console.log('   URL: /admin/login')
 }
 
-// 상품 이미지 업로드 (여러 개)
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    if (!token) {
-      return NextResponse.json({ ok: false, error: '인증이 필요합니다.' }, { status: 401 })
-    }
-
-    const payload = await verifyAccessToken(token)
-    if (!payload) {
-      return NextResponse.json({ ok: false, error: '유효하지 않은 토큰입니다.' }, { status: 401 })
-    }
-
-    const productId = parseInt(params.id)
-    if (isNaN(productId)) {
-      return NextResponse.json({ ok: false, error: '유효하지 않은 상품 ID입니다.' }, { status: 400 })
-    }
-
-    // 상품 존재 확인
-    const product = await prisma.product.findUnique({
-      where: { id: productId }
-    })
-
-    if (!product) {
-      return NextResponse.json({ ok: false, error: '상품을 찾을 수 없습니다.' }, { status: 404 })
-    }
-
-    const formData = await request.formData()
-    const files = formData.getAll('images') as File[]
-
-    if (files.length === 0) {
-      return NextResponse.json({ ok: false, error: '업로드할 이미지가 없습니다.' }, { status: 400 })
-    }
-
-    if (files.length > 5) {
-      return NextResponse.json({ ok: false, error: '최대 5개의 이미지만 업로드할 수 있습니다.' }, { status: 400 })
-    }
-
-    // 현재 이미지 개수 확인
-    const currentImageCount = await prisma.productImage.count({
-      where: { productId, isActive: true }
-    })
-
-    if (currentImageCount + files.length > 5) {
-      return NextResponse.json({ ok: false, error: '상품당 최대 5개의 이미지만 등록할 수 있습니다.' }, { status: 400 })
-    }
-
-    // 업로드 디렉토리 생성
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'products', productId.toString())
-    if (!existsSync(uploadDir)) {
-      await fs.mkdir(uploadDir, { recursive: true })
-    }
-
-    const uploadedImages = []
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      
-      // 파일 타입 검증
-      if (!file.type.startsWith('image/')) {
-        return NextResponse.json({ ok: false, error: '이미지 파일만 업로드할 수 있습니다.' }, { status: 400 })
-      }
-
-      // 파일 크기 검증 (5MB 제한)
-      if (file.size > 5 * 1024 * 1024) {
-        return NextResponse.json({ ok: false, error: '파일 크기는 5MB를 초과할 수 없습니다.' }, { status: 400 })
-      }
-
-      // 파일명 생성 (타임스탬프 + 원본 파일명)
-      const timestamp = Date.now() + i // 중복 방지를 위해 인덱스 추가
-      const fileName = `${timestamp}_${file.name}`
-      const relativeFilePath = `/uploads/products/${productId}/${fileName}`
-      const absoluteFilePath = path.join(uploadDir, fileName)
-
-      // 파일을 실제로 저장
-      const buffer = Buffer.from(await file.arrayBuffer())
-      await fs.writeFile(absoluteFilePath, buffer)
-
-      // DB에 이미지 정보 저장
-      const image = await prisma.productImage.create({
-        data: {
-          productId,
-          fileName: file.name,
-          filePath: relativeFilePath,
-          fileSize: file.size,
-          sortOrder: currentImageCount + i,
-          isActive: true
-        }
-      })
-
-      uploadedImages.push(image)
-    }
-
-    return NextResponse.json({ 
-      ok: true, 
-      data: uploadedImages,
-      message: `${uploadedImages.length}개의 이미지가 업로드되었습니다.`
-    })
-  } catch (error) {
-    console.error('Upload product images error:', error)
-    return NextResponse.json({ ok: false, error: '이미지 업로드에 실패했습니다.' }, { status: 500 })
-  }
-}
+main()
+  .catch((e) => {
+    console.error('❌ 시드 데이터 생성 실패:', e)
+    process.exit(1)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })

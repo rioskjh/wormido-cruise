@@ -113,7 +113,6 @@ model Board {
   useUpload        Boolean?           @default(false) @map("use_upload")
   createdAt        DateTime?          @default(now()) @map("created_at") @db.Timestamp(6)
   type             BoardType?         @default(NOTICE)
-  boardId          String?            @unique(map: "boards_boardid_unique") @db.VarChar(255)
   isAdminOnly      Boolean?           @default(false) @map("is_admin_only")
   updated_at       DateTime?          @default(now()) @db.Timestamp(6)
   board_categories board_categories[]
@@ -124,7 +123,7 @@ model Board {
 
 model Post {
   id              Int          @id @default(autoincrement())
-  boardId         String?      @db.VarChar(255)
+  boardId         String?      @map("board_id") @db.VarChar(255)
   member_id       Int?
   title           String       @db.VarChar(255)
   content         String?
@@ -140,7 +139,6 @@ model Post {
   type            BoardType    @default(NOTICE)
   authorId        Int?         @map("author_id")
   views           Int?         @default(0) @map("views")
-  boardId         String?      @map("board_id") @db.VarChar(255)
   attachments     Attachment[]
   comments        Comment[]
   files           PostFile[]   @relation("PostFiles")
