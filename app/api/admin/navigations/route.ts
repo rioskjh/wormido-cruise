@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     })
 
     // 최상위 메뉴만 필터링
-    const topLevelNavigations = navigations.filter(nav => !nav.parentId)
+    const topLevelNavigations = navigations.filter((nav: any) => !nav.parentId)
 
     return NextResponse.json({
       ok: true,

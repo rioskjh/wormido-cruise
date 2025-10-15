@@ -58,6 +58,26 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white">
+      {/* 개발자 도구용 디버그 정보 */}
+      <div style={{display: 'none'}} data-debug-info={`페이지 빌드 시간: ${new Date().toISOString()}, 배경색: #4C9DE8`} />
+      
+      {/* 시각적 디버그 - 개발 모드에서만 표시 */}
+      <div style={{
+        position: 'fixed',
+        top: '10px',
+        right: '10px',
+        background: '#4C9DE8',
+        color: 'white',
+        padding: '10px',
+        borderRadius: '5px',
+        fontSize: '12px',
+        zIndex: 9999,
+        border: '2px solid #fff'
+      }}>
+        배경색: #4C9DE8<br/>
+        빌드시간: {new Date().toISOString()}
+      </div>
+      
       {/* 네비게이션 */}
       <UserNavigation />
 
@@ -69,7 +89,11 @@ export default function Home() {
             <div className="size-full">
               <div className="box-border content-stretch flex flex-col items-start pb-0 pt-[20px] px-[15px] relative w-full">
             {/* 배경 */}
-                <div className="absolute bg-[#4C9DE8] h-[220px] left-0 top-0 w-[360px]" />
+                <div 
+                  className="absolute h-[220px] left-0 top-0 w-[360px]" 
+                  style={{backgroundColor: '#4C9DE8'}}
+                  data-debug="모바일 배경색: #4C9DE8 (밝은 파란색)"
+                />
             
             {/* 메인 콘텐츠 */}
                 <div className="content-stretch flex flex-col gap-[20px] items-start relative shrink-0 w-full">
@@ -106,7 +130,12 @@ export default function Home() {
           {/* 배경 - 파란색 박스와 이미지를 하나로 합쳐서 브라우저 가로 사이즈 꽉 차게 */}
           <div className="absolute inset-0 w-full h-full">
             {/* 파란색 배경 */}
-            <div className="absolute bg-[#4C9DE8] h-[450px] left-0 top-1/2 -translate-y-1/2 w-full" />
+            <div 
+              className="absolute h-[450px] left-0 top-1/2 -translate-y-1/2 w-full" 
+              style={{backgroundColor: '#4C9DE8'}}
+              data-debug="배경색: #4C9DE8 (밝은 파란색)"
+              title="배경색: #4C9DE8 (밝은 파란색)"
+            />
             {/* 크루즈 이미지 - 세로 중앙 정렬 */}
             <div className="absolute h-[703px] left-[calc(50%-300px)] top-1/2 -translate-y-1/2 w-[1250px] overflow-hidden">
                 <img
@@ -650,3 +679,4 @@ export default function Home() {
     </main>
   )
 }
+
