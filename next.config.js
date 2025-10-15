@@ -11,8 +11,8 @@ const nextConfig = {
   // 성능 최적화
   swcMinify: true,
   compress: true,
-  // Vercel 배포 설정
-  output: 'standalone',
+  // 일반 빌드 설정
+  // output: 'standalone',
   // 정적 파일 서빙을 위한 설정
   trailingSlash: false,
   // assetPrefix 제거 - 캐시 문제 해결
