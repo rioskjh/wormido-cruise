@@ -69,7 +69,7 @@ export default function Home() {
             <div className="size-full">
               <div className="box-border content-stretch flex flex-col items-start pb-0 pt-[20px] px-[15px] relative w-full">
             {/* 배경 */}
-                <div className="absolute bg-[#190a6b] h-[220px] left-0 top-0 w-[360px]" />
+                <div className="absolute bg-[#4C9DE8] h-[220px] left-0 top-0 w-[360px]" />
             
             {/* 메인 콘텐츠 */}
                 <div className="content-stretch flex flex-col gap-[20px] items-start relative shrink-0 w-full">
@@ -106,7 +106,7 @@ export default function Home() {
           {/* 배경 - 파란색 박스와 이미지를 하나로 합쳐서 브라우저 가로 사이즈 꽉 차게 */}
           <div className="absolute inset-0 w-full h-full">
             {/* 파란색 배경 */}
-            <div className="absolute bg-[#190a6b] h-[450px] left-0 top-1/2 -translate-y-1/2 w-full" />
+            <div className="absolute bg-[#4C9DE8] h-[450px] left-0 top-1/2 -translate-y-1/2 w-full" />
             {/* 크루즈 이미지 - 세로 중앙 정렬 */}
             <div className="absolute h-[703px] left-[calc(50%-300px)] top-1/2 -translate-y-1/2 w-[1250px] overflow-hidden">
                 <img
