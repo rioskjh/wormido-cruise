@@ -19,6 +19,24 @@ const nextConfig = {
   // assetPrefix: 'https://wolmido.web12.kr',
   // 정적 파일 서빙 활성화
   staticPageGenerationTimeout: 1000,
+  // 디자인 폴더 제외
+  webpack: (config) => {
+    // design-files 폴더의 모든 파일을 제외
+    config.module.rules.push({
+      test: /\.(tsx?|jsx?)$/,
+      include: /design-files/,
+      use: 'ignore-loader',
+    })
+    
+    // TypeScript 컴파일러에서 제외
+    config.module.rules.push({
+      test: /\.(tsx?|jsx?)$/,
+      include: /design-files/,
+      loader: 'ignore-loader',
+    })
+    
+    return config
+  },
 }
 
 module.exports = nextConfig

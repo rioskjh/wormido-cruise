@@ -1,32 +1,11 @@
 import { PrismaClient } from '@prisma/client'
-import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
 async function main() {
   console.log('🌱 시드 데이터 생성 시작...')
 
-  // 관리자 계정 생성
-  const hashedPassword = await bcrypt.hash('admin123!', 12)
-  
-  const admin = await prisma.admin.upsert({
-    where: { username: 'admin' },
-    update: {},
-    create: {
-      username: 'admin',
-      password: hashedPassword,
-      email: 'admin@wolmido.com',
-      name: '관리자',
-      role: 'SUPER_ADMIN',
-      isActive: true,
-    },
-  })
-
-  console.log('✅ 관리자 계정 생성 완료:', {
-    username: admin.username,
-    email: admin.email,
-    role: admin.role,
-  })
+  // 관리자 계정은 실제 데이터로 존재하므로 생성하지 않음
 
   // 기본 설정 데이터 생성
   const settings = [
@@ -72,21 +51,21 @@ async function main() {
       boardId: 'notice',
       title: '공지사항',
       description: '월미도 해양관광 공지사항',
-      type: 'NOTICE',
+      type: 'NOTICE' as const,
       isAdminOnly: false,
     },
     {
       boardId: 'faq',
       title: '자주 묻는 질문',
       description: 'FAQ 게시판',
-      type: 'FAQ',
+      type: 'FAQ' as const,
       isAdminOnly: false,
     },
     {
       boardId: 'qna',
       title: '문의하기',
       description: '고객 문의 게시판',
-      type: 'QNA',
+      type: 'QNA' as const,
       isAdminOnly: false,
     },
   ]
@@ -103,9 +82,7 @@ async function main() {
 
   console.log('🎉 시드 데이터 생성 완료!')
   console.log('')
-  console.log('📋 관리자 로그인 정보:')
-  console.log('   사용자명: admin')
-  console.log('   비밀번호: admin123!')
+  console.log('📋 관리자 계정은 실제 데이터로 존재합니다.')
   console.log('   URL: /admin/login')
 }
 
