@@ -339,7 +339,7 @@ export default function Home() {
               <div className="content-stretch flex flex-col gap-[50px] items-start relative shrink-0 w-[550px]">
                 <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
                   {/* 공지사항 아이콘 */}
-            <div className="relative shrink-0 size-[30px]">
+            <div className="relative shrink-0 size-[50px]">
               <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/7ee2e80c76ff5461678242b1f2ed1baba366c81d.png" />
               <div className="absolute bottom-[17.19%] contents left-0 right-[56.81%] top-[38.28%] hidden">
             <div className="absolute inset-[38.28%_56.81%_22.54%_19.89%]">
@@ -470,7 +470,7 @@ export default function Home() {
               <div className="content-stretch flex flex-col gap-[50px] h-auto lg:h-[290px] items-start relative shrink-0 w-[550px]">
                 <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
                   {/* 고객센터 아이콘 */}
-            <div className="h-[26px] relative shrink-0 w-[30px]">
+            <div className="h-[50px] relative shrink-0 w-[50px]">
               <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/1fa5765c4779a9313c292915da45c9fb833e327f.png" />
               <div className="absolute bottom-[-0.01%] contents left-0 right-[-0.01%] top-[-0.01%] hidden">
             <div className="absolute contents inset-[-0.01%_7.55%]">

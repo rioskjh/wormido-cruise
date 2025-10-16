@@ -35,7 +35,7 @@ export default function ProductSection({ products, loading, error }: ProductSect
       {/* 상품소개 제목 */}
       <div className="content-stretch flex gap-[16px] items-center relative shrink-0 px-[15px] md:px-0">
         {/* 상품소개 아이콘 - 유람선 */}
-        <div className="h-[22px] relative shrink-0 w-[44px] flex items-center justify-center">
+        <div className="h-[22px] md:h-[33px] relative shrink-0 w-[44px] md:w-[66px] flex items-center justify-center">
           <img
             src="/images/ship-icon.png"
             alt="유람선 아이콘"
