@@ -178,16 +178,25 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
     const isActive = activeMenu === item.id
     const isCurrentPage = pathname === item.url
 
-    // 상품 목록 메뉴의 URL 결정
-    const getProductMenuUrl = () => {
-      if (Array.isArray(categories) && categories.length === 1) {
-        // 카테고리가 1개인 경우 해당 카테고리로 직접 이동
-        return `/products?category=${categories[0].id}`
-      } else if (Array.isArray(categories) && categories.length > 1) {
-        // 카테고리가 2개 이상인 경우 상품 목록 페이지로 이동
+    // 1차 메뉴 클릭시 첫 번째 2차 메뉴로 이동하는 URL 결정
+    const getFirstChildUrl = () => {
+      // 2차 메뉴가 있으면 첫 번째 2차 메뉴로 이동
+      if (hasChildren && Array.isArray(item.children) && item.children.length > 0) {
+        return item.children[0].url || '#'
+      }
+      
+      // 상품 목록 메뉴의 경우 카테고리 기반 URL 결정
+      if (isProductsMenu) {
+        if (Array.isArray(categories) && categories.length === 1) {
+          return `/products?category=${categories[0].id}`
+        } else if (Array.isArray(categories) && categories.length > 1) {
+          return '/products'
+        }
         return '/products'
       }
-      return '/products'
+      
+      // 기본 URL
+      return item.url || '#'
     }
 
     return (
@@ -195,73 +204,43 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
         key={item.id}
         className="relative"
       >
-        {item.url || (isProductsMenu && Array.isArray(categories) && categories.length === 1) ? (
-          <Link
-            href={isProductsMenu ? getProductMenuUrl() : (item.url || '#')}
-            target={item.isNewWindow ? '_blank' : '_self'}
-            rel={item.isNewWindow ? 'noopener noreferrer' : undefined}
-            onClick={(e) => {
-              if (shouldShowDropdown) {
-                e.preventDefault()
-                handleMenuClick(item.id)
-              } else {
-                onItemClick?.()
-              }
-            }}
-            className={`relative shrink-0 font-['Pretendard:SemiBold',_sans-serif] text-[18px] leading-[30px] transition-colors duration-200 ${
-              isCurrentPage
-                ? 'text-blue-600'
-                : 'text-[#222222] hover:text-blue-600'
-            }`}
-          >
-            {item.title}
-            {shouldShowDropdown && (
-              <svg
-                className={`inline-block ml-1 w-4 h-4 transition-transform duration-200 ${
-                  isActive ? 'rotate-180' : ''
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            )}
-          </Link>
-        ) : (
-          <span
-            onClick={() => shouldShowDropdown ? handleMenuClick(item.id) : undefined}
-            className={`relative shrink-0 font-['Pretendard:SemiBold',_sans-serif] text-[18px] leading-[30px] cursor-pointer transition-colors duration-200 ${
-              isCurrentPage
-                ? 'text-blue-600'
-                : 'text-[#222222] hover:text-blue-600'
-            }`}
-          >
-            {item.title}
-            {shouldShowDropdown && (
-              <svg
-                className={`inline-block ml-1 w-4 h-4 transition-transform duration-200 ${
-                  isActive ? 'rotate-180' : ''
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            )}
-          </span>
-        )}
+        <Link
+          href={getFirstChildUrl()}
+          target={item.isNewWindow ? '_blank' : '_self'}
+          rel={item.isNewWindow ? 'noopener noreferrer' : undefined}
+          onClick={(e) => {
+            if (shouldShowDropdown) {
+              e.preventDefault()
+              handleMenuClick(item.id)
+            } else {
+              onItemClick?.()
+            }
+          }}
+          className={`relative shrink-0 font-['Pretendard:SemiBold',_sans-serif] text-[18px] leading-[30px] transition-colors duration-200 ${
+            isCurrentPage
+              ? 'text-blue-600'
+              : 'text-[#222222] hover:text-blue-600'
+          }`}
+        >
+          {item.title}
+          {shouldShowDropdown && (
+            <svg
+              className={`inline-block ml-1 w-4 h-4 transition-transform duration-200 ${
+                isActive ? 'rotate-180' : ''
+              }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          )}
+        </Link>
 
         {/* 하위 메뉴 */}
         {shouldShowDropdown && (

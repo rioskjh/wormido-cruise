@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 // import { Home } from 'lucide-react' // PNG 이미지로 변경
 
 interface SubNavigationItem {
@@ -32,10 +33,24 @@ export default function SubNavigation({ items }: SubNavigationProps) {
   const [showMainMenu, setShowMainMenu] = useState(false)
   const [selectedMainMenu, setSelectedMainMenu] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const pathname = usePathname()
 
   useEffect(() => {
     fetchNavigations()
   }, [])
+
+  // 현재 경로에 따라 메뉴 자동 선택
+  useEffect(() => {
+    if (navigations.length > 0 && !selectedMainMenu) {
+      const currentMenu = findCurrentMenuByPath(pathname, navigations)
+      if (currentMenu) {
+        setSelectedMainMenu(currentMenu.title)
+      } else {
+        // 경로에 맞는 메뉴가 없으면 첫 번째 메뉴 선택
+        setSelectedMainMenu(navigations[0].title)
+      }
+    }
+  }, [navigations, pathname, selectedMainMenu])
 
   // 팝업 외부 클릭시 닫기
   useEffect(() => {
@@ -55,6 +70,41 @@ export default function SubNavigation({ items }: SubNavigationProps) {
     }
   }, [showMainMenu])
 
+  // 현재 경로에 맞는 메뉴 찾기
+  const findCurrentMenuByPath = (currentPath: string, navItems: NavigationItem[]): NavigationItem | null => {
+    for (const nav of navItems) {
+      // 메인 메뉴 URL과 일치하는지 확인
+      if (nav.url && currentPath === nav.url) {
+        return nav
+      }
+      
+      // 하위 메뉴 URL과 일치하는지 확인
+      if (nav.children && nav.children.length > 0) {
+        for (const child of nav.children) {
+          if (child.url && currentPath === child.url) {
+            return nav // 부모 메뉴 반환
+          }
+        }
+      }
+      
+      // 상품 관련 페이지인 경우 상품 메뉴 찾기
+      if (currentPath.startsWith('/products') && nav.type === 'PRODUCTS') {
+        return nav
+      }
+      
+      // 게시판 관련 페이지인 경우 게시판 메뉴 찾기
+      if (currentPath.startsWith('/board') && nav.type === 'BOARD') {
+        return nav
+      }
+      
+      // 콘텐츠 관련 페이지인 경우 콘텐츠 메뉴 찾기
+      if (currentPath.startsWith('/contents') && nav.type === 'CONTENT') {
+        return nav
+      }
+    }
+    return null
+  }
+
   const fetchNavigations = async () => {
     try {
       const timestamp = new Date().getTime()
@@ -73,10 +123,6 @@ export default function SubNavigation({ items }: SubNavigationProps) {
 
       if (data.ok && Array.isArray(data.data)) {
         setNavigations(data.data)
-        // 첫 번째 메뉴를 기본 선택으로 설정
-        if (data.data.length > 0 && !selectedMainMenu) {
-          setSelectedMainMenu(data.data[0].title)
-        }
       } else {
         setNavigations([])
       }
@@ -128,11 +174,14 @@ export default function SubNavigation({ items }: SubNavigationProps) {
                   }
                   ${isFirst ? 'rounded-tl-[4px] rounded-tr-[4px]' : ''}
                   ${isLast ? 'rounded-bl-[4px] rounded-br-[4px]' : ''}
-                  ${!isSelected && !isLast ? 'border-b border-[#dddddd]' : ''}
                 `}
               >
                 {!isSelected && (
-                  <div className="absolute border border-[#dddddd] border-solid inset-0 pointer-events-none" />
+                  <div className={`absolute border border-[#dddddd] border-solid inset-0 pointer-events-none ${
+                    isFirst ? 'rounded-tl-[4px] rounded-tr-[4px]' : ''
+                  } ${isLast ? 'rounded-bl-[4px] rounded-br-[4px]' : ''} ${
+                    !isLast ? 'border-b-0' : ''
+                  }`} />
                 )}
                 <p className="font-['Pretendard:Medium',_sans-serif] leading-[30px] not-italic relative shrink-0 text-[16px] text-nowrap whitespace-pre">
                   {menu.title}
@@ -167,7 +216,7 @@ export default function SubNavigation({ items }: SubNavigationProps) {
               <p className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
                 {selectedMainMenu || (navigations.length > 0 ? navigations[0].title : '메뉴 선택')}
               </p>
-              <div className={`transform transition-transform duration-200 ${showMainMenu ? 'rotate-180' : ''}`}>
+              <div className={`transform transition-transform duration-200 ${showMainMenu ? '' : 'rotate-180'}`}>
                 <img 
                   src="/images/arrow-up-icon.png" 
                   alt="화살표" 
