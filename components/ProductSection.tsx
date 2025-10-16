@@ -31,11 +31,11 @@ interface ProductSectionProps {
 
 export default function ProductSection({ products, loading, error }: ProductSectionProps) {
   return (
-    <div className="box-border content-stretch flex flex-col gap-[30px] items-start pb-[40px] md:pb-[100px] pt-0 px-0 md:px-0 relative size-full">
+    <div className="box-border content-stretch flex flex-col gap-[15px] md:gap-[30px] items-start pb-[40px] md:pb-[100px] pt-0 px-0 md:px-0 relative size-full">
       {/* 상품소개 제목 */}
       <div className="content-stretch flex gap-[16px] items-center relative shrink-0 px-[15px] md:px-0">
         {/* 상품소개 아이콘 - 유람선 */}
-        <div className="h-[33px] relative shrink-0 w-[66px] flex items-center justify-center">
+        <div className="h-[22px] relative shrink-0 w-[44px] flex items-center justify-center">
           <img
             src="/images/ship-icon.png"
             alt="유람선 아이콘"

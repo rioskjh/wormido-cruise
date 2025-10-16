@@ -173,7 +173,7 @@ export default function Home() {
       </section>
 
       {/* 예약 카드 섹션 */}
-      <section className="w-full py-16">
+      <section className="w-full py-8">
         <div className="container mx-auto px-4">
           {/* 모바일 버전 - 반응형 */}
           <div className="md:hidden relative w-full px-4">
@@ -304,7 +304,7 @@ export default function Home() {
       </section>
 
       {/* 상품소개 섹션 */}
-      <section className="w-full py-4">
+      <section className="w-full py-0 md:py-4">
         {/* 모바일: 전체 너비, 데스크톱: 컨테이너 */}
         <div className="md:container md:mx-auto md:px-4">
           <div className="md:max-w-[1200px] md:mx-auto">
@@ -327,7 +327,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="max-w-[1200px] mx-auto">
             {/* 모바일 버전 */}
-            <div className="md:hidden box-border content-stretch flex flex-col gap-[40px] items-start px-[15px] py-[40px] relative w-full">
+            <div className="md:hidden box-border content-stretch flex flex-col gap-[40px] items-start px-0 py-[40px] relative w-full">
               <MobileAnnouncementSection />
               <MobileCustomerServiceSection />
             </div>
