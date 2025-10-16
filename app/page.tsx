@@ -182,13 +182,14 @@ export default function Home() {
             {/* 승선권 예매하기 카드 */}
             <Link 
               href="/reservation" 
-                  className="bg-[#d7dfff] box-border content-stretch flex flex-col gap-[10px] items-start px-[17px] py-[20px] relative rounded-[10px] shrink-0 w-[160px]"
+                  className="bg-white box-border content-stretch flex flex-col gap-[10px] items-start px-[17px] py-[20px] relative rounded-[10px] shrink-0 w-[160px]"
             >
+                  <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.2)]" />
                   {/* 아이콘 */}
                   <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
                     <div className="[grid-area:1_/_1] ml-0 mt-0 relative size-[40px]">
                       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 40 40">
-                        <circle cx="20" cy="20" fill="var(--fill-0, white)" id="Ellipse 3" r="20" />
+                        <circle cx="20" cy="20" fill="var(--fill-0, #E3F4FE)" id="Ellipse 3" r="20" />
                       </svg>
                     </div>
                     <div className="[grid-area:1_/_1] grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[17.5%] mt-[17.5%] place-items-start relative">
@@ -220,13 +221,14 @@ export default function Home() {
             {/* 예약확인 및 취소 카드 */}
             <Link 
               href="/reservation/check" 
-                  className="bg-[#f6dfed] box-border content-stretch flex flex-col gap-[10px] items-start px-[17px] py-[20px] relative rounded-[10px] shrink-0 w-[160px]"
+                  className="bg-white box-border content-stretch flex flex-col gap-[10px] items-start px-[17px] py-[20px] relative rounded-[10px] shrink-0 w-[160px]"
                 >
+                  <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.2)]" />
                   {/* 아이콘 */}
                   <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
                     <div className="[grid-area:1_/_1] ml-0 mt-0 relative size-[40px]">
                       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 40 40">
-                        <circle cx="20" cy="20" fill="var(--fill-0, white)" id="Ellipse 3" r="20" />
+                        <circle cx="20" cy="20" fill="var(--fill-0, #E3F4FE)" id="Ellipse 3" r="20" />
                       </svg>
                     </div>
                     <div className="[grid-area:1_/_1] grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[17.5%] mt-[17.5%] place-items-start relative">
@@ -269,14 +271,15 @@ export default function Home() {
             {/* 승선권 예매하기 카드 */}
             <Link 
               href="/reservation" 
-              className="bg-[#d7dfff] box-border content-stretch flex items-center justify-between px-[30px] py-[40px] relative rounded-[10px] shrink-0 w-[580px]"
+              className="bg-white box-border content-stretch flex items-center justify-between px-[50px] py-[40px] relative rounded-[10px] shrink-0 w-[585px]"
             >
+              <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.4)]" />
               <div className="content-stretch flex gap-[40px] items-center relative shrink-0">
                   {/* 아이콘 */}
                 <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
                   <div className="[grid-area:1_/_1] ml-0 mt-0 relative size-[90px]">
                     <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 90 90">
-                      <circle cx="45" cy="45" fill="var(--fill-0, white)" id="Ellipse 3" r="45" />
+                      <circle cx="45" cy="45" fill="var(--fill-0, #E3F4FE)" id="Ellipse 3" r="45" />
                     </svg>
                   </div>
                   <div className="[grid-area:1_/_1] grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[22.222%] mt-[22.222%] place-items-start relative">
@@ -319,14 +322,15 @@ export default function Home() {
             {/* 예약확인 및 취소 카드 */}
             <Link 
               href="/reservation/check" 
-              className="bg-[#f6dfed] box-border content-stretch flex items-center justify-between px-[30px] py-[40px] relative rounded-[10px] shrink-0 w-[580px]"
+              className="bg-white box-border content-stretch flex items-center justify-between px-[50px] py-[40px] relative rounded-[10px] shrink-0 w-[585px]"
             >
+              <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.4)]" />
               <div className="content-stretch flex gap-[40px] items-center relative shrink-0">
                   {/* 아이콘 */}
                 <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
                   <div className="[grid-area:1_/_1] ml-0 mt-0 relative size-[90px]">
                     <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 90 90">
-                      <circle cx="45" cy="45" fill="var(--fill-0, white)" id="Ellipse 3" r="45" />
+                      <circle cx="45" cy="45" fill="var(--fill-0, #E3F4FE)" id="Ellipse 3" r="45" />
                     </svg>
                   </div>
                   <div className="[grid-area:1_/_1] grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[22.222%] mt-[22.222%] place-items-start relative">
@@ -410,8 +414,9 @@ export default function Home() {
               <div className="content-stretch flex flex-col gap-[50px] items-start relative shrink-0 w-[550px]">
                 <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
                   {/* 공지사항 아이콘 */}
-        <div className="h-[51px] overflow-clip relative shrink-0 w-[50px]">
-          <div className="absolute bottom-[17.19%] contents left-0 right-[56.81%] top-[38.28%]">
+        <div className="relative shrink-0 size-[30px]">
+          <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/7ee2e80c76ff5461678242b1f2ed1baba366c81d.png" />
+          <div className="absolute bottom-[17.19%] contents left-0 right-[56.81%] top-[38.28%] hidden">
             <div className="absolute inset-[38.28%_56.81%_22.54%_19.89%]">
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <img alt="" className="absolute left-0 max-w-none size-full top-0" src="/images/64d191de22328fc842768e48b26b9394a5b5ab47.png" />
@@ -540,8 +545,9 @@ export default function Home() {
               <div className="content-stretch flex flex-col gap-[50px] h-auto lg:h-[290px] items-start relative shrink-0 w-[550px]">
                 <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
                   {/* 고객센터 아이콘 */}
-        <div className="h-[52px] overflow-clip relative shrink-0 w-[60px]">
-          <div className="absolute bottom-[-0.01%] contents left-0 right-[-0.01%] top-[-0.01%]">
+        <div className="h-[26px] relative shrink-0 w-[30px]">
+          <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/1fa5765c4779a9313c292915da45c9fb833e327f.png" />
+          <div className="absolute bottom-[-0.01%] contents left-0 right-[-0.01%] top-[-0.01%] hidden">
             <div className="absolute contents inset-[-0.01%_7.55%]">
               <div className="absolute inset-[-0.01%_7.55%_3.17%_7.55%]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
