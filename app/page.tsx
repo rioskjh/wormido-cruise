@@ -187,7 +187,7 @@ export default function Home() {
                   <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.2)]" />
                   {/* 아이콘 */}
                   <div className="relative shrink-0 size-[40px]">
-                    <img alt="승선권 예매하기" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/ticket-icon.png" />
+                    <img alt="승선권 예매하기" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/pc-ticket-icon.png" />
                   </div>
                 
                   {/* 텍스트 */}
@@ -210,7 +210,7 @@ export default function Home() {
                   <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.2)]" />
                   {/* 아이콘 */}
                   <div className="relative shrink-0 size-[40px]">
-                    <img alt="예약확인 및 취소" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/receipt-icon.png" />
+                    <img alt="예약확인 및 취소" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/pc-receipt-icon.png" />
                   </div>
                   
                   {/* 텍스트 */}
@@ -238,25 +238,9 @@ export default function Home() {
               <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.4)]" />
               <div className="content-stretch flex gap-[40px] items-center relative shrink-0">
                   {/* 아이콘 */}
-                <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
-                  <div className="[grid-area:1_/_1] ml-0 mt-0 relative size-[90px]">
-                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 90 90">
-                      <circle cx="45" cy="45" fill="var(--fill-0, #E3F4FE)" id="Ellipse 3" r="45" />
-                    </svg>
-                  </div>
-                  <div className="[grid-area:1_/_1] grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[22.222%] mt-[22.222%] place-items-start relative">
-                    <div className="[grid-area:1_/_1] grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[5.208%] mt-[11.458%] place-items-start relative">
-                      <div className="[grid-area:1_/_1] h-[38.542px] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-2.604px_-5.729px] mask-size-[50px_50px] ml-0 mt-0 relative w-[44.792px]" style={{ maskImage: `url("data:image/svg+xml,%3Csvg%20preserveAspectRatio%3D%22none%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20overflow%3D%22visible%22%20style%3D%22display%3A%20block%3B%22%20viewBox%3D%220%200%2050%2050%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cg%20id%3D%22clippath%22%3E%0A%3Cpath%20id%3D%22Vector%22%20d%3D%22M50%200H0V50H50V0Z%22%20fill%3D%22var(--fill-0%2C%20black)%22%2F%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A")` }}>
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 45 39">
-                          <g id="ticket 2">
-                            <path d="M8.85417 0C3.96354 0 0 3.96354 0 8.85417V14.1667C0 14.9089 0.523438 15.5495 1.2526 15.6979C2.91406 16.0365 4.16667 17.5078 4.16667 19.2708C4.16667 21.0339 2.91406 22.5052 1.2526 22.8438C0.523438 22.9922 0 23.6328 0 24.375V29.6875C0 34.5781 3.96354 38.5417 8.85417 38.5417H35.9375C40.8281 38.5417 44.7917 34.5781 44.7917 29.6875V24.375C44.7917 23.6328 44.2682 22.9922 43.5391 22.8438C41.8776 22.5052 40.625 21.0339 40.625 19.2708C40.625 17.5078 41.8776 16.0365 43.5391 15.6979C44.2682 15.5495 44.7917 14.9089 44.7917 14.1667V8.85417C44.7917 3.96354 40.8281 0 35.9375 0H8.85417Z" fill="var(--fill-0, #2D68FF)" id="Vector 298" opacity="0.4" />
-                            <path clipRule="evenodd" d="M30.2083 1.58946e-07V9.3099C30.2083 10.1719 29.5078 10.8724 28.6458 10.8724C27.7839 10.8724 27.0833 10.1719 27.0833 9.3099V1.58946e-07H30.2083ZM28.6458 14.388C29.5078 14.388 30.2083 15.0885 30.2083 15.9505V22.5911C30.2083 23.4531 29.5078 24.1536 28.6458 24.1536C27.7839 24.1536 27.0833 23.4531 27.0833 22.5911V15.9505C27.0833 15.0885 27.7839 14.388 28.6458 14.388ZM28.6458 27.6693C29.5078 27.6693 30.2083 28.3698 30.2083 29.2318V38.5417H27.0833V29.2318C27.0833 28.3698 27.7839 27.6693 28.6458 27.6693Z" fill="var(--fill-0, #2D68FF)" fillRule="evenodd" id="Vector 299" />
-                          </g>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                  </div>
+                <div className="relative shrink-0 size-[90px]">
+                  <img alt="승선권 예매하기" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/pc-ticket-icon.png" />
+                </div>
                   
                   {/* 텍스트 */}
                 <div className="content-stretch flex flex-col gap-[6px] items-start leading-[0] not-italic relative shrink-0 text-nowrap">
@@ -289,31 +273,9 @@ export default function Home() {
               <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.4)]" />
               <div className="content-stretch flex gap-[40px] items-center relative shrink-0">
                   {/* 아이콘 */}
-                <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
-                  <div className="[grid-area:1_/_1] ml-0 mt-0 relative size-[90px]">
-                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 90 90">
-                      <circle cx="45" cy="45" fill="var(--fill-0, #E3F4FE)" id="Ellipse 3" r="45" />
-                    </svg>
-                  </div>
-                  <div className="[grid-area:1_/_1] grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[22.222%] mt-[22.222%] place-items-start relative">
-                    <div className="[grid-area:1_/_1] grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[5.208%] mt-[5.215%] place-items-start relative">
-                      <div className="[grid-area:1_/_1] h-[44.794px] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-2.604px_-2.607px] mask-size-[50px_50px] ml-0 mt-0 relative w-[44.792px]" style={{ maskImage: `url("data:image/svg+xml,%3Csvg%20preserveAspectRatio%3D%22none%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20overflow%3D%22visible%22%20style%3D%22display%3A%20block%3B%22%20viewBox%3D%220%200%2050%2050%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cg%20id%3D%22clippath%22%3E%0A%3Cpath%20id%3D%22Vector%22%20d%3D%22M50%200H0V50H50V0Z%22%20fill%3D%22var(--fill-0%2C%20black)%22%2F%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A")` }}>
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 45 45">
-                          <g id="receipt-1 2">
-                            <path d="M23.7135 0.697348C22.263 -0.357339 20.2578 -0.201089 18.9896 1.06714L17.4271 2.62964C17.237 2.81974 16.9323 2.83537 16.7266 2.66089L15.3542 1.52026C12.9792 -0.458902 9.375 1.2286 9.375 4.31974V38.0177C9.375 43.226 7.74219 44.7885 5.72917 44.7885H35.9427C40.8333 44.7885 44.7917 40.8223 44.7917 35.9343V4.31974C44.7917 1.2286 41.1875 -0.458902 38.8125 1.51766L37.4401 2.66089C37.2344 2.83537 36.9297 2.81974 36.7396 2.62964L35.1771 1.06714C33.9089 -0.201089 31.9036 -0.357339 30.4531 0.697348L27.3906 2.92651C27.2083 3.05933 26.9583 3.05933 26.776 2.92651L23.7135 0.697348Z" fill="var(--fill-0, #F6D3E9)" id="Vector 290" />
-                            <g id="Vector 291">
-                              <path d="M20.8333 32.2989C19.9714 32.2989 19.2708 31.5984 19.2708 30.7364C19.2708 29.8744 19.9714 29.1739 20.8333 29.1739H33.3333C34.1953 29.1739 34.8958 29.8718 34.8958 30.7364C34.8958 31.601 34.1953 32.2989 33.3333 32.2989H20.8333Z" fill="var(--fill-0, #DA93BE)" id="Vector" />
-                              <path d="M18.75 25.0098C17.888 25.0098 17.1875 24.3093 17.1875 23.4473C17.1875 22.5854 17.888 21.8848 18.75 21.8848H35.4167C36.2786 21.8848 36.9792 22.5828 36.9792 23.4473C36.9792 24.3119 36.2786 25.0098 35.4167 25.0098H18.75Z" fill="var(--fill-0, #DA93BE)" id="Vector_2" />
-                              <path d="M22.9167 17.7208C22.0547 17.7208 21.3542 17.0203 21.3542 16.1583C21.3542 15.2963 22.0547 14.5958 22.9167 14.5958H31.25C32.112 14.5958 32.8125 15.2937 32.8125 16.1583C32.8125 17.0229 32.112 17.7208 31.25 17.7208H22.9167Z" fill="var(--fill-0, #DA93BE)" id="Vector_3" />
-                              <path d="M2.60417 22.9239H9.375V38.0177C9.375 43.0619 7.84375 44.6869 5.91667 44.7833C2.61979 44.6114 -7.94729e-08 41.8822 -7.94729e-08 38.5437V25.5281C-7.94729e-08 24.0906 1.16667 22.9239 2.60417 22.9239Z" fill="var(--fill-0, #DA93BE)" id="Vector_4" />
-                              <path d="M6.25 44.7937C6.32552 44.7937 6.40104 44.7911 6.47917 44.7885H6.02344C6.09896 44.7911 6.17448 44.7937 6.2526 44.7937H6.25Z" fill="var(--fill-0, #2D68FF)" id="Vector_5" />
-                            </g>
-                          </g>
-                    </svg>
-                      </div>
-                    </div>
-                  </div>
-                  </div>
+                <div className="relative shrink-0 size-[90px]">
+                  <img alt="예약확인 및 취소" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/pc-receipt-icon.png" />
+                </div>
                   
                   {/* 텍스트 */}
                 <div className="content-stretch flex flex-col gap-[6px] items-start justify-center leading-[0] not-italic relative shrink-0 text-nowrap">

@@ -150,9 +150,7 @@ export default function MobileNavigation({ user, cartItemCount, onCartClick, onL
                         className="flex items-center gap-3 text-[#222222] text-lg py-2"
                         onClick={closeMenu}
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
+                        <img alt="정보수정" className="w-5 h-5 object-contain" src="/images/login-icon.png" />
                         정보수정
                       </Link>
                       <Link 
@@ -160,9 +158,7 @@ export default function MobileNavigation({ user, cartItemCount, onCartClick, onL
                         className="flex items-center gap-3 text-[#222222] text-lg py-2"
                         onClick={closeMenu}
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
+                        <img alt="예약조회" className="w-5 h-5 object-contain" src="/images/calendar-icon.png" />
                         예약조회
                       </Link>
                       <button
@@ -172,9 +168,7 @@ export default function MobileNavigation({ user, cartItemCount, onCartClick, onL
                         }}
                         className="flex items-center gap-3 text-[#222222] text-lg py-2 w-full text-left"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
+                        <img alt="로그아웃" className="w-5 h-5 object-contain" src="/images/logout-icon.png" />
                         로그아웃
                       </button>
                     </div>
