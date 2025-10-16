@@ -88,9 +88,9 @@ export default function Home() {
           <div className="relative w-full">
             <div className="size-full">
               <div className="box-border content-stretch flex flex-col items-start pb-0 pt-[20px] px-[15px] relative w-full">
-            {/* 배경 */}
+            {/* 배경 - 화면 전체 너비로 수정 */}
                 <div 
-                  className="absolute h-[220px] left-0 top-0 w-[360px]" 
+                  className="absolute h-[220px] left-0 top-0 w-full" 
                   style={{backgroundColor: '#4C9DE8'}}
                   data-debug="모바일 배경색: #4C9DE8 (밝은 파란색)"
                 />
@@ -305,8 +305,9 @@ export default function Home() {
 
       {/* 상품소개 섹션 */}
       <section className="w-full py-4">
-        <div className="container mx-auto px-4">
-          <div className="max-w-[1200px] mx-auto">
+        {/* 모바일: 전체 너비, 데스크톱: 컨테이너 */}
+        <div className="md:container md:mx-auto md:px-4">
+          <div className="md:max-w-[1200px] md:mx-auto">
             <ProductSection products={products} loading={loading} error={error} />
           </div>
         </div>

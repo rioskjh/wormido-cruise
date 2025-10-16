@@ -31,9 +31,9 @@ interface ProductSectionProps {
 
 export default function ProductSection({ products, loading, error }: ProductSectionProps) {
   return (
-    <div className="box-border content-stretch flex flex-col gap-[30px] items-start pb-[100px] pt-0 px-0 relative size-full">
+    <div className="box-border content-stretch flex flex-col gap-[30px] items-start pb-[40px] md:pb-[100px] pt-0 px-0 md:px-0 relative size-full">
       {/* 상품소개 제목 */}
-      <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
+      <div className="content-stretch flex gap-[16px] items-center relative shrink-0 px-[15px] md:px-0">
         {/* 상품소개 아이콘 - 유람선 */}
         <div className="h-[33px] relative shrink-0 w-[66px] flex items-center justify-center">
           <img
@@ -44,8 +44,8 @@ export default function ProductSection({ products, loading, error }: ProductSect
             className="w-full h-full object-contain"
           />
         </div>
-        <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[34px] text-nowrap">
-          <p className="leading-[50px] whitespace-pre">상품소개</p>
+        <div className="font-['Pretendard:Bold',_sans-serif] leading-[0] not-italic relative shrink-0 text-[#222222] text-[24px] md:text-[34px] text-nowrap">
+          <p className="leading-[36px] md:leading-[50px] whitespace-pre">상품소개</p>
         </div>
       </div>
 
@@ -63,7 +63,7 @@ export default function ProductSection({ products, loading, error }: ProductSect
         <>
           {/* 모바일 버전 - 가로 스크롤 */}
           <div className="md:hidden w-full overflow-hidden">
-            <div className="flex gap-[10px] overflow-x-auto pb-2 scrollbar-hide" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+            <div className="flex gap-[10px] overflow-x-auto pb-2 scrollbar-hide px-[15px]" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
               {products.map((product, index) => {
                 // 업로드된 이미지가 있으면 사용, 없으면 기본 이미지 사용
                 const hasUploadedImage = product.images && product.images.length > 0
