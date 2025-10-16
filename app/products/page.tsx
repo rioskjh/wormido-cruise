@@ -153,8 +153,85 @@ function ProductsContent() {
             {error}
           </div>
         ) : (
-          <div className="flex gap-[30px] items-start">
-            {products.slice(0, 3).map((product, index) => {
+          <>
+            {/* 모바일 버전 - 한 줄에 1개씩 */}
+            <div className="md:hidden flex flex-col gap-[20px] w-full">
+              {products.map((product, index) => {
+                // 업로드된 이미지가 있으면 사용, 없으면 기본 이미지 사용
+                const hasUploadedImage = product.images && product.images.length > 0
+                const imageSrc = hasUploadedImage 
+                  ? product.images[0].filePath 
+                  : `/images/design-assets/${index === 0 ? '395ecb514347a2b67636818efc42e5bc27269325.png' : index === 1 ? '17c94b934fb469c9e8305d4e810a5c1b2eda98b4.png' : 'ec35f3ef156b9a8f70f3287075f9d663e753a88b.png'}`
+                
+                return (
+                  <Link 
+                    key={product.id} 
+                    href={`/products/${product.id}`}
+                    className="flex flex-row items-center w-full group bg-white border border-[#dddddd] rounded-[10px] overflow-hidden"
+                  >
+                    {/* 상품 이미지 */}
+                    <div className="h-[120px] w-[120px] flex-shrink-0">
+                      <img
+                        src={imageSrc}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+
+                    {/* 상품 정보 */}
+                    <div className="flex-1 px-[15px] py-[15px]">
+                      <div className="flex flex-col gap-[8px]">
+                        {/* 상품 제목 */}
+                        <h3 className="text-[#222222] text-[16px] font-bold font-['Pretendard:Bold'] leading-[22px]">
+                          {product.name}
+                        </h3>
+                        
+                        {/* 상품 설명 */}
+                        <div className="text-[#444444] text-[12px] font-['Pretendard:Regular'] leading-[18px] h-[36px] overflow-hidden whitespace-pre">
+                          <p className="mb-0 line-clamp-2">{product.description || '상품 설명이 없습니다.'}</p>
+                        </div>
+
+                        {/* 가격 정보 */}
+                        <div className="flex gap-[8px] items-center">
+                          {product.basePrice > product.adultPrice ? (
+                            <>
+                              <p className="line-through text-[#666666] text-[12px] font-['Pretendard:Regular'] leading-[18px]">
+                                {product.basePrice.toLocaleString()}원
+                              </p>
+                              <p className="text-[#222222] text-[16px] font-bold font-['Pretendard:Bold'] leading-[22px]">
+                                {product.adultPrice.toLocaleString()}원
+                              </p>
+                            </>
+                          ) : (
+                            <p className="text-[#222222] text-[16px] font-bold font-['Pretendard:Bold'] leading-[22px]">
+                              {product.adultPrice.toLocaleString()}원
+                            </p>
+                          )}
+                        </div>
+
+                        {/* 예약 버튼 */}
+                        <div className="bg-white border border-[#222222] rounded-[4px] w-fit">
+                          <div className="flex gap-[8px] items-center justify-center px-[12px] py-[6px]">
+                            <p className="text-[#222222] text-[12px] font-semibold font-['Pretendard:SemiBold'] leading-[18px] text-center">
+                              예약하기
+                            </p>
+                            <div className="flex h-[16px] items-center justify-center w-[16px]">
+                              <div className="rotate-90">
+                                <ArrowUpIcon />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+
+            {/* 데스크톱 버전 - 기존 3개 레이아웃 */}
+            <div className="hidden md:flex gap-[30px] items-start">
+              {products.slice(0, 3).map((product, index) => {
               // 업로드된 이미지가 있으면 사용, 없으면 기본 이미지 사용
               const hasUploadedImage = product.images && product.images.length > 0
               const imageSrc = hasUploadedImage 
@@ -184,8 +261,8 @@ function ProductsContent() {
                         <h3 className="text-[#222222] text-[26px] font-bold font-['Pretendard:Bold'] leading-[36px]">
                           {product.name}
                         </h3>
-                        <div className="text-[#444444] text-[18px] font-['Pretendard:Regular'] leading-[30px] whitespace-pre">
-                          <p className="mb-0">{product.description || '상품 설명이 없습니다.'}</p>
+                        <div className="text-[#444444] text-[18px] font-['Pretendard:Regular'] leading-[30px] h-[90px] overflow-hidden whitespace-pre">
+                          <p className="mb-0 line-clamp-3">{product.description || '상품 설명이 없습니다.'}</p>
                         </div>
                       </div>
 
@@ -225,7 +302,8 @@ function ProductsContent() {
                 </Link>
               )
             })}
-          </div>
+            </div>
+          </>
         )}
 
         {/* 상품이 없는 경우 */}

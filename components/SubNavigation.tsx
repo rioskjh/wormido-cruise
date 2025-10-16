@@ -105,6 +105,20 @@ export default function SubNavigation({ items }: SubNavigationProps) {
     return null
   }
 
+  // 현재 경로에 맞는 2차 메뉴 찾기
+  const findCurrentSubMenuByPath = (currentPath: string, navItems: NavigationItem[]): NavigationItem | null => {
+    for (const nav of navItems) {
+      if (nav.children && nav.children.length > 0) {
+        for (const child of nav.children) {
+          if (child.url && currentPath === child.url) {
+            return child // 2차 메뉴 반환
+          }
+        }
+      }
+    }
+    return null
+  }
+
   const fetchNavigations = async () => {
     try {
       const timestamp = new Date().getTime()
@@ -141,6 +155,15 @@ export default function SubNavigation({ items }: SubNavigationProps) {
   const handleMainMenuSelect = (menu: NavigationItem) => {
     setSelectedMainMenu(menu.title)
     setShowMainMenu(false)
+    
+    // 메뉴 클릭시 해당 메뉴로 이동
+    if (menu.children && menu.children.length > 0) {
+      // 2차 메뉴가 있으면 첫 번째 2차 메뉴로 이동
+      window.location.href = menu.children[0].url || '#'
+    } else if (menu.url) {
+      // 1차 메뉴에 직접 URL이 있으면 해당 URL로 이동
+      window.location.href = menu.url
+    }
   }
 
   const getCurrentMainMenu = () => {
@@ -194,6 +217,10 @@ export default function SubNavigation({ items }: SubNavigationProps) {
     )
   }
 
+  // 현재 2차 메뉴 찾기
+  const currentSubMenu = findCurrentSubMenuByPath(pathname, navigations)
+  const isProductsPage = pathname.startsWith('/products')
+
   return (
     <nav className="bg-white py-5">
       <div className="container mx-auto px-4 max-w-[1200px]">
@@ -207,48 +234,66 @@ export default function SubNavigation({ items }: SubNavigationProps) {
             />
           </Link>
 
-          {/* 메인 메뉴 선택 버튼 */}
-          <div className="relative">
-            <div 
-              className="flex items-center justify-between w-[200px] cursor-pointer"
-              onClick={() => setShowMainMenu(!showMainMenu)}
-            >
-              <p className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
-                {selectedMainMenu || (navigations.length > 0 ? navigations[0].title : '메뉴 선택')}
-              </p>
-              <div className={`transform transition-transform duration-200 ${showMainMenu ? '' : 'rotate-180'}`}>
-                <img 
-                  src="/images/arrow-up-icon.png" 
-                  alt="화살표" 
-                  className="w-[18px] h-[18px]" 
-                />
+          {/* 상품예약 페이지이고 2차 메뉴가 있는 경우 브레드크럼 형태로 표시 */}
+          {isProductsPage && currentSubMenu ? (
+            <>
+              {/* 상품예약 메뉴 */}
+              <div className="flex items-center gap-[10px]">
+                <span className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
+                  상품예약
+                </span>
+                <span className="text-[#666666]">{'>'}</span>
+                <span className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
+                  {currentSubMenu.title}
+                </span>
               </div>
-            </div>
-
-            {/* 메인 메뉴 팝업 */}
-            {renderMainMenuPopup()}
-          </div>
-
-          {/* 서브 메뉴 (현재 선택된 메인 메뉴의 하위 메뉴들) */}
-          {getCurrentMainMenu()?.children && getCurrentMainMenu()!.children.length > 0 && (
-            <div className="flex items-center gap-[30px]">
-              {getCurrentMainMenu()!.children.map((child, index) => (
-                <div key={child.id} className="flex items-center">
-                  {child.url ? (
-                    <Link
-                      href={child.url}
-                      className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px] hover:text-[#3c64d6] transition-colors"
-                    >
-                      {child.title}
-                    </Link>
-                  ) : (
-                    <span className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
-                      {child.title}
-                    </span>
-                  )}
+            </>
+          ) : (
+            <>
+              {/* 메인 메뉴 선택 버튼 */}
+              <div className="relative">
+                <div 
+                  className="flex items-center justify-between w-[200px] cursor-pointer"
+                  onClick={() => setShowMainMenu(!showMainMenu)}
+                >
+                  <p className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
+                    {selectedMainMenu || (navigations.length > 0 ? navigations[0].title : '메뉴 선택')}
+                  </p>
+                  <div className={`transform transition-transform duration-200 ${showMainMenu ? '' : 'rotate-180'}`}>
+                    <img 
+                      src="/images/arrow-up-icon.png" 
+                      alt="화살표" 
+                      className="w-[18px] h-[18px]" 
+                    />
+                  </div>
                 </div>
-              ))}
-            </div>
+
+                {/* 메인 메뉴 팝업 */}
+                {renderMainMenuPopup()}
+              </div>
+
+              {/* 서브 메뉴 (현재 선택된 메인 메뉴의 하위 메뉴들) */}
+              {getCurrentMainMenu()?.children && getCurrentMainMenu()!.children.length > 0 && (
+                <div className="flex items-center gap-[30px]">
+                  {getCurrentMainMenu()!.children.map((child, index) => (
+                    <div key={child.id} className="flex items-center">
+                      {child.url ? (
+                        <Link
+                          href={child.url}
+                          className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px] hover:text-[#3c64d6] transition-colors"
+                        >
+                          {child.title}
+                        </Link>
+                      ) : (
+                        <span className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
+                          {child.title}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

@@ -174,7 +174,7 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
     const isProductsMenu = item.type === 'PRODUCTS'
     const hasChildren = item.children && Array.isArray(item.children) && item.children.length > 0
     const hasCategoryChildren = isProductsMenu && Array.isArray(categories) && categories.length > 0
-    const shouldShowDropdown = hasChildren || hasCategoryChildren
+    const shouldShowDropdown = false // 최상단 네비게이션에서는 드롭다운 숨김
     const isActive = activeMenu === item.id
     const isCurrentPage = pathname === item.url
 
@@ -223,77 +223,9 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
           }`}
         >
           {item.title}
-          {shouldShowDropdown && (
-            <svg
-              className={`inline-block ml-1 w-4 h-4 transition-transform duration-200 ${
-                isActive ? 'rotate-180' : ''
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          )}
         </Link>
 
-        {/* 하위 메뉴 */}
-        {shouldShowDropdown && (
-          <ul
-            className={`absolute top-full left-0 w-56 bg-white border border-gray-200 rounded-lg shadow-xl z-50 transition-all duration-200 ${
-              isActive
-                ? 'opacity-100 visible transform translate-y-0'
-                : 'opacity-0 invisible transform -translate-y-2'
-            }`}
-          >
-            {/* 기존 하위 메뉴 */}
-            {hasChildren && Array.isArray(item.children) && item.children.map((child) => (
-              <li key={child.id}>
-                <Link
-                  href={child.url || '#'}
-                  target={child.isNewWindow ? '_blank' : '_self'}
-                  rel={child.isNewWindow ? 'noopener noreferrer' : undefined}
-                  onClick={() => {
-                    handleSubmenuClick()
-                    onItemClick?.()
-                  }}
-                  className={`block px-6 py-3 text-[16px] font-['Pretendard:Medium',_sans-serif] transition-colors duration-200 ${
-                    pathname === child.url
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-[#222222] hover:text-blue-600 hover:bg-gray-50'
-                  }`}
-                >
-                  {child.title}
-                </Link>
-              </li>
-            ))}
-            
-            {/* 상품 카테고리 하위 메뉴 */}
-            {hasCategoryChildren && Array.isArray(categories) && categories.map((category) => (
-              <li key={`category-${category.id}`}>
-                <Link
-                  href={`/products?category=${category.id}`}
-                  onClick={() => {
-                    handleSubmenuClick()
-                    onItemClick?.()
-                  }}
-                  className={`block px-6 py-3 text-[16px] font-['Pretendard:Medium',_sans-serif] transition-colors duration-200 ${
-                    pathname === `/products?category=${category.id}`
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-[#222222] hover:text-blue-600 hover:bg-gray-50'
-                  }`}
-                >
-                  {category.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
+        {/* 하위 메뉴 - 최상단 네비게이션에서는 숨김 */}
       </li>
     )
   }
