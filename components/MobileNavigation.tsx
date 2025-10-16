@@ -15,12 +15,10 @@ interface User {
 
 interface MobileNavigationProps {
   user: User | null
-  cartItemCount: number
-  onCartClick: () => void
   onLogout: () => void
 }
 
-export default function MobileNavigation({ user, cartItemCount, onCartClick, onLogout }: MobileNavigationProps) {
+export default function MobileNavigation({ user, onLogout }: MobileNavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const router = useRouter()
 
@@ -53,18 +51,13 @@ export default function MobileNavigation({ user, cartItemCount, onCartClick, onL
 
             {/* 우측 아이콘들 */}
             <div className="content-stretch flex gap-[20px] items-center justify-start relative shrink-0">
-              {/* 장바구니 아이콘 */}
-              <button
-                onClick={onCartClick}
-                className="relative flex items-center justify-center w-6 h-6"
+              {/* 예약조회 아이콘 */}
+              <Link 
+                href="/reservations" 
+                className="flex items-center justify-center w-6 h-6"
               >
-                <img alt="장바구니" className="w-5 h-5 object-contain" src="/images/cart-icon.png" />
-                {cartItemCount > 0 && (
-                  <div className="absolute -top-1 -right-1 bg-design-purple text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-pretendard font-medium text-[10px]">
-                    {cartItemCount}
-                  </div>
-                )}
-              </button>
+                <img alt="예약조회" className="w-5 h-5 object-contain" src="/images/calendar-icon.png" />
+              </Link>
 
               {/* 로그인 아이콘 */}
               {user ? (

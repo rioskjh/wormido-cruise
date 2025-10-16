@@ -142,8 +142,6 @@ export default function UserNavigation() {
       {/* 모바일 네비게이션 */}
       <MobileNavigation 
         user={user}
-        cartItemCount={cartItemCount}
-        onCartClick={handleCartClick}
         onLogout={handleLogout}
       />
 
