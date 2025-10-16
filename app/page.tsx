@@ -83,33 +83,33 @@ export default function Home() {
 
       {/* 메인 비주얼 섹션 */}
       <section className="relative w-full">
-        {/* 모바일 버전 */}
+        {/* 모바일 버전 - 반응형 */}
         <div className="md:hidden relative w-full">
           <div className="relative w-full">
             <div className="size-full">
-              <div className="box-border content-stretch flex flex-col items-start pb-0 pt-[20px] px-[15px] relative w-full">
+              <div className="box-border content-stretch flex flex-col items-start pb-0 pt-5 px-4 relative w-full">
             {/* 배경 - 화면 전체 너비로 수정 */}
                 <div 
-                  className="absolute h-[220px] left-0 top-0 w-full" 
+                  className="absolute h-56 sm:h-60 left-0 top-0 w-full" 
                   style={{backgroundColor: '#4C9DE8'}}
                   data-debug="모바일 배경색: #4C9DE8 (밝은 파란색)"
                 />
             
             {/* 메인 콘텐츠 */}
-                <div className="content-stretch flex flex-col gap-[20px] items-start relative shrink-0 w-full">
+                <div className="content-stretch flex flex-col gap-5 items-start relative shrink-0 w-full">
                   {/* 텍스트 */}
-                  <div className="content-stretch flex flex-col gap-[6px] items-start leading-[0] not-italic relative shrink-0 text-nowrap text-white">
-                    <div className="font-['Pretendard:ExtraBold',_sans-serif] leading-[32px] relative shrink-0 text-[22px] whitespace-pre">
+                  <div className="content-stretch flex flex-col gap-1.5 items-start leading-[0] not-italic relative shrink-0 text-nowrap text-white">
+                    <div className="font-['Pretendard:ExtraBold',_sans-serif] leading-8 sm:leading-9 relative shrink-0 text-lg sm:text-xl whitespace-pre">
                       <p className="mb-0">푸른 바다 위에서</p>
                       <p>만나는 특별한 하루</p>
                     </div>
-                    <div className="font-['Pretendard:Regular',_sans-serif] relative shrink-0 text-[13px]">
-                      <p className="leading-[22px] text-nowrap whitespace-pre">월미도 해양관광 크루즈와 함께하는 잊지 못할 여행</p>
+                    <div className="font-['Pretendard:Regular',_sans-serif] relative shrink-0 text-xs sm:text-sm">
+                      <p className="leading-5 sm:leading-6 text-nowrap whitespace-pre">월미도 해양관광 크루즈와 함께하는 잊지 못할 여행</p>
                     </div>
                   </div>
                   
                   {/* 크루즈 이미지 */}
-                  <div className="h-[186px] relative shrink-0 w-[330px]">
+                  <div className="h-48 sm:h-52 relative shrink-0 w-full">
                     <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
                       <img
                         alt=""
@@ -175,27 +175,27 @@ export default function Home() {
       {/* 예약 카드 섹션 */}
       <section className="w-full py-16">
         <div className="container mx-auto px-4">
-          {/* 모바일 버전 */}
-          <div className="md:hidden relative w-full">
+          {/* 모바일 버전 - 반응형 */}
+          <div className="md:hidden relative w-full px-4">
             <div className="flex flex-row items-center size-full">
-              <div className="box-border content-stretch flex gap-[10px] items-center px-0 py-0 relative w-full">
+              <div className="box-border content-stretch flex gap-2.5 sm:gap-3 items-center px-0 py-0 relative w-full">
             {/* 승선권 예매하기 카드 */}
             <Link 
               href="/reservation" 
-                  className="bg-white box-border content-stretch flex flex-col gap-[10px] items-start px-[17px] py-[20px] relative rounded-[10px] shrink-0 w-[160px]"
+                  className="bg-white box-border content-stretch flex flex-col gap-2.5 items-start px-4 py-5 relative rounded-[10px] shrink-0 flex-1 min-w-0"
             >
                   <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.2)]" />
                   {/* 아이콘 */}
-                  <div className="relative shrink-0 size-[40px]">
+                  <div className="relative shrink-0 w-10 h-10 sm:w-12 sm:h-12">
                     <img alt="승선권 예매하기" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/pc-ticket-icon.png" />
                   </div>
                 
                   {/* 텍스트 */}
-                  <div className="content-stretch flex flex-col gap-[4px] items-start leading-[0] not-italic relative shrink-0 text-nowrap">
-                    <div className="font-['Pretendard:Bold',_sans-serif] relative shrink-0 text-[#222222] text-[16px]">
-                      <p className="leading-[26px] text-nowrap whitespace-pre">승선권 예매하기</p>
+                  <div className="content-stretch flex flex-col gap-1 items-start leading-[0] not-italic relative shrink-0 text-nowrap w-full">
+                    <div className="font-['Pretendard:Bold',_sans-serif] relative shrink-0 text-[#222222] text-sm sm:text-base">
+                      <p className="leading-6 sm:leading-7 text-nowrap whitespace-pre">승선권 예매하기</p>
                     </div>
-                    <div className="font-['Pretendard:Regular',_sans-serif] leading-[19px] relative shrink-0 text-[#444444] text-[11px] whitespace-pre">
+                    <div className="font-['Pretendard:Regular',_sans-serif] leading-4 sm:leading-5 relative shrink-0 text-[#444444] text-xs sm:text-sm whitespace-pre">
                       <p className="mb-0">원하는 일정과 좌석을</p>
                       <p>간편하게 선택</p>
                 </div>
@@ -205,20 +205,20 @@ export default function Home() {
             {/* 예약확인 및 취소 카드 */}
             <Link 
               href="/reservation/check" 
-                  className="bg-white box-border content-stretch flex flex-col gap-[10px] items-start px-[17px] py-[20px] relative rounded-[10px] shrink-0 w-[160px]"
+                  className="bg-white box-border content-stretch flex flex-col gap-2.5 items-start px-4 py-5 relative rounded-[10px] shrink-0 flex-1 min-w-0"
                 >
                   <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.2)]" />
                   {/* 아이콘 */}
-                  <div className="relative shrink-0 size-[40px]">
+                  <div className="relative shrink-0 w-10 h-10 sm:w-12 sm:h-12">
                     <img alt="예약확인 및 취소" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/pc-receipt-icon.png" />
                   </div>
                   
                   {/* 텍스트 */}
-                  <div className="content-stretch flex flex-col gap-[6px] items-start justify-center leading-[0] not-italic relative shrink-0 text-nowrap">
-                    <div className="font-['Pretendard:Bold',_sans-serif] relative shrink-0 text-[#222222] text-[16px]">
-                      <p className="leading-[26px] text-nowrap whitespace-pre">예약확인 및 취소</p>
+                  <div className="content-stretch flex flex-col gap-1.5 items-start justify-center leading-[0] not-italic relative shrink-0 text-nowrap w-full">
+                    <div className="font-['Pretendard:Bold',_sans-serif] relative shrink-0 text-[#222222] text-sm sm:text-base">
+                      <p className="leading-6 sm:leading-7 text-nowrap whitespace-pre">예약확인 및 취소</p>
                     </div>
-                    <div className="font-['Pretendard:Regular',_sans-serif] leading-[19px] relative shrink-0 text-[#444444] text-[11px] whitespace-pre">
+                    <div className="font-['Pretendard:Regular',_sans-serif] leading-4 sm:leading-5 relative shrink-0 text-[#444444] text-xs sm:text-sm whitespace-pre">
                       <p className="mb-0">예약 내역을</p>
                       <p>한눈에 확인하세요.</p>
                     </div>
