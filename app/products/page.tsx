@@ -142,7 +142,7 @@ function ProductsContent() {
       <SubNavigation items={[]} />
 
       {/* 메인 콘텐츠 */}
-      <div className="flex flex-col items-center px-0 py-[100px] w-[1200px] mx-auto">
+      <div className="flex flex-col items-center px-4 md:px-0 py-[100px] w-full max-w-[1200px] mx-auto">
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#222222]"></div>

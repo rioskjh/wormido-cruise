@@ -110,8 +110,17 @@ export default function SubNavigation({ items }: SubNavigationProps) {
     for (const nav of navItems) {
       if (nav.children && nav.children.length > 0) {
         for (const child of nav.children) {
+          // 정확한 URL 매치
           if (child.url && currentPath === child.url) {
             return child // 2차 메뉴 반환
+          }
+          // 상품 카테고리 URL 매치 (/products?category=1)
+          if (child.url && child.url.startsWith('/products?category=') && currentPath.startsWith('/products')) {
+            const urlParams = new URLSearchParams(child.url.split('?')[1])
+            const currentParams = new URLSearchParams(currentPath.split('?')[1] || '')
+            if (urlParams.get('category') === currentParams.get('category')) {
+              return child
+            }
           }
         }
       }

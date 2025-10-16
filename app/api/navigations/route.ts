@@ -22,9 +22,52 @@ export async function GET(request: NextRequest) {
     // 최상위 메뉴만 필터링
     const topLevelNavigations = navigations.filter(nav => !nav.parentId)
 
+    // 상품 메뉴인 경우 카테고리를 2차 메뉴로 추가
+    const navigationsWithCategories = await Promise.all(
+      topLevelNavigations.map(async (nav) => {
+        if (nav.type === 'PRODUCTS') {
+          // 활성화된 카테고리 목록 조회
+          const categories = await prisma.category.findMany({
+            where: {
+              isActive: true
+            },
+            orderBy: [
+              { sortOrder: 'asc' },
+              { createdAt: 'asc' }
+            ],
+            select: {
+              id: true,
+              name: true,
+              sortOrder: true
+            }
+          })
+
+          // 카테고리를 2차 메뉴 형태로 변환
+          const categoryMenus = categories.map(category => ({
+            id: `category_${category.id}`,
+            title: category.name,
+            url: `/products?category=${category.id}`,
+            type: 'CUSTOM' as const,
+            targetId: category.id,
+            parentId: nav.id,
+            sortOrder: category.sortOrder,
+            isActive: true,
+            isNewWindow: false,
+            children: []
+          }))
+
+          return {
+            ...nav,
+            children: [...nav.children, ...categoryMenus]
+          }
+        }
+        return nav
+      })
+    )
+
     return NextResponse.json({
       ok: true,
-      data: topLevelNavigations,
+      data: navigationsWithCategories,
       timestamp: new Date().toISOString()
     }, {
       headers: {
