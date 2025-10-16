@@ -58,9 +58,7 @@ export default function MobileNavigation({ user, cartItemCount, onCartClick, onL
                 onClick={onCartClick}
                 className="relative flex items-center justify-center w-6 h-6"
               >
-                <svg className="w-5 h-5 text-[#222222]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
-                </svg>
+                <img alt="장바구니" className="w-5 h-5 object-contain" src="/images/cart-icon.png" />
                 {cartItemCount > 0 && (
                   <div className="absolute -top-1 -right-1 bg-design-purple text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-pretendard font-medium text-[10px]">
                     {cartItemCount}
@@ -74,18 +72,14 @@ export default function MobileNavigation({ user, cartItemCount, onCartClick, onL
                   href="/profile" 
                   className="flex items-center justify-center w-6 h-6"
                 >
-                  <svg className="w-5 h-5 text-[#222222]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+                  <img alt="프로필" className="w-5 h-5 object-contain" src="/images/login-icon.png" />
                 </Link>
               ) : (
                 <Link 
                   href="/login" 
                   className="flex items-center justify-center w-6 h-6"
                 >
-                  <svg className="w-5 h-5 text-[#222222]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                  </svg>
+                  <img alt="로그인" className="w-5 h-5 object-contain" src="/images/login-icon.png" />
                 </Link>
               )}
 
@@ -179,9 +173,7 @@ export default function MobileNavigation({ user, cartItemCount, onCartClick, onL
                         className="flex items-center gap-3 text-[#222222] text-lg py-2"
                         onClick={closeMenu}
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                        </svg>
+                        <img alt="로그인" className="w-5 h-5 object-contain" src="/images/login-icon.png" />
                         로그인
                       </Link>
                       <Link 
@@ -189,9 +181,7 @@ export default function MobileNavigation({ user, cartItemCount, onCartClick, onL
                         className="flex items-center gap-3 text-[#222222] text-lg py-2"
                         onClick={closeMenu}
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
+                        <img alt="회원가입" className="w-5 h-5 object-contain" src="/images/login-icon.png" />
                         회원가입
                       </Link>
                     </div>
