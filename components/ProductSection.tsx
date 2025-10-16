@@ -98,7 +98,7 @@ export default function ProductSection({ products, loading, error }: ProductSect
                             </div>
                             {/* 설명 영역을 3줄로 고정 */}
                             <div className="font-['Pretendard:Regular',_sans-serif] leading-[19px] relative shrink-0 text-[#444444] text-[11px] h-[57px] overflow-hidden">
-                              <p className="mb-0 line-clamp-3">{product.description || '상품 설명이 없습니다.'}</p>
+                              <p className="mb-0 line-clamp-3 whitespace-pre">{product.description || '상품 설명이 없습니다.'}</p>
                             </div>
                           </div>
                           
@@ -178,7 +178,7 @@ export default function ProductSection({ products, loading, error }: ProductSect
                           </div>
                           {/* 설명 영역을 3줄로 고정 */}
                           <div className="font-['Pretendard:Regular',_sans-serif] leading-[30px] relative shrink-0 text-[#444444] text-[18px] h-[90px] overflow-hidden">
-                            <p className="mb-0 line-clamp-3">{product.description || '상품 설명이 없습니다.'}</p>
+                            <p className="mb-0 line-clamp-3 whitespace-pre">{product.description || '상품 설명이 없습니다.'}</p>
                           </div>
                         </div>
                         

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Home } from 'lucide-react'
+// import { Home } from 'lucide-react' // PNG 이미지로 변경
 
 interface SubNavigationItem {
   label: string
@@ -10,91 +10,197 @@ interface SubNavigationItem {
   children?: SubNavigationItem[]
 }
 
+interface NavigationItem {
+  id: number
+  title: string
+  url: string | null
+  type: 'CUSTOM' | 'PRODUCTS' | 'BOARD' | 'CONTENT' | 'EXTERNAL'
+  targetId: number | null
+  parentId: number | null
+  sortOrder: number
+  isActive: boolean
+  isNewWindow: boolean
+  children: NavigationItem[]
+}
+
 interface SubNavigationProps {
   items: SubNavigationItem[]
 }
 
 export default function SubNavigation({ items }: SubNavigationProps) {
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const [navigations, setNavigations] = useState<NavigationItem[]>([])
+  const [showMainMenu, setShowMainMenu] = useState(false)
+  const [selectedMainMenu, setSelectedMainMenu] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const renderMenuItem = (item: SubNavigationItem, index: number, level: number = 1) => {
-    const hasChildren = item.children && item.children.length > 0
-    const isHovered = hoveredItem === `${level}-${index}`
+  useEffect(() => {
+    fetchNavigations()
+  }, [])
+
+  // 팝업 외부 클릭시 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element
+      if (showMainMenu && !target.closest('.relative')) {
+        setShowMainMenu(false)
+      }
+    }
+
+    if (showMainMenu) {
+      document.addEventListener('click', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [showMainMenu])
+
+  const fetchNavigations = async () => {
+    try {
+      const timestamp = new Date().getTime()
+      const random = Math.random().toString(36).substring(7)
+      const response = await fetch(`/api/navigations?t=${timestamp}&r=${random}&v=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+          'If-Modified-Since': '0',
+          'If-None-Match': '*'
+        }
+      })
+      const data = await response.json()
+
+      if (data.ok && Array.isArray(data.data)) {
+        setNavigations(data.data)
+        // 첫 번째 메뉴를 기본 선택으로 설정
+        if (data.data.length > 0 && !selectedMainMenu) {
+          setSelectedMainMenu(data.data[0].title)
+        }
+      } else {
+        setNavigations([])
+      }
+    } catch (error) {
+      console.error('네비게이션 조회 오류:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleMainMenuClick = (menuTitle: string) => {
+    setSelectedMainMenu(menuTitle)
+    setShowMainMenu(!showMainMenu)
+  }
+
+  const handleMainMenuSelect = (menu: NavigationItem) => {
+    setSelectedMainMenu(menu.title)
+    setShowMainMenu(false)
+  }
+
+  const getCurrentMainMenu = () => {
+    if (!selectedMainMenu) return null
+    return navigations.find(nav => nav.title === selectedMainMenu)
+  }
+
+  const renderMainMenuPopup = () => {
+    if (!showMainMenu || navigations.length === 0) return null
+
+    const currentMenu = getCurrentMainMenu()
+    const currentIndex = currentMenu ? navigations.findIndex(nav => nav.id === currentMenu.id) : 0
 
     return (
-      <div
-        key={`${level}-${index}`}
-        className="relative"
-        onMouseEnter={() => hasChildren && setHoveredItem(`${level}-${index}`)}
-        onMouseLeave={() => hasChildren && setHoveredItem(null)}
-      >
-        <div className="flex items-center justify-between w-[150px]">
-          {item.href ? (
-            <Link
-              href={item.href}
-              className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px] hover:text-[#3c64d6] transition-colors"
-            >
-              {item.label}
-            </Link>
-          ) : (
-            <span className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
-              {item.label}
-            </span>
-          )}
-          
-          {hasChildren && (
-            <div className="flex items-center justify-center">
-              <div className={`transform transition-transform duration-200 ${isHovered ? 'rotate-180' : ''}`}>
-                <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+      <div className="absolute top-full left-0 mt-1 bg-white border border-[#dddddd] rounded-[4px] shadow-lg z-50 overflow-hidden">
+        <div className="flex flex-col">
+          {navigations.map((menu, index) => {
+            const isSelected = index === currentIndex
+            const isFirst = index === 0
+            const isLast = index === navigations.length - 1
+            
+            return (
+              <div
+                key={menu.id}
+                onClick={() => handleMainMenuSelect(menu)}
+                className={`
+                  box-border content-stretch flex gap-[10px] items-center px-[20px] py-[10px] relative shrink-0 w-[200px] cursor-pointer
+                  ${isSelected 
+                    ? 'bg-[#190a6b] text-white' 
+                    : 'bg-white text-[#222222] hover:bg-gray-50'
+                  }
+                  ${isFirst ? 'rounded-tl-[4px] rounded-tr-[4px]' : ''}
+                  ${isLast ? 'rounded-bl-[4px] rounded-br-[4px]' : ''}
+                  ${!isSelected && !isLast ? 'border-b border-[#dddddd]' : ''}
+                `}
+              >
+                {!isSelected && (
+                  <div className="absolute border border-[#dddddd] border-solid inset-0 pointer-events-none" />
+                )}
+                <p className="font-['Pretendard:Medium',_sans-serif] leading-[30px] not-italic relative shrink-0 text-[16px] text-nowrap whitespace-pre">
+                  {menu.title}
+                </p>
               </div>
-            </div>
-          )}
+            )
+          })}
         </div>
-
-        {/* 드롭다운 메뉴 */}
-        {hasChildren && isHovered && (
-          <div className="absolute top-full left-0 mt-1 bg-white border border-[#dddddd] rounded-lg shadow-lg z-50 min-w-[200px]">
-            <div className="py-2">
-              {item.children!.map((child, childIndex) => (
-                <div key={childIndex} className="px-4 py-2 hover:bg-gray-50">
-                  {child.href ? (
-                    <Link
-                      href={child.href}
-                      className="font-['Pretendard:Regular',_sans-serif] text-[16px] text-[#222222] leading-[28px] hover:text-[#3c64d6] transition-colors block"
-                    >
-                      {child.label}
-                    </Link>
-                  ) : (
-                    <span className="font-['Pretendard:Regular',_sans-serif] text-[16px] text-[#222222] leading-[28px] block">
-                      {child.label}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     )
   }
 
   return (
-    <nav className="bg-white border-b border-[#dddddd] py-5">
+    <nav className="bg-white py-5">
       <div className="container mx-auto px-4 max-w-[1200px]">
-        <div className="flex items-center gap-[30px]">
+        <div className="flex items-center gap-[30px] relative">
           {/* 홈 버튼 */}
-          <Link href="/" className="flex items-center hover:text-[#3c64d6] transition-colors">
-            <Home className="w-6 h-6 text-[#222222]" />
+          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <img 
+              src="/images/home-icon.png" 
+              alt="홈" 
+              className="w-6 h-6" 
+            />
           </Link>
 
-          {/* 메뉴 아이템들 */}
-          {items.map((item, index) => (
-            <div key={index} className="flex items-center">
-              {renderMenuItem(item, index, 1)}
+          {/* 메인 메뉴 선택 버튼 */}
+          <div className="relative">
+            <div 
+              className="flex items-center justify-between w-[200px] cursor-pointer"
+              onClick={() => setShowMainMenu(!showMainMenu)}
+            >
+              <p className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
+                {selectedMainMenu || (navigations.length > 0 ? navigations[0].title : '메뉴 선택')}
+              </p>
+              <div className={`transform transition-transform duration-200 ${showMainMenu ? 'rotate-180' : ''}`}>
+                <img 
+                  src="/images/arrow-up-icon.png" 
+                  alt="화살표" 
+                  className="w-[18px] h-[18px]" 
+                />
+              </div>
             </div>
-          ))}
+
+            {/* 메인 메뉴 팝업 */}
+            {renderMainMenuPopup()}
+          </div>
+
+          {/* 서브 메뉴 (현재 선택된 메인 메뉴의 하위 메뉴들) */}
+          {getCurrentMainMenu()?.children && getCurrentMainMenu()!.children.length > 0 && (
+            <div className="flex items-center gap-[30px]">
+              {getCurrentMainMenu()!.children.map((child, index) => (
+                <div key={child.id} className="flex items-center">
+                  {child.url ? (
+                    <Link
+                      href={child.url}
+                      className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px] hover:text-[#3c64d6] transition-colors"
+                    >
+                      {child.title}
+                    </Link>
+                  ) : (
+                    <span className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
+                      {child.title}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </nav>

@@ -139,17 +139,7 @@ function ProductsContent() {
       </div>
 
       {/* 서브 네비게이션 */}
-      <SubNavigation 
-        items={[
-          { 
-            label: '상품예약',
-            href: '/products'
-          },
-          { 
-            label: selectedCategory?.name || '전체'
-          }
-        ]}
-      />
+      <SubNavigation items={[]} />
 
       {/* 메인 콘텐츠 */}
       <div className="flex flex-col items-center px-0 py-[100px] w-[1200px] mx-auto">
@@ -194,7 +184,7 @@ function ProductsContent() {
                         <h3 className="text-[#222222] text-[26px] font-bold font-['Pretendard:Bold'] leading-[36px]">
                           {product.name}
                         </h3>
-                        <div className="text-[#444444] text-[18px] font-['Pretendard:Regular'] leading-[30px]">
+                        <div className="text-[#444444] text-[18px] font-['Pretendard:Regular'] leading-[30px] whitespace-pre">
                           <p className="mb-0">{product.description || '상품 설명이 없습니다.'}</p>
                         </div>
                       </div>
