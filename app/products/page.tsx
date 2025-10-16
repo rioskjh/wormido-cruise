@@ -324,8 +324,8 @@ function ProductsContent() {
       {/* 푸터 */}
       <Footer />
 
-      {/* 퀵 메뉴 */}
-      <div className="fixed bottom-[422px] right-[30px] w-[110px] h-[493px] z-50">
+      {/* 퀵 메뉴 - PC에서만 표시 */}
+      <div className="hidden md:block fixed bottom-[422px] right-[30px] w-[110px] h-[493px] z-50">
         {/* 고려고속훼리 배너 */}
         <div className="absolute bottom-[48.08%] left-0 right-0 top-0 bg-white border border-[#dddddd] rounded-[4px]">
           <div className="absolute top-[16px] left-1/2 transform -translate-x-1/2 w-[90px] h-[54px]">

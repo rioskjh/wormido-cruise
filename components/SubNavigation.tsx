@@ -31,7 +31,9 @@ interface SubNavigationProps {
 export default function SubNavigation({ items }: SubNavigationProps) {
   const [navigations, setNavigations] = useState<NavigationItem[]>([])
   const [showMainMenu, setShowMainMenu] = useState(false)
+  const [showSubMenu, setShowSubMenu] = useState(false)
   const [selectedMainMenu, setSelectedMainMenu] = useState<string | null>(null)
+  const [selectedSubMenu, setSelectedSubMenu] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const pathname = usePathname()
 
@@ -52,23 +54,40 @@ export default function SubNavigation({ items }: SubNavigationProps) {
     }
   }, [navigations, pathname, selectedMainMenu])
 
+  // 현재 경로에 따라 2차 메뉴 자동 선택
+  useEffect(() => {
+    if (navigations.length > 0 && selectedMainMenu && !selectedSubMenu) {
+      const currentSubMenu = findCurrentSubMenuByPath(pathname, navigations)
+      if (currentSubMenu) {
+        setSelectedSubMenu(currentSubMenu.title)
+      } else {
+        // 경로에 맞는 2차 메뉴가 없으면 첫 번째 2차 메뉴 선택
+        const mainMenu = navigations.find(nav => nav.title === selectedMainMenu)
+        if (mainMenu && mainMenu.children && mainMenu.children.length > 0) {
+          setSelectedSubMenu(mainMenu.children[0].title)
+        }
+      }
+    }
+  }, [navigations, pathname, selectedMainMenu, selectedSubMenu])
+
   // 팝업 외부 클릭시 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element
-      if (showMainMenu && !target.closest('.relative')) {
+      if ((showMainMenu || showSubMenu) && !target.closest('.relative')) {
         setShowMainMenu(false)
+        setShowSubMenu(false)
       }
     }
 
-    if (showMainMenu) {
+    if (showMainMenu || showSubMenu) {
       document.addEventListener('click', handleClickOutside)
     }
 
     return () => {
       document.removeEventListener('click', handleClickOutside)
     }
-  }, [showMainMenu])
+  }, [showMainMenu, showSubMenu])
 
   // 현재 경로에 맞는 메뉴 찾기
   const findCurrentMenuByPath = (currentPath: string, navItems: NavigationItem[]): NavigationItem | null => {
@@ -159,6 +178,8 @@ export default function SubNavigation({ items }: SubNavigationProps) {
   const handleMainMenuClick = (menuTitle: string) => {
     setSelectedMainMenu(menuTitle)
     setShowMainMenu(!showMainMenu)
+    // 1차 메뉴 클릭시 2차 메뉴 닫기 (팝업이 열려있든 닫혀있든 항상 닫기)
+    setShowSubMenu(false)
   }
 
   const handleMainMenuSelect = (menu: NavigationItem) => {
@@ -175,9 +196,33 @@ export default function SubNavigation({ items }: SubNavigationProps) {
     }
   }
 
+  const handleSubMenuClick = (subMenuTitle: string) => {
+    setSelectedSubMenu(subMenuTitle)
+    setShowSubMenu(!showSubMenu)
+    // 2차 메뉴 클릭시 1차 메뉴 닫기
+    setShowMainMenu(false)
+  }
+
+  const handleSubMenuSelect = (subMenu: NavigationItem) => {
+    setSelectedSubMenu(subMenu.title)
+    setShowSubMenu(false)
+    
+    // 2차 메뉴 클릭시 해당 URL로 이동
+    if (subMenu.url) {
+      window.location.href = subMenu.url
+    }
+  }
+
   const getCurrentMainMenu = () => {
     if (!selectedMainMenu) return null
     return navigations.find(nav => nav.title === selectedMainMenu)
+  }
+
+  const getCurrentSubMenu = () => {
+    if (!selectedSubMenu) return null
+    const mainMenu = getCurrentMainMenu()
+    if (!mainMenu || !mainMenu.children) return null
+    return mainMenu.children.find(child => child.title === selectedSubMenu)
   }
 
   const renderMainMenuPopup = () => {
@@ -187,7 +232,7 @@ export default function SubNavigation({ items }: SubNavigationProps) {
     const currentIndex = currentMenu ? navigations.findIndex(nav => nav.id === currentMenu.id) : 0
 
     return (
-      <div className="absolute top-full left-0 mt-1 bg-white border border-[#dddddd] rounded-[4px] shadow-lg z-50 overflow-hidden">
+      <div className="absolute top-full left-0 mt-1 bg-white border border-[#dddddd] rounded-[4px] shadow-lg z-50 overflow-hidden w-[40%] md:w-auto">
         <div className="flex flex-col">
           {navigations.map((menu, index) => {
             const isSelected = index === currentIndex
@@ -199,7 +244,7 @@ export default function SubNavigation({ items }: SubNavigationProps) {
                 key={menu.id}
                 onClick={() => handleMainMenuSelect(menu)}
                 className={`
-                  box-border content-stretch flex gap-[10px] items-center px-[20px] py-[10px] relative shrink-0 w-[200px] cursor-pointer
+                  box-border content-stretch flex gap-[10px] items-center px-[20px] py-[10px] relative shrink-0 w-full md:w-[200px] cursor-pointer
                   ${isSelected 
                     ? 'bg-[#190a6b] text-white' 
                     : 'bg-white text-[#222222] hover:bg-gray-50'
@@ -215,8 +260,55 @@ export default function SubNavigation({ items }: SubNavigationProps) {
                     !isLast ? 'border-b-0' : ''
                   }`} />
                 )}
-                <p className="font-['Pretendard:Medium',_sans-serif] leading-[30px] not-italic relative shrink-0 text-[16px] text-nowrap whitespace-pre">
+                <p className="font-['Pretendard:Medium',_sans-serif] leading-[30px] md:leading-[30px] leading-[20px] not-italic relative shrink-0 text-[16px] md:text-[16px] text-[14px] text-nowrap whitespace-pre">
                   {menu.title}
+                </p>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
+  const renderSubMenuPopup = () => {
+    const mainMenu = getCurrentMainMenu()
+    if (!showSubMenu || !mainMenu || !mainMenu.children || mainMenu.children.length === 0) return null
+
+    const currentSubMenu = getCurrentSubMenu()
+    const currentIndex = currentSubMenu ? mainMenu.children.findIndex(child => child.id === currentSubMenu.id) : 0
+
+    return (
+      <div className="absolute top-full left-0 mt-1 bg-white border border-[#dddddd] rounded-[4px] shadow-lg z-50 overflow-hidden w-[40%] md:w-auto">
+        <div className="flex flex-col">
+          {mainMenu.children.map((subMenu, index) => {
+            const isSelected = index === currentIndex
+            const isFirst = index === 0
+            const isLast = index === mainMenu.children.length - 1
+            
+            return (
+              <div
+                key={subMenu.id}
+                onClick={() => handleSubMenuSelect(subMenu)}
+                className={`
+                  box-border content-stretch flex gap-[10px] items-center px-[20px] py-[10px] relative shrink-0 w-full md:w-[200px] cursor-pointer
+                  ${isSelected 
+                    ? 'bg-[#190a6b] text-white' 
+                    : 'bg-white text-[#222222] hover:bg-gray-50'
+                  }
+                  ${isFirst ? 'rounded-tl-[4px] rounded-tr-[4px]' : ''}
+                  ${isLast ? 'rounded-bl-[4px] rounded-br-[4px]' : ''}
+                `}
+              >
+                {!isSelected && (
+                  <div className={`absolute border border-[#dddddd] border-solid inset-0 pointer-events-none ${
+                    isFirst ? 'rounded-tl-[4px] rounded-tr-[4px]' : ''
+                  } ${isLast ? 'rounded-bl-[4px] rounded-br-[4px]' : ''} ${
+                    !isLast ? 'border-b-0' : ''
+                  }`} />
+                )}
+                <p className="font-['Pretendard:Medium',_sans-serif] leading-[30px] md:leading-[30px] leading-[20px] not-italic relative shrink-0 text-[16px] md:text-[16px] text-[14px] text-nowrap whitespace-pre">
+                  {subMenu.title}
                 </p>
               </div>
             )
@@ -233,9 +325,9 @@ export default function SubNavigation({ items }: SubNavigationProps) {
   return (
     <nav className="bg-white py-5">
       <div className="container mx-auto px-4 max-w-[1200px]">
-        <div className="flex items-center gap-[30px] relative">
-          {/* 홈 버튼 */}
-          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+        <div className="flex items-center gap-[30px] relative md:gap-[30px] gap-[10px]">
+          {/* 홈 버튼 - 모바일 20% */}
+          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity w-[20%] md:w-auto justify-center md:justify-start">
             <img 
               src="/images/home-icon.png" 
               alt="홈" 
@@ -246,33 +338,38 @@ export default function SubNavigation({ items }: SubNavigationProps) {
           {/* 상품예약 페이지이고 2차 메뉴가 있는 경우 브레드크럼 형태로 표시 */}
           {isProductsPage && currentSubMenu ? (
             <>
-              {/* 상품예약 메뉴 */}
-              <div className="flex items-center gap-[10px]">
-                <span className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
+              {/* 상품예약 메뉴 - 모바일 40% + 40% */}
+              <div className="flex items-center gap-[10px] w-[40%] md:w-auto">
+                <span className="font-['Pretendard:Medium',_sans-serif] text-[17px] md:text-[17px] text-[14px] text-[#222222] leading-[30px] md:leading-[30px] leading-[20px] truncate">
                   상품예약
                 </span>
-                <span className="text-[#666666]">{'>'}</span>
-                <span className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
+              </div>
+              <div className="flex items-center gap-[10px] w-[40%] md:w-auto">
+                <span className="text-[#666666] text-[14px] md:text-[17px]">{'>'}</span>
+                <span className="font-['Pretendard:Medium',_sans-serif] text-[17px] md:text-[17px] text-[14px] text-[#222222] leading-[30px] md:leading-[30px] leading-[20px] truncate">
                   {currentSubMenu.title}
                 </span>
               </div>
             </>
           ) : (
             <>
-              {/* 메인 메뉴 선택 버튼 */}
-              <div className="relative">
+              {/* 메인 메뉴 선택 버튼 - 모바일 40% */}
+              <div className="relative w-[40%] md:w-auto">
                 <div 
-                  className="flex items-center justify-between w-[200px] cursor-pointer"
-                  onClick={() => setShowMainMenu(!showMainMenu)}
+                  className="flex items-center justify-between w-full md:w-[200px] cursor-pointer"
+                  onClick={() => {
+                    setShowMainMenu(!showMainMenu)
+                    setShowSubMenu(false) // 1차 메뉴 클릭시 2차 메뉴 팝업 닫기
+                  }}
                 >
-                  <p className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
+                  <p className="font-['Pretendard:Medium',_sans-serif] text-[17px] md:text-[17px] text-[14px] text-[#222222] leading-[30px] md:leading-[30px] leading-[20px] truncate">
                     {selectedMainMenu || (navigations.length > 0 ? navigations[0].title : '메뉴 선택')}
                   </p>
                   <div className={`transform transition-transform duration-200 ${showMainMenu ? '' : 'rotate-180'}`}>
                     <img 
                       src="/images/arrow-up-icon.png" 
                       alt="화살표" 
-                      className="w-[18px] h-[18px]" 
+                      className="w-[18px] h-[18px] md:w-[18px] md:h-[18px] w-[14px] h-[14px]" 
                     />
                   </div>
                 </div>
@@ -281,25 +378,30 @@ export default function SubNavigation({ items }: SubNavigationProps) {
                 {renderMainMenuPopup()}
               </div>
 
-              {/* 서브 메뉴 (현재 선택된 메인 메뉴의 하위 메뉴들) */}
+              {/* 서브 메뉴 (현재 선택된 메인 메뉴의 하위 메뉴들) - 모바일 40% */}
               {getCurrentMainMenu()?.children && getCurrentMainMenu()!.children.length > 0 && (
-                <div className="flex items-center gap-[30px]">
-                  {getCurrentMainMenu()!.children.map((child, index) => (
-                    <div key={child.id} className="flex items-center">
-                      {child.url ? (
-                        <Link
-                          href={child.url}
-                          className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px] hover:text-[#3c64d6] transition-colors"
-                        >
-                          {child.title}
-                        </Link>
-                      ) : (
-                        <span className="font-['Pretendard:Medium',_sans-serif] text-[17px] text-[#222222] leading-[30px]">
-                          {child.title}
-                        </span>
-                      )}
+                <div className="flex items-center gap-[30px] w-[40%] md:w-auto">
+                  {/* 2차 메뉴 선택 버튼 */}
+                  <div className="relative w-full md:w-auto">
+                    <div 
+                      className="flex items-center justify-between w-full md:w-[200px] cursor-pointer"
+                      onClick={() => handleSubMenuClick(selectedSubMenu || getCurrentMainMenu()!.children[0].title)}
+                    >
+                      <p className="font-['Pretendard:Medium',_sans-serif] text-[17px] md:text-[17px] text-[14px] text-[#222222] leading-[30px] md:leading-[30px] leading-[20px] truncate">
+                        {selectedSubMenu || getCurrentMainMenu()!.children[0].title}
+                      </p>
+                      <div className={`transform transition-transform duration-200 ${showSubMenu ? '' : 'rotate-180'}`}>
+                        <img 
+                          src="/images/arrow-up-icon.png" 
+                          alt="화살표" 
+                          className="w-[18px] h-[18px] md:w-[18px] md:h-[18px] w-[14px] h-[14px]" 
+                        />
+                      </div>
                     </div>
-                  ))}
+
+                    {/* 2차 메뉴 팝업 */}
+                    {renderSubMenuPopup()}
+                  </div>
                 </div>
               )}
             </>
