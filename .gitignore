@@ -87,3 +87,7 @@ jspm_packages/
 # TernJS port file
 .tern-port
 .vercel
+
+# Build files
+*.zip
+wormi-build-*.zip
