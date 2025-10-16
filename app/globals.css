@@ -125,4 +125,13 @@
   .bg-design-blue {
     background-color: hsl(var(--design-blue));
   }
+  
+  /* 텍스트 줄 수 제한 */
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
