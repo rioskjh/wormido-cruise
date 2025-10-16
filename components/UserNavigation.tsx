@@ -179,7 +179,7 @@ export default function UserNavigation() {
                     className="content-stretch flex gap-[10px] items-center relative shrink-0"
                   >
                     <div className="h-[20px] relative shrink-0 w-[18px]" data-name="Group">
-                      <LoginIcon className="size-full" color="#222222" strokeWidth={2} />
+                      <img alt="로그인" className="size-full object-contain" src="/images/login-icon.png" />
                     </div>
                     <p className="font-['Pretendard:SemiBold',_sans-serif] leading-[20px] not-italic relative shrink-0 text-[#222222] text-[15px] text-center text-nowrap whitespace-pre">정보수정</p>
                   </Link>
@@ -188,7 +188,7 @@ export default function UserNavigation() {
                     className="content-stretch flex gap-[10px] items-center relative shrink-0"
                   >
                     <div className="relative shrink-0 size-[20px]" data-name="Group">
-                      <CalendarIcon className="size-full" color="#222222" strokeWidth={2} />
+                      <img alt="예약조회" className="size-full object-contain" src="/images/calendar-icon.png" />
                     </div>
                     <p className="font-['Pretendard:SemiBold',_sans-serif] leading-[20px] not-italic relative shrink-0 text-[#222222] text-[15px] text-center text-nowrap whitespace-pre">예약조회</p>
                   </Link>
@@ -201,7 +201,7 @@ export default function UserNavigation() {
                     className="content-stretch flex gap-[10px] items-center relative shrink-0"
                   >
                     <div className="h-[20px] relative shrink-0 w-[18px]" data-name="Group">
-                      <LoginIcon className="size-full" color="#222222" strokeWidth={2} />
+                      <img alt="로그인" className="size-full object-contain" src="/images/login-icon.png" />
                     </div>
                     <p className="font-['Pretendard:SemiBold',_sans-serif] leading-[20px] not-italic relative shrink-0 text-[#222222] text-[15px] text-center text-nowrap whitespace-pre">로그인</p>
                   </Link>
@@ -210,7 +210,7 @@ export default function UserNavigation() {
                     className="content-stretch flex gap-[10px] items-center relative shrink-0"
                   >
                     <div className="relative shrink-0 size-[20px]" data-name="Group">
-                      <CalendarIcon className="size-full" color="#222222" strokeWidth={2} />
+                      <img alt="예약조회" className="size-full object-contain" src="/images/calendar-icon.png" />
                     </div>
                     <p className="font-['Pretendard:SemiBold',_sans-serif] leading-[20px] not-italic relative shrink-0 text-[#222222] text-[15px] text-center text-nowrap whitespace-pre">예약조회</p>
                   </Link>

@@ -187,7 +187,7 @@ export default function Home() {
                   <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.2)]" />
                   {/* 아이콘 */}
                   <div className="relative shrink-0 size-[40px]">
-                    <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/ship-icon.png" />
+                    <img alt="승선권 예매하기" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/ticket-icon.png" />
                   </div>
                 
                   {/* 텍스트 */}
@@ -210,7 +210,7 @@ export default function Home() {
                   <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.2)]" />
                   {/* 아이콘 */}
                   <div className="relative shrink-0 size-[40px]">
-                    <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/cart-icon.png" />
+                    <img alt="예약확인 및 취소" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src="/images/receipt-icon.png" />
                   </div>
                   
                   {/* 텍스트 */}

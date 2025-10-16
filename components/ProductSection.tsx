@@ -62,7 +62,7 @@ export default function ProductSection({ products, loading, error }: ProductSect
       ) : (
         <>
           {/* 모바일 버전 - 가로 스크롤 */}
-          <div className="md:hidden w-full">
+          <div className="md:hidden w-full overflow-hidden">
             <div className="flex gap-[10px] overflow-x-auto pb-2 scrollbar-hide" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
               {products.map((product, index) => {
                 // 업로드된 이미지가 있으면 사용, 없으면 기본 이미지 사용
