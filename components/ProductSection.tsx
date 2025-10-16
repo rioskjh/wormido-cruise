@@ -61,8 +61,9 @@ export default function ProductSection({ products, loading, error }: ProductSect
         </div>
       ) : (
         <>
-          {/* 모바일 버전 - 세로 배치 */}
-          <div className="md:hidden content-stretch flex flex-col gap-[10px] items-start relative shrink-0 w-full">
+          {/* 모바일 버전 - 가로 스크롤 */}
+          <div className="md:hidden w-full">
+            <div className="flex gap-[10px] overflow-x-auto pb-2 scrollbar-hide" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
               {products.map((product, index) => {
                 // 업로드된 이미지가 있으면 사용, 없으면 기본 이미지 사용
                 const hasUploadedImage = product.images && product.images.length > 0
@@ -74,10 +75,10 @@ export default function ProductSection({ products, loading, error }: ProductSect
                   <Link 
                     key={product.id} 
                     href={`/products/${product.id}`}
-                    className="content-stretch flex flex-col items-center relative shrink-0 w-[330px] hover:transform hover:scale-105 transition-all duration-200 cursor-pointer border border-[#dddddd] rounded-[10px] overflow-hidden"
+                    className="flex flex-col items-center relative shrink-0 w-[280px] hover:transform hover:scale-105 transition-all duration-200 cursor-pointer border border-[#dddddd] rounded-[10px] overflow-hidden"
                   >
                     {/* 상품 이미지 영역 */}
-                    <div className="h-[347px] relative rounded-tl-[10px] rounded-tr-[10px] shrink-0 w-[330px]">
+                    <div className="h-[280px] relative rounded-tl-[10px] rounded-tr-[10px] shrink-0 w-[280px]">
                       <img
                         src={imageSrc}
                         alt={product.name}
@@ -86,10 +87,10 @@ export default function ProductSection({ products, loading, error }: ProductSect
                     </div>
                   
                     {/* 상품 정보 영역 */}
-                    <div className="h-[211px] relative rounded-bl-[10px] rounded-br-[10px] shrink-0 w-full">
+                    <div className="h-[180px] relative rounded-bl-[10px] rounded-br-[10px] shrink-0 w-[280px]">
                       <div aria-hidden="true" className="absolute border border-[#dddddd] border-solid inset-0 pointer-events-none rounded-bl-[10px] rounded-br-[10px]" />
                       <div className="flex flex-col items-center size-full">
-                        <div className="box-border content-stretch flex flex-col h-[211px] items-center justify-between px-[20px] py-[16px] relative w-full">
+                        <div className="box-border content-stretch flex flex-col h-[180px] items-center justify-between px-[20px] py-[16px] relative w-full">
                           {/* 상품 제목과 설명 */}
                           <div className="content-stretch flex flex-col gap-[4px] items-center leading-[0] not-italic relative shrink-0 text-center text-nowrap">
                             <div className="font-['Pretendard:Bold',_sans-serif] relative shrink-0 text-[#222222] text-[18px]">
@@ -138,6 +139,7 @@ export default function ProductSection({ products, loading, error }: ProductSect
                   </Link>
                 )
               })}
+            </div>
           </div>
 
           {/* 데스크톱 버전 */}
