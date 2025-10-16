@@ -120,58 +120,34 @@ export async function POST(
       const randomCode = Math.random().toString(36).substring(2, 8)
       const fileName = `${timestamp}_${randomCode}_${file.name}`
       
-      // 로컬 저장 경로 설정 (상품 이미지는 /images/product/ 폴더에 저장)
-      // 프로덕션 환경에서는 .next/standalone/public 경로 사용
-      const isProduction = process.env.NODE_ENV === 'production'
-      const publicPath = isProduction ? '.next/standalone/public' : 'public'
-      const uploadDir = path.join(process.cwd(), publicPath, 'images', 'product')
+      // 외부 업로드 디렉토리에 직접 저장 (빌드와 독립적)
+      const uploadDir = '/home/wolmido/uploads/images/product'
       const filePath = path.join(uploadDir, fileName)
       
       // 디렉토리가 없으면 생성
       await mkdir(uploadDir, { recursive: true })
       
-            // 파일을 로컬에 저장
-            console.log('파일 저장 시작:', fileName)
-            const bytes = await file.arrayBuffer()
-            const buffer = Buffer.from(bytes)
-            await writeFile(filePath, buffer)
-            console.log('파일 저장 완료:', filePath)
-            
-            // public 경로에도 복사 (웹 접근용)
-            console.log('public 경로 저장 시작...')
-            const publicUploadDir = '/home/wolmido/public_html/public/images/product'
-            const publicFilePath = path.join(publicUploadDir, fileName)
-            console.log('public 경로:', publicUploadDir)
-            console.log('public 파일 경로:', publicFilePath)
-            
-            try {
-              await mkdir(publicUploadDir, { recursive: true })
-              console.log('public 디렉토리 생성/확인 완료')
-              
-              await writeFile(publicFilePath, buffer)
-              console.log('public 파일 쓰기 완료')
-              
-              // 소유자를 wolmido로 변경 (UID: 1000, GID: 1000)
-              try {
-                await chown(publicFilePath, 1000, 1000)
-                console.log('public 파일 소유자 변경 완료')
-              } catch (chownError) {
-                console.warn('소유자 변경 실패 (무시하고 계속 진행):', chownError)
-              }
-              
-              console.log('public 경로에도 저장 완료:', publicFilePath)
-            } catch (publicError) {
-              console.error('public 경로 저장 중 에러:', publicError)
-              // public 경로 저장 실패해도 데이터베이스 저장은 계속 진행
-              console.log('public 경로 저장 실패했지만 데이터베이스 저장은 계속 진행')
-            }
+      // 파일을 외부 디렉토리에 저장
+      console.log('파일 저장 시작:', fileName)
+      const bytes = await file.arrayBuffer()
+      const buffer = Buffer.from(bytes)
+      await writeFile(filePath, buffer)
+      console.log('파일 저장 완료:', filePath)
+      
+      // 소유자를 www-data로 변경 (웹서버 권한)
+      try {
+        await chown(filePath, 33, 33) // www-data UID:GID
+        console.log('파일 소유자 변경 완료')
+      } catch (chownError) {
+        console.warn('소유자 변경 실패 (무시하고 계속 진행):', chownError)
+      }
 
       // DB에 이미지 정보 저장
       const image = await prisma.productImage.create({
         data: {
           productId,
           fileName: file.name,
-          filePath: `/images/product/${fileName}`, // 로컬 경로 저장
+          filePath: `/images/uploaded/product/${fileName}`, // 업로드된 파일 경로 저장
           fileSize: file.size,
           sortOrder: currentImageCount + i,
           isActive: true

@@ -181,8 +181,8 @@ export default function Home() {
               <div className="box-border content-stretch flex gap-2.5 sm:gap-3 items-center px-0 py-0 relative w-full">
             {/* 승선권 예매하기 카드 */}
             <Link 
-              href="/reservation" 
-                  className="bg-white box-border content-stretch flex flex-col gap-2.5 items-start px-4 py-5 relative rounded-[10px] shrink-0 flex-1 min-w-0"
+              href="/products" 
+              className="bg-white box-border content-stretch flex flex-col gap-2.5 items-start px-4 py-5 relative rounded-[10px] shrink-0 flex-1 min-w-0"
             >
                   <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.2)]" />
                   {/* 아이콘 */}
@@ -232,7 +232,7 @@ export default function Home() {
           <div className="hidden md:flex box-border content-stretch justify-between items-center px-0 py-[50px] relative w-full max-w-[1200px] mx-auto">
             {/* 승선권 예매하기 카드 */}
             <Link 
-              href="/reservation" 
+              href="/products" 
               className="bg-white box-border content-stretch flex items-center justify-between px-[50px] py-[40px] relative rounded-[10px] shrink-0 w-[585px]"
             >
               <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.4)]" />

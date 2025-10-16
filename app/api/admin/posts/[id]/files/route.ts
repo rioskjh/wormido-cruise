@@ -75,29 +75,21 @@ export async function POST(
     const randomCode = Math.random().toString(36).substring(2, 8)
     const fileName = `${timestamp}_${randomCode}_${file.name}`
     
-    // 로컬 저장 경로 설정 (게시판 첨부파일은 /images/board/ 폴더에 저장)
-    // 프로덕션 환경에서는 .next/standalone/public 경로 사용
-    const isProduction = process.env.NODE_ENV === 'production'
-    const publicPath = isProduction ? '.next/standalone/public' : 'public'
-    const uploadDir = path.join(process.cwd(), publicPath, 'images', 'board')
+    // 외부 업로드 디렉토리에 직접 저장 (빌드와 독립적)
+    const uploadDir = '/home/wolmido/uploads/contents/board'
     const filePath = path.join(uploadDir, fileName)
     
     // 디렉토리가 없으면 생성
     await mkdir(uploadDir, { recursive: true })
     
-    // 파일을 로컬에 저장
+    // 파일을 외부 디렉토리에 저장
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
     await writeFile(filePath, buffer)
     
-    // public 경로에도 복사 (웹 접근용)
-    const publicUploadDir = '/home/wolmido/public_html/public/images/board'
-    const publicFilePath = path.join(publicUploadDir, fileName)
-    await mkdir(publicUploadDir, { recursive: true })
-    await writeFile(publicFilePath, buffer)
-    // 소유자를 wolmido로 변경 (UID: 1000, GID: 1000)
+    // 소유자를 www-data로 변경 (웹서버 권한)
     try {
-      await chown(publicFilePath, 1000, 1000)
+      await chown(filePath, 33, 33) // www-data UID:GID
       console.log('게시글 첨부파일 소유자 변경 완료')
     } catch (chownError) {
       console.warn('게시글 첨부파일 소유자 변경 실패 (무시하고 계속 진행):', chownError)
@@ -107,7 +99,7 @@ export async function POST(
     const postFile = await prisma.postFile.create({
       data: {
         postId: postId,
-        storagePath: `/images/board/${fileName}`, // 로컬 경로 저장
+        storagePath: `/uploads/contents/board/${fileName}`, // 업로드된 파일 경로 저장
         filename: file.name,
         size: file.size
       }
