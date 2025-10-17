@@ -1,0 +1,114 @@
+/* 컨텐츠 페이지 스타일 */
+.content-styles {
+  line-height: 1.8;
+  color: #333;
+}
+
+.content-styles h1,
+.content-styles h2,
+.content-styles h3,
+.content-styles h4,
+.content-styles h5,
+.content-styles h6 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: #222;
+}
+
+.content-styles h1 {
+  font-size: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.content-styles h2 {
+  font-size: 1.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.25rem;
+}
+
+.content-styles h3 {
+  font-size: 1.5rem;
+}
+
+.content-styles h4 {
+  font-size: 1.25rem;
+}
+
+.content-styles p {
+  margin-bottom: 1rem;
+}
+
+.content-styles ul,
+.content-styles ol {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+}
+
+.content-styles li {
+  margin-bottom: 0.5rem;
+}
+
+.content-styles blockquote {
+  border-left: 4px solid #3b82f6;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.content-styles img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.content-styles table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.content-styles th,
+.content-styles td {
+  border: 1px solid #d1d5db;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.content-styles th {
+  background-color: #f9fafb;
+  font-weight: bold;
+}
+
+.content-styles code {
+  background-color: #f3f4f6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+}
+
+.content-styles pre {
+  background-color: #f3f4f6;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.content-styles pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.content-styles a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.content-styles a:hover {
+  color: #1d4ed8;
+}

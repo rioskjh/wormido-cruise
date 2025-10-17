@@ -5,8 +5,6 @@ import { useParams, useRouter } from 'next/navigation'
 // import Image from 'next/image' // 이미지 최적화 비활성화
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
-import PageBanner from '@/components/PageBanner'
-import Breadcrumb from '@/components/Breadcrumb'
 import SubNavigation from '@/components/SubNavigation'
 import { useToast } from '@/contexts/ToastContext'
 
@@ -309,11 +307,20 @@ export default function ProductDetailPage() {
     <div className="min-h-screen bg-white">
       <UserNavigation />
       
-      {/* 페이지 배너 */}
-      <PageBanner 
-        title={product.name}
-        subtitle={product.description}
-      />
+      {/* 비주얼 섹션 */}
+      <div className="relative w-full h-[370px] flex items-center justify-center overflow-hidden rounded-[10px] mx-auto max-w-[1820px]">
+        <div className="absolute inset-0">
+          <img 
+            alt="상품예약 배너" 
+            className="w-full h-full object-cover rounded-[10px]" 
+            src="/images/design-assets/aeefcb7185f8ec781f75ece941d96ec57ad9dad5.png" 
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40 rounded-[10px]" />
+        </div>
+        <h1 className="relative z-10 text-white text-[50px] font-bold font-['Pretendard:Bold'] leading-[60px]">
+          상품예약
+        </h1>
+      </div>
       
       {/* 서브 네비게이션 */}
       <SubNavigation 

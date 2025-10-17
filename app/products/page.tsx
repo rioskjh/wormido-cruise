@@ -210,9 +210,9 @@ function ProductsContent() {
                         </div>
 
                         {/* 예약 버튼 */}
-                        <div className="bg-white border border-[#222222] rounded-[4px] w-fit">
+                        <div className="bg-white border border-[#222222] rounded-[4px] w-fit group-hover:bg-[#222222] transition-colors duration-200">
                           <div className="flex gap-[8px] items-center justify-center px-[12px] py-[6px]">
-                            <p className="text-[#222222] text-[12px] font-semibold font-['Pretendard:SemiBold'] leading-[18px] text-center">
+                            <p className="text-[#222222] group-hover:text-white text-[12px] font-semibold font-['Pretendard:SemiBold'] leading-[18px] text-center transition-colors duration-200">
                               예약하기
                             </p>
                             <div className="flex h-[16px] items-center justify-center w-[16px]">
@@ -285,9 +285,9 @@ function ProductsContent() {
                       </div>
 
                       {/* 예약 버튼 */}
-                      <div className="bg-white border border-[#222222] rounded-[4px] w-full">
+                      <div className="bg-white border border-[#222222] rounded-[4px] w-full group-hover:bg-[#222222] transition-colors duration-200">
                         <div className="flex gap-[10px] items-center justify-center px-0 py-[10px]">
-                          <p className="text-[#222222] text-[17px] font-semibold font-['Pretendard:SemiBold'] leading-[30px] text-center">
+                          <p className="text-[#222222] group-hover:text-white text-[17px] font-semibold font-['Pretendard:SemiBold'] leading-[30px] text-center transition-colors duration-200">
                             예약하기
                           </p>
                           <div className="flex h-[20px] items-center justify-center w-[20px]">

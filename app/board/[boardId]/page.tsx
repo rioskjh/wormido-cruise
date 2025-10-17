@@ -1,11 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import UserNavigation from '@/components/UserNavigation'
 import SubNavigation from '@/components/SubNavigation'
-import PageBanner from '@/components/PageBanner'
 import Footer from '@/components/Footer'
 
 interface Post {
@@ -43,6 +42,7 @@ interface BoardData {
 export default function BoardPage() {
   const params = useParams()
   const router = useRouter()
+  const pathname = usePathname()
   const boardId = params.boardId as string
   
   const [boardData, setBoardData] = useState<BoardData | null>(null)
@@ -50,9 +50,38 @@ export default function BoardPage() {
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const [mainMenuTitle, setMainMenuTitle] = useState('게시판')
 
   // API에서 받은 게시판 정보 사용
   const currentBoard = boardData?.board
+
+  // 1차 메뉴명 가져오기
+  useEffect(() => {
+    const fetchMainMenuTitle = async () => {
+      try {
+        const response = await fetch('/api/navigations')
+        const data = await response.json()
+        
+        if (data.ok && data.data) {
+          // 현재 경로와 매칭되는 1차 메뉴 찾기
+          for (const nav of data.data) {
+            if (nav.children && nav.children.length > 0) {
+              for (const child of nav.children) {
+                if (child.url && pathname.startsWith(child.url)) {
+                  setMainMenuTitle(nav.title)
+                  return
+                }
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error('네비게이션 정보 조회 오류:', error)
+      }
+    }
+
+    fetchMainMenuTitle()
+  }, [pathname])
 
   useEffect(() => {
     fetchPosts()
@@ -131,11 +160,20 @@ export default function BoardPage() {
     <div className="min-h-screen bg-white">
       <UserNavigation />
       
-      {/* 페이지 배너 */}
-      <PageBanner 
-        title={currentBoard?.title || '게시판'}
-        subtitle={currentBoard?.description || ''}
-      />
+      {/* 비주얼 섹션 */}
+      <div className="relative w-full h-[370px] flex items-center justify-center overflow-hidden rounded-[10px] mx-auto max-w-[1820px]">
+        <div className="absolute inset-0">
+          <img 
+            alt="게시판 배너" 
+            className="w-full h-full object-cover rounded-[10px]" 
+            src="/images/design-assets/aeefcb7185f8ec781f75ece941d96ec57ad9dad5.png" 
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40 rounded-[10px]" />
+        </div>
+        <h1 className="relative z-10 text-white text-[50px] font-bold font-['Pretendard:Bold'] leading-[60px]">
+          {mainMenuTitle}
+        </h1>
+      </div>
       
       {/* 서브 네비게이션 */}
       <SubNavigation />

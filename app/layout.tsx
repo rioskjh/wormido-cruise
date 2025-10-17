@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import { ToastProvider } from '@/contexts/ToastContext'
 import { getSiteMetadata } from '@/lib/metadata'
@@ -37,6 +38,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={inter.className}>
+        <Script 
+          src="https://cdn.tailwindcss.com" 
+          strategy="beforeInteractive"
+        />
         <ToastProvider>
           {children}
           <PopupManager />
