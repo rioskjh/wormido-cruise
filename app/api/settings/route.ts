@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getNoCacheHeaders } from '@/lib/cache-headers'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -18,7 +19,10 @@ export async function GET() {
 
     return NextResponse.json({
       ok: true,
-      data: { settings }
+      data: { settings },
+      timestamp: new Date().toISOString()
+    }, {
+      headers: getNoCacheHeaders()
     })
 
   } catch (error) {

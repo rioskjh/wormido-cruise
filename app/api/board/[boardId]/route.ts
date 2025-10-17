@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getNoCacheHeaders } from '@/lib/cache-headers'
+
+// 동적 렌더링 강제
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 // GET: 게시판별 게시글 목록 조회
 export async function GET(
@@ -92,7 +97,10 @@ export async function GET(
           total,
           totalPages: Math.ceil(total / limit)
         }
-      }
+      },
+      timestamp: new Date().toISOString()
+    }, {
+      headers: getNoCacheHeaders()
     })
   } catch (error) {
     console.error('게시판 조회 오류:', error)

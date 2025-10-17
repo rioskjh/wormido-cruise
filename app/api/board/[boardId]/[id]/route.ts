@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
+import { getNoCacheHeaders } from '@/lib/cache-headers'
 
 // 동적 렌더링 강제
 export const dynamic = 'force-dynamic'
@@ -90,7 +91,10 @@ export async function GET(
       data: {
         post,
         board
-      }
+      },
+      timestamp: new Date().toISOString()
+    }, {
+      headers: getNoCacheHeaders()
     })
   } catch (error) {
     console.error('게시글 조회 오류:', error)

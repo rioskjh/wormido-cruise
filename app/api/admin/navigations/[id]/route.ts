@@ -58,7 +58,16 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     return NextResponse.json({
       ok: true,
-      data: navigation
+      data: navigation,
+      timestamp: new Date().toISOString()
+    }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Last-Modified': new Date().toUTCString(),
+        'ETag': `"${Date.now()}"`
+      }
     })
   } catch (error) {
     console.error('네비게이션 조회 오류:', error)
@@ -129,8 +138,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         1: '/board/notice',    // 공지사항
         2: '/board/event',     // 이벤트
         3: '/board/review',    // 리뷰
-        4: '/board/faq',       // FAQ
-        5: '/board/qna'        // Q&A
+        4: '/board/event',     // 이벤트 (수정)
+        5: '/board/qna',       // Q&A
+        6: '/board/faq',       // FAQ (수정)
+        7: '/board/event-review' // 이벤트 리뷰
       }
       
       const boardUrl = boardUrlMap[validatedData.targetId]
@@ -161,7 +172,16 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     return NextResponse.json({
       ok: true,
-      data: updatedNavigation
+      data: updatedNavigation,
+      timestamp: new Date().toISOString()
+    }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Last-Modified': new Date().toUTCString(),
+        'ETag': `"${Date.now()}"`
+      }
     })
   } catch (error) {
     console.error('네비게이션 수정 오류:', error)
@@ -228,7 +248,16 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     return NextResponse.json({
       ok: true,
-      message: '네비게이션이 삭제되었습니다.'
+      message: '네비게이션이 삭제되었습니다.',
+      timestamp: new Date().toISOString()
+    }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Last-Modified': new Date().toUTCString(),
+        'ETag': `"${Date.now()}"`
+      }
     })
   } catch (error) {
     console.error('네비게이션 삭제 오류:', error)

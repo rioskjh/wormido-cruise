@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getNoCacheHeaders } from '@/lib/cache-headers'
+
+// 동적 렌더링 강제
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 // 공개 컨텐츠 조회 (사용자용)
 export async function GET(
@@ -36,7 +41,10 @@ export async function GET(
 
     return NextResponse.json({
       ok: true,
-      data: content
+      data: content,
+      timestamp: new Date().toISOString()
+    }, {
+      headers: getNoCacheHeaders()
     })
   } catch (error) {
     console.error('Public content fetch error:', error)

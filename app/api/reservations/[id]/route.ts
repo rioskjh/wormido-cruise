@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
+import { getNoCacheHeaders } from '@/lib/cache-headers'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 // 특정 예약 조회 (GET)
 export async function GET(
@@ -73,6 +76,9 @@ export async function GET(
     return NextResponse.json({
       ok: true,
       data: reservation,
+      timestamp: new Date().toISOString()
+    }, {
+      headers: getNoCacheHeaders()
     })
 
   } catch (error) {
@@ -172,6 +178,9 @@ export async function PUT(
       ok: true,
       data: updatedReservation,
       message: '예약이 성공적으로 수정되었습니다.',
+      timestamp: new Date().toISOString()
+    }, {
+      headers: getNoCacheHeaders()
     })
 
   } catch (error) {
@@ -246,6 +255,9 @@ export async function DELETE(
       ok: true,
       data: cancelledReservation,
       message: '예약이 성공적으로 취소되었습니다.',
+      timestamp: new Date().toISOString()
+    }, {
+      headers: getNoCacheHeaders()
     })
 
   } catch (error) {

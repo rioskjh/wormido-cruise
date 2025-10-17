@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getNoCacheHeaders } from '@/lib/cache-headers'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -77,6 +78,9 @@ export async function GET(request: NextRequest) {
           totalPages: Math.ceil(total / limit),
         },
       },
+      timestamp: new Date().toISOString()
+    }, {
+      headers: getNoCacheHeaders()
     })
 
   } catch (error) {

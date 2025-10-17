@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+// 동적 렌더링 강제
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 // GET: 공개 네비게이션 조회 (계층 구조)
 export async function GET(request: NextRequest) {
   try {
@@ -71,10 +75,11 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString()
     }, {
       headers: {
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
         'Pragma': 'no-cache',
         'Expires': '0',
-        'Last-Modified': new Date().toUTCString()
+        'Last-Modified': new Date().toUTCString(),
+        'ETag': `"${Date.now()}"`
       }
     })
   } catch (error) {

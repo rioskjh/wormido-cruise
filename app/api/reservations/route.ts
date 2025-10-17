@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
+import { getNoCacheHeaders } from '@/lib/cache-headers'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -155,7 +156,10 @@ export async function POST(request: NextRequest) {
       ok: true,
       data: {
         reservation: result
-      }
+      },
+      timestamp: new Date().toISOString()
+    }, {
+      headers: getNoCacheHeaders()
     })
 
   } catch (error) {
@@ -214,7 +218,10 @@ export async function GET(request: NextRequest) {
       ok: true,
       data: {
         reservations
-      }
+      },
+      timestamp: new Date().toISOString()
+    }, {
+      headers: getNoCacheHeaders()
     })
 
   } catch (error) {

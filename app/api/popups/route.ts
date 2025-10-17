@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getNoCacheHeaders } from '@/lib/cache-headers'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 // 활성 팝업 조회
 export async function GET(request: NextRequest) {
@@ -27,7 +30,10 @@ export async function GET(request: NextRequest) {
     // 모든 활성 팝업 반환 (클라이언트에서 필터링)
     return NextResponse.json({
       ok: true,
-      data: popups
+      data: popups,
+      timestamp: new Date().toISOString()
+    }, {
+      headers: getNoCacheHeaders()
     })
 
   } catch (error) {
