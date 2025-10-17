@@ -26,7 +26,7 @@ interface Navigation {
   id: number
   title: string
   url: string | null
-  type: 'CUSTOM' | 'PRODUCTS' | 'BOARD' | 'CONTENT' | 'EXTERNAL'
+  type: 'CUSTOM' | 'PRODUCTS' | 'BOARD' | 'CONTENT' | 'EXTERNAL' | 'SCHEDULE'
   targetId: number | null
   parentId: number | null
   sortOrder: number
@@ -48,7 +48,7 @@ export default function AdminNavigationCreatePage() {
   const [formData, setFormData] = useState({
     title: '',
     url: '',
-    type: 'CUSTOM' as 'CUSTOM' | 'PRODUCTS' | 'BOARD' | 'CONTENT' | 'EXTERNAL',
+    type: 'CUSTOM' as 'CUSTOM' | 'PRODUCTS' | 'BOARD' | 'CONTENT' | 'EXTERNAL' | 'SCHEDULE',
     targetId: '',
     parentId: '',
     sortOrder: 0,
@@ -253,6 +253,7 @@ export default function AdminNavigationCreatePage() {
                   <option value="BOARD">게시판</option>
                   <option value="CONTENT">컨텐츠 페이지</option>
                   <option value="EXTERNAL">외부 링크</option>
+                  <option value="SCHEDULE">일정관리</option>
                 </select>
               </div>
 

@@ -8,7 +8,7 @@ interface NavigationItem {
   id: number
   title: string
   url: string | null
-  type: 'CUSTOM' | 'PRODUCTS' | 'BOARD' | 'CONTENT' | 'EXTERNAL'
+  type: 'CUSTOM' | 'PRODUCTS' | 'BOARD' | 'CONTENT' | 'EXTERNAL' | 'SCHEDULE'
   targetId: number | null
   parentId: number | null
   sortOrder: number

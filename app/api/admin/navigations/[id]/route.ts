@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic'
 const navigationUpdateSchema = z.object({
   title: z.string().min(1, '제목은 필수입니다').optional(),
   url: z.string().optional(),
-  type: z.enum(['CUSTOM', 'PRODUCTS', 'BOARD', 'CONTENT', 'EXTERNAL']).optional(),
+  type: z.enum(['CUSTOM', 'PRODUCTS', 'BOARD', 'CONTENT', 'EXTERNAL', 'SCHEDULE']).optional(),
   targetId: z.number().optional(),
   parentId: z.number().optional(),
   sortOrder: z.number().optional(),
@@ -155,6 +155,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       if (content) {
         finalUrl = `/contents/${content.slug}`
       }
+    } else if (validatedData.type === 'SCHEDULE') {
+      finalUrl = '/schedule'
     }
 
     const updatedNavigation = await prisma.navigation.update({

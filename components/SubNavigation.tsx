@@ -15,7 +15,7 @@ interface NavigationItem {
   id: number
   title: string
   url: string | null
-  type: 'CUSTOM' | 'PRODUCTS' | 'BOARD' | 'CONTENT' | 'EXTERNAL'
+  type: 'CUSTOM' | 'PRODUCTS' | 'BOARD' | 'CONTENT' | 'EXTERNAL' | 'SCHEDULE'
   targetId: number | null
   parentId: number | null
   sortOrder: number
@@ -152,6 +152,12 @@ function SubNavigationContent({ items = [] }: SubNavigationProps) {
         return nav
       }
       
+      // 일정관리 관련 페이지인 경우 일정관리 메뉴 찾기
+      if (currentPath.startsWith('/schedule') && nav.type === 'SCHEDULE') {
+        console.log('일정관리 메뉴 일치:', nav.title)
+        return nav
+      }
+      
       // 콘텐츠 관련 페이지인 경우 콘텐츠 메뉴 찾기 (쿼리 파라미터가 없는 경우만)
       if (currentPath.startsWith('/contents') && nav.type === 'CONTENT' && !currentPath.includes('?')) {
         console.log('콘텐츠 메뉴 일치 (쿼리 없음):', nav.title)
@@ -232,6 +238,10 @@ function SubNavigationContent({ items = [] }: SubNavigationProps) {
             if (urlParams.get('slug') === currentParams.get('slug')) {
               return child
             }
+          }
+          // 일정관리 URL 매치 (/schedule)
+          if (child.url && child.url.startsWith('/schedule') && currentPath.startsWith('/schedule')) {
+            return child
           }
         }
       }
@@ -433,6 +443,7 @@ function SubNavigationContent({ items = [] }: SubNavigationProps) {
   const isProductsPage = fullPath.startsWith('/products')
   const isContentPage = fullPath.startsWith('/contents')
   const isBoardPage = fullPath.startsWith('/board')
+  const isSchedulePage = fullPath.startsWith('/schedule')
   
   // 컨텐츠 페이지가 1차 메뉴 자체인지 2차 메뉴인지 확인
   const isContentPageAsMainMenu = isContentPage && !currentSubMenu
@@ -441,6 +452,10 @@ function SubNavigationContent({ items = [] }: SubNavigationProps) {
   // 게시판 페이지가 1차 메뉴 자체인지 2차 메뉴인지 확인
   const isBoardPageAsMainMenu = isBoardPage && !currentSubMenu
   const isBoardPageAsSubMenu = isBoardPage && currentSubMenu
+  
+  // 일정관리 페이지가 1차 메뉴 자체인지 2차 메뉴인지 확인
+  const isSchedulePageAsMainMenu = isSchedulePage && !currentSubMenu
+  const isSchedulePageAsSubMenu = isSchedulePage && currentSubMenu
 
   return (
     <nav className="bg-white py-5">
@@ -456,7 +471,7 @@ function SubNavigationContent({ items = [] }: SubNavigationProps) {
           </Link>
 
           {/* 상품예약 페이지이거나 컨텐츠 페이지, 게시판 페이지가 2차 메뉴인 경우 팝업 기능 포함 */}
-          {(isProductsPage && currentSubMenu) || isContentPageAsSubMenu || isBoardPageAsSubMenu ? (
+          {(isProductsPage && currentSubMenu) || isContentPageAsSubMenu || isBoardPageAsSubMenu || isSchedulePageAsSubMenu ? (
             <>
               {/* 1차 메뉴 - 모바일 50% */}
               <div className="relative w-[50%] md:w-auto">
@@ -510,7 +525,7 @@ function SubNavigationContent({ items = [] }: SubNavigationProps) {
                 </div>
               )}
             </>
-          ) : isContentPageAsMainMenu || isBoardPageAsMainMenu ? (
+          ) : isContentPageAsMainMenu || isBoardPageAsMainMenu || isSchedulePageAsMainMenu ? (
             <>
               {/* 컨텐츠 페이지가 1차 메뉴인 경우 - 팝업 기능 포함 */}
               <div className="relative w-[50%] md:w-auto">

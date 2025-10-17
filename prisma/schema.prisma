@@ -544,4 +544,5 @@ enum NavigationType {
   BOARD
   CONTENT
   EXTERNAL
+  SCHEDULE
 }
