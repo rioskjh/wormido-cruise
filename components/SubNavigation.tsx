@@ -125,6 +125,15 @@ export default function SubNavigation({ items = [] }: SubNavigationProps) {
       if (nav.url && currentPath === nav.url && nav.type === 'CONTENT') {
         return nav
       }
+      
+      // 콘텐츠 페이지 쿼리 파라미터 매치
+      if (nav.url && nav.url.startsWith('/contents?slug=') && currentPath.startsWith('/contents')) {
+        const urlParams = new URLSearchParams(nav.url.split('?')[1])
+        const currentParams = new URLSearchParams(currentPath.split('?')[1] || '')
+        if (urlParams.get('slug') === currentParams.get('slug')) {
+          return nav
+        }
+      }
     }
     return null
   }
@@ -149,6 +158,14 @@ export default function SubNavigation({ items = [] }: SubNavigationProps) {
           // 컨텐츠 페이지 URL 매치 (/contents/slug)
           if (child.url && child.url.startsWith('/contents/') && currentPath.startsWith('/contents/')) {
             if (child.url === currentPath) {
+              return child
+            }
+          }
+          // 컨텐츠 페이지 쿼리 파라미터 매치 (/contents?slug=slug)
+          if (child.url && child.url.startsWith('/contents?slug=') && currentPath.startsWith('/contents')) {
+            const urlParams = new URLSearchParams(child.url.split('?')[1])
+            const currentParams = new URLSearchParams(currentPath.split('?')[1] || '')
+            if (urlParams.get('slug') === currentParams.get('slug')) {
               return child
             }
           }
@@ -200,10 +217,22 @@ export default function SubNavigation({ items = [] }: SubNavigationProps) {
     // 메뉴 클릭시 해당 메뉴로 이동
     if (menu.children && menu.children.length > 0) {
       // 2차 메뉴가 있으면 첫 번째 2차 메뉴로 이동
-      window.location.href = menu.children[0].url || '#'
+      let firstChildUrl = menu.children[0].url || '#'
+      // 기존 /contents/slug 형태를 /contents?slug=slug 형태로 변환
+      if (firstChildUrl.startsWith('/contents/') && !firstChildUrl.includes('?')) {
+        const slug = firstChildUrl.replace('/contents/', '')
+        firstChildUrl = `/contents?slug=${slug}`
+      }
+      window.location.href = firstChildUrl
     } else if (menu.url) {
       // 1차 메뉴에 직접 URL이 있으면 해당 URL로 이동
-      window.location.href = menu.url
+      let menuUrl = menu.url
+      // 기존 /contents/slug 형태를 /contents?slug=slug 형태로 변환
+      if (menuUrl.startsWith('/contents/') && !menuUrl.includes('?')) {
+        const slug = menuUrl.replace('/contents/', '')
+        menuUrl = `/contents?slug=${slug}`
+      }
+      window.location.href = menuUrl
     }
   }
 
@@ -220,7 +249,13 @@ export default function SubNavigation({ items = [] }: SubNavigationProps) {
     
     // 2차 메뉴 클릭시 해당 URL로 이동
     if (subMenu.url) {
-      window.location.href = subMenu.url
+      let subMenuUrl = subMenu.url
+      // 기존 /contents/slug 형태를 /contents?slug=slug 형태로 변환
+      if (subMenuUrl.startsWith('/contents/') && !subMenuUrl.includes('?')) {
+        const slug = subMenuUrl.replace('/contents/', '')
+        subMenuUrl = `/contents?slug=${slug}`
+      }
+      window.location.href = subMenuUrl
     }
   }
 

@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
         where: { id: validatedData.targetId }
       })
       if (content) {
-        finalUrl = `/contents/${content.slug}`
+        finalUrl = `/contents?slug=${content.slug}`
       }
     }
 
