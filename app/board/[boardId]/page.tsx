@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import UserNavigation from '@/components/UserNavigation'
+import SubNavigation from '@/components/SubNavigation'
+import PageBanner from '@/components/PageBanner'
 import Footer from '@/components/Footer'
 
 interface Post {
@@ -126,15 +128,20 @@ export default function BoardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <UserNavigation />
+      
+      {/* 페이지 배너 */}
+      <PageBanner 
+        title={currentBoard?.title || '게시판'}
+        subtitle={currentBoard?.description || ''}
+      />
+      
+      {/* 서브 네비게이션 */}
+      <SubNavigation />
+      
       <div className="py-8">
         <div className="container mx-auto px-4">
-        {/* 게시판 헤더 */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{currentBoard?.title || '게시판'}</h1>
-          <p className="text-gray-600">{currentBoard?.description || ''}</p>
-        </div>
 
         {/* 검색 및 작성 버튼 */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">

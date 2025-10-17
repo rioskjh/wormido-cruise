@@ -183,8 +183,8 @@ export default function DynamicNavigation({ className = '', onItemClick }: Dynam
       // 2차 메뉴가 있으면 첫 번째 2차 메뉴로 이동
       if (hasChildren && Array.isArray(item.children) && item.children.length > 0) {
         const firstChildUrl = item.children[0].url || '#'
-        // 기존 /contents/slug 형태를 /contents?slug=slug 형태로 변환
-        if (firstChildUrl.startsWith('/contents/') && !firstChildUrl.includes('?')) {
+        // contents 경로일 때만 /contents/slug 형태를 /contents?slug=slug 형태로 변환
+        if (firstChildUrl.startsWith('/contents/') && !firstChildUrl.includes('?') && item.type === 'CONTENT') {
           const slug = firstChildUrl.replace('/contents/', '')
           return `/contents?slug=${slug}`
         }

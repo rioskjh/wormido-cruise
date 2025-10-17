@@ -79,16 +79,6 @@ function ContentsPageContent() {
   return (
     <SubPageLayout title={content.title}>
       <article className="w-full">
-        {/* 메타 정보 */}
-        <div className="flex items-center text-sm text-gray-500 space-x-4 mb-8">
-          <time dateTime={content.publishedAt}>
-            발행일: {new Date(content.publishedAt).toLocaleDateString('ko-KR')}
-          </time>
-          <time dateTime={content.updatedAt}>
-            수정일: {new Date(content.updatedAt).toLocaleDateString('ko-KR')}
-          </time>
-        </div>
-
         {/* 컨텐츠 내용 */}
         <div className="prose prose-lg max-w-none w-full">
           <div 

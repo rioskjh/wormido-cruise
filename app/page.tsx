@@ -204,7 +204,7 @@ export default function Home() {
 
             {/* 예약확인 및 취소 카드 */}
             <Link 
-              href="/reservation/check" 
+              href="/reservation/lookup" 
                   className="bg-white box-border content-stretch flex flex-col gap-2.5 items-start px-4 py-5 relative rounded-[10px] shrink-0 flex-1 min-w-0"
                 >
                   <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.2)]" />
@@ -267,7 +267,7 @@ export default function Home() {
 
             {/* 예약확인 및 취소 카드 */}
             <Link 
-              href="/reservation/check" 
+              href="/reservation/lookup" 
               className="bg-white box-border content-stretch flex items-center justify-between px-[50px] py-[40px] relative rounded-[10px] shrink-0 w-[585px]"
             >
               <div aria-hidden="true" className="absolute border border-[#222222] border-solid inset-0 pointer-events-none rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.4)]" />
