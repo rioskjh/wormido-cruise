@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import UserNavigation from '@/components/UserNavigation'
-import Footer from '@/components/Footer'
+import SubPageLayout from '@/components/SubPageLayout'
 import './content-styles.css'
 
 interface Content {
@@ -68,38 +67,26 @@ export default async function ContentPage({ params }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-white">
-      <UserNavigation />
-      
-      <div className="container mx-auto px-4 py-8">
-        <article className="max-w-4xl mx-auto">
-          {/* 헤더 */}
-          <header className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-pretendard">
-              {content.title}
-            </h1>
-            
-            <div className="flex items-center text-sm text-gray-500 space-x-4">
-              <time dateTime={content.publishedAt}>
-                발행일: {new Date(content.publishedAt).toLocaleDateString('ko-KR')}
-              </time>
-              <time dateTime={content.updatedAt}>
-                수정일: {new Date(content.updatedAt).toLocaleDateString('ko-KR')}
-              </time>
-            </div>
-          </header>
+    <SubPageLayout title={content.title}>
+      <article className="w-full">
+        {/* 메타 정보 */}
+        <div className="flex items-center text-sm text-gray-500 space-x-4 mb-8">
+          <time dateTime={content.publishedAt}>
+            발행일: {new Date(content.publishedAt).toLocaleDateString('ko-KR')}
+          </time>
+          <time dateTime={content.updatedAt}>
+            수정일: {new Date(content.updatedAt).toLocaleDateString('ko-KR')}
+          </time>
+        </div>
 
-          {/* 내용 */}
-          <div className="prose prose-lg max-w-none">
-            <div 
-              dangerouslySetInnerHTML={{ __html: content.content }}
-              className="content-body"
-            />
-          </div>
-        </article>
-      </div>
-
-      <Footer />
-    </main>
+        {/* 컨텐츠 내용 */}
+        <div className="prose prose-lg max-w-none w-full">
+          <div 
+            dangerouslySetInnerHTML={{ __html: content.content }}
+            className="content-body"
+          />
+        </div>
+      </article>
+    </SubPageLayout>
   )
 }

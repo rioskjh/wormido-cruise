@@ -25,10 +25,10 @@ interface NavigationItem {
 }
 
 interface SubNavigationProps {
-  items: SubNavigationItem[]
+  items?: SubNavigationItem[]
 }
 
-export default function SubNavigation({ items }: SubNavigationProps) {
+export default function SubNavigation({ items = [] }: SubNavigationProps) {
   const [navigations, setNavigations] = useState<NavigationItem[]>([])
   const [showMainMenu, setShowMainMenu] = useState(false)
   const [showSubMenu, setShowSubMenu] = useState(false)
@@ -120,6 +120,11 @@ export default function SubNavigation({ items }: SubNavigationProps) {
       if (currentPath.startsWith('/contents') && nav.type === 'CONTENT') {
         return nav
       }
+      
+      // 콘텐츠 페이지 URL과 정확히 일치하는 경우
+      if (nav.url && currentPath === nav.url && nav.type === 'CONTENT') {
+        return nav
+      }
     }
     return null
   }
@@ -138,6 +143,12 @@ export default function SubNavigation({ items }: SubNavigationProps) {
             const urlParams = new URLSearchParams(child.url.split('?')[1])
             const currentParams = new URLSearchParams(currentPath.split('?')[1] || '')
             if (urlParams.get('category') === currentParams.get('category')) {
+              return child
+            }
+          }
+          // 컨텐츠 페이지 URL 매치 (/contents/slug)
+          if (child.url && child.url.startsWith('/contents/') && currentPath.startsWith('/contents/')) {
+            if (child.url === currentPath) {
               return child
             }
           }
@@ -321,6 +332,7 @@ export default function SubNavigation({ items }: SubNavigationProps) {
   // 현재 2차 메뉴 찾기
   const currentSubMenu = findCurrentSubMenuByPath(pathname, navigations)
   const isProductsPage = pathname.startsWith('/products')
+  const isContentPage = pathname.startsWith('/contents')
 
   return (
     <nav className="bg-white py-5">
@@ -335,13 +347,13 @@ export default function SubNavigation({ items }: SubNavigationProps) {
             />
           </Link>
 
-          {/* 상품예약 페이지이고 2차 메뉴가 있는 경우 브레드크럼 형태로 표시 */}
-          {isProductsPage && currentSubMenu ? (
+          {/* 상품예약 또는 컨텐츠 페이지이고 2차 메뉴가 있는 경우 브레드크럼 형태로 표시 */}
+          {(isProductsPage || isContentPage) && currentSubMenu ? (
             <>
-              {/* 상품예약 메뉴 - 모바일 40% + 40% */}
+              {/* 1차 메뉴 - 모바일 40% */}
               <div className="flex items-center gap-[10px] w-[40%] md:w-auto">
                 <span className="font-['Pretendard:Medium',_sans-serif] text-[17px] md:text-[17px] text-[14px] text-[#222222] leading-[30px] md:leading-[30px] leading-[20px] truncate">
-                  상품예약
+                  {selectedMainMenu || '메뉴'}
                 </span>
               </div>
               <div className="flex items-center gap-[10px] w-[40%] md:w-auto">
