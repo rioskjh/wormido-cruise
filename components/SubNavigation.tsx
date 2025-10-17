@@ -232,15 +232,15 @@ export default function SubNavigation({ items }: SubNavigationProps) {
     const currentIndex = currentMenu ? navigations.findIndex(nav => nav.id === currentMenu.id) : 0
 
     return (
-      <div className="absolute top-full left-0 mt-1 bg-white border border-[#dddddd] rounded-[4px] shadow-lg z-50 overflow-hidden w-[40%] md:w-auto">
+      <div className="absolute top-full left-0 mt-1 bg-white border border-[#dddddd] rounded-[4px] shadow-lg z-50 overflow-hidden w-full md:w-auto">
         <div className="flex flex-col">
           {navigations.map((menu, index) => {
             const isSelected = index === currentIndex
             const isFirst = index === 0
             const isLast = index === navigations.length - 1
-            
-            return (
-              <div
+
+    return (
+      <div
                 key={menu.id}
                 onClick={() => handleMainMenuSelect(menu)}
                 className={`
@@ -279,7 +279,7 @@ export default function SubNavigation({ items }: SubNavigationProps) {
     const currentIndex = currentSubMenu ? mainMenu.children.findIndex(child => child.id === currentSubMenu.id) : 0
 
     return (
-      <div className="absolute top-full left-0 mt-1 bg-white border border-[#dddddd] rounded-[4px] shadow-lg z-50 overflow-hidden w-[40%] md:w-auto">
+      <div className="absolute top-full left-0 mt-1 bg-white border border-[#dddddd] rounded-[4px] shadow-lg z-50 overflow-hidden w-full md:w-auto">
         <div className="flex flex-col">
           {mainMenu.children.map((subMenu, index) => {
             const isSelected = index === currentIndex
@@ -310,10 +310,10 @@ export default function SubNavigation({ items }: SubNavigationProps) {
                 <p className="font-['Pretendard:Medium',_sans-serif] leading-[30px] md:leading-[30px] leading-[20px] not-italic relative shrink-0 text-[16px] md:text-[16px] text-[14px] text-nowrap whitespace-pre">
                   {subMenu.title}
                 </p>
-              </div>
+                </div>
             )
           })}
-        </div>
+          </div>
       </div>
     )
   }
@@ -402,7 +402,7 @@ export default function SubNavigation({ items }: SubNavigationProps) {
                     {/* 2차 메뉴 팝업 */}
                     {renderSubMenuPopup()}
                   </div>
-                </div>
+            </div>
               )}
             </>
           )}
