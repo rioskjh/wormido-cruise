@@ -234,9 +234,28 @@ function InicisReturnContent() {
   return (
     <div className="min-h-screen bg-white">
       <UserNavigation />
-      <PageBanner title="결제 승인 처리중" />
+      <PageBanner title="결제 리턴 파라미터" />
       <div className="container mx-auto px-4 py-8" style={{ maxWidth: '1200px' }}>
-        <div className="text-center text-gray-700">결제 승인 처리중입니다. 잠시만 기다려주세요...</div>
+        <h2 className="text-2xl font-bold mb-4">INIcis Return Parameters</h2>
+        <div className="bg-gray-50 border border-gray-200 rounded p-4">
+          <pre className="text-xs whitespace-pre-wrap break-words">{lines.join('\n')}</pre>
+        </div>
+        {/* Approve Debug Info */}
+        {(approveJson || approveError) && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded p-4 mt-4">
+            <h3 className="font-semibold mb-2">승인 결과 (Debug)</h3>
+            {approveError && (
+              <div className="text-red-600 text-xs mb-2">{approveError}</div>
+            )}
+            <pre className="text-xs whitespace-pre-wrap break-words">{JSON.stringify(approveJson, null, 2)}</pre>
+          </div>
+        )}
+        {decodedMerchantData && (
+          <div className="bg-gray-50 border border-gray-200 rounded p-4 mt-4">
+            <h3 className="font-semibold mb-2">merchantData (decoded)</h3>
+            <pre className="text-xs whitespace-pre-wrap break-words">{decodedMerchantData}</pre>
+          </div>
+        )}
       </div>
       <Footer />
     </div>

@@ -33,7 +33,7 @@ function ReservationCompleteContent() {
   const { showError } = useToast()
   const [reservationData, setReservationData] = useState<ReservationData | null>(null)
   const [loading, setLoading] = useState(true)
-  // const [debugParams, setDebugParams] = useState<string[]>([])
+  const [debugParams, setDebugParams] = useState<string[]>([])
 
   useEffect(() => {
     const loadReservationData = () => {
@@ -82,18 +82,17 @@ function ReservationCompleteContent() {
     loadReservationData()
   }, [searchParams, router, showError])
 
-  // Debug block disabled for production
-  // useEffect(() => {
-  //   try {
-  //     const list: string[] = []
-  //     searchParams.forEach((value: string, key: string) => {
-  //       list.push(`${key}=${value}`)
-  //     })
-  //     setDebugParams(list)
-  //   } catch {
-  //     setDebugParams([])
-  //   }
-  // }, [searchParams])
+  useEffect(() => {
+    try {
+      const list: string[] = []
+      searchParams.forEach((value: string, key: string) => {
+        list.push(`${key}=${value}`)
+      })
+      setDebugParams(list)
+    } catch {
+      setDebugParams([])
+    }
+  }, [searchParams])
 
   const handleGoToMain = () => {
     router.push('/')
@@ -321,7 +320,13 @@ function ReservationCompleteContent() {
       {/* Footer */}
       <Footer />
 
-      {/* Debug hidden */}
+      {/* Debug: received query params */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="mt-8 bg-gray-100 border border-gray-300 rounded-lg p-4">
+          <h4 className="font-semibold mb-2">Debug: Query Params</h4>
+          <pre className="text-xs whitespace-pre-wrap break-words">{debugParams.join('\n')}</pre>
+        </div>
+      </div>
     </div>
   )
 }
