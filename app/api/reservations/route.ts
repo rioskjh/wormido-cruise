@@ -21,7 +21,9 @@ export async function POST(request: NextRequest) {
       representativePhone,
       representativeEmail,
       totalAmount,
-      selectedOptions = {}
+      selectedOptions = {},
+      orderNumber: incomingOrderNumber,
+      statusMode
     } = body
 
     // 필수 필드 검증
@@ -99,11 +101,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 예약 번호 생성 (YYYYMMDD + 랜덤 6자리)
-    const today = new Date()
-    const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '')
-    const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase()
-    const orderNumber = `WR${dateStr}${randomStr}`
+    // 예약 번호: 전달받은 orderNumber(예: INICIS oid)를 우선 사용, 없으면 생성
+    let orderNumber = incomingOrderNumber as string | undefined
+    if (!orderNumber) {
+      const today = new Date()
+      const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '')
+      const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase()
+      orderNumber = `WR${dateStr}${randomStr}`
+    }
 
     // 트랜잭션으로 예약 생성 및 상품 예약 수 증가
     const result = await prisma.$transaction(async (tx) => {
@@ -123,10 +128,10 @@ export async function POST(request: NextRequest) {
           children,
           infants,
           totalAmount,
-          status: 'CONFIRMED', // 테스트 모드이므로 바로 확정
-          paymentStatus: 'COMPLETED', // 테스트 모드이므로 결제 완료
-          paymentMethod: 'TEST_PAYMENT',
-          paymentDate: new Date(),
+          status: statusMode === 'PENDING' ? 'PENDING' : 'CONFIRMED',
+          paymentStatus: statusMode === 'PENDING' ? 'PENDING' : 'COMPLETED',
+          paymentMethod: statusMode === 'PENDING' ? null : 'TEST_PAYMENT',
+          paymentDate: statusMode === 'PENDING' ? null : new Date(),
           reservationDate: new Date(), // 현재 날짜로 설정
           reservationTime: '10:00' // 기본 시간 설정
         },

@@ -1,30 +1,28 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import UserNavigation from '@/components/UserNavigation'
 import Footer from '@/components/Footer'
 
 export default function ReservationLookupPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [orderNumber, setOrderNumber] = useState('')
   const [customerName, setCustomerName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [autoQueried, setAutoQueried] = useState(false)
 
-  const handleLookup = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!orderNumber.trim() || !customerName.trim()) {
+  const performLookup = async (ord: string, name: string) => {
+    if (!ord.trim() || !name.trim()) {
       setError('예약번호와 예약자명을 모두 입력해주세요.')
       return
     }
-
     setLoading(true)
     setError('')
-
     try {
-      const response = await fetch(`/api/reservations/detail?orderNumber=${encodeURIComponent(orderNumber)}&customerName=${encodeURIComponent(customerName)}`)
+      const response = await fetch(`/api/reservations/detail?orderNumber=${encodeURIComponent(ord)}&customerName=${encodeURIComponent(name)}`)
       const data = await response.json()
 
       if (data.ok) {
@@ -38,6 +36,22 @@ export default function ReservationLookupPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  useEffect(() => {
+    const o = searchParams.get('orderNumber')
+    const n = searchParams.get('customerName')
+    if (o) setOrderNumber(o)
+    if (n) setCustomerName(n)
+    if (o && n && !autoQueried) {
+      setAutoQueried(true)
+      performLookup(o, n)
+    }
+  }, [searchParams, autoQueried])
+
+  const handleLookup = async (e: React.FormEvent) => {
+    e.preventDefault()
+    performLookup(orderNumber, customerName)
   }
 
   return (

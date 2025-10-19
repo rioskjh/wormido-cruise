@@ -115,6 +115,162 @@ function ReservationContent() {
       showError('입력 오류', '이메일을 입력해주세요.')
       return
     }
+    // email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(customerInfo.customerEmail)) {
+      showError('입력 오류', '올바른 이메일 형식을 입력해주세요.')
+      return
+    }
+    
+    // 대표 탑승자 정보 검증
+    if (!customerInfo.representativeName.trim()) {
+      showError('입력 오류', '대표 탑승자명을 입력해주세요.')
+      return
+    }
+    if (!customerInfo.representativePhone.trim()) {
+      showError('입력 오류', '대표 탑승자 연락처를 입력해주세요.')
+      return
+    }
+    if (!customerInfo.representativeEmail.trim()) {
+      showError('입력 오류', '대표 탑승자 이메일을 입력해주세요.')
+      return
+    }
+    if (!emailRegex.test(customerInfo.representativeEmail)) {
+      showError('입력 오류', '대표 탑승자 이메일 형식이 올바르지 않습니다.')
+      return
+    }
+
+    // terms validation (필수 두 개 체크)
+    const terms1 = (document.getElementById('terms1') as HTMLInputElement | null)?.checked
+    const terms2 = (document.getElementById('terms2') as HTMLInputElement | null)?.checked
+    if (!terms1 || !terms2) {
+      showError('약관 동의 필요', '필수 약관에 동의해 주세요.')
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      // 1) 서버에서 이니시스 파라미터 생성
+      const prepRes = await fetch('/api/payment/inicis/prepare', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ price: reservationData.totalPrice })
+      })
+      const prep = await prepRes.json()
+      if (!prep.ok) {
+        showError('결제 오류', '결제 준비에 실패했습니다.')
+        setLoading(false)
+        return
+      }
+
+      // 2) stdpay.js 로드 후 결제창 호출
+      await new Promise<void>((resolve, reject) => {
+        const existing = document.getElementById('inicis-stdpay') as HTMLScriptElement | null
+        if (existing) return resolve()
+        const s = document.createElement('script')
+        s.id = 'inicis-stdpay'
+        // Use INICIS staging stdpay script for test environment
+        s.src = 'https://stgstdpay.inicis.com/stdjs/INIStdPay.js'
+        s.onload = () => resolve()
+        s.onerror = () => reject(new Error('stdpay.js load failed'))
+        document.body.appendChild(s)
+      })
+
+      const { mid, oid, price, timestamp, signature, verification, mKey, version, currency, gopaymethod, acceptmethod, use_chkfake, returnUrl } = prep.data
+
+      const form = document.createElement('form')
+      form.id = 'SendPayForm_id'
+      form.name = 'SendPayForm_id'
+      form.method = 'POST'
+      form.acceptCharset = 'UTF-8'
+
+      const add = (n: string, v: string) => { const i = document.createElement('input'); i.type='hidden'; i.name=n; i.value=v; form.appendChild(i) }
+
+      add('version', version)
+      add('charset', 'UTF-8')
+      add('mid', mid)
+      add('goodname', '월미도 크루즈 예약')
+      add('oid', oid)
+      add('price', String(price))
+      add('currency', currency)
+      add('timestamp', timestamp)
+      add('signature', signature)
+      add('verification', verification)
+      add('mKey', mKey)
+      add('gopaymethod', gopaymethod)
+      add('acceptmethod', acceptmethod)
+      add('use_chkfake', use_chkfake || 'Y')
+      add('returnUrl', returnUrl)
+
+      // Buyer info
+      add('buyername', customerInfo.customerName)
+      add('buyertel', customerInfo.customerPhone)
+      add('buyeremail', customerInfo.customerEmail)
+
+      // Custom context to roundtrip back (merchantData)
+      const merchantPayload = {
+        productId: reservationData.productId,
+        adults: reservationData.adults,
+        children: reservationData.children,
+        infants: reservationData.infants,
+        totalPrice: reservationData.totalPrice,
+        customerName: customerInfo.customerName,
+        customerPhone: customerInfo.customerPhone,
+        customerEmail: customerInfo.customerEmail,
+        representativeName: customerInfo.representativeName,
+        representativePhone: customerInfo.representativePhone,
+        representativeEmail: customerInfo.representativeEmail,
+        oid,
+        // Preserve original reservation page URL params for cancel redirect
+        reservationQuery: (typeof window !== 'undefined' ? window.location.search.replace(/^\?/, '') : ''),
+        reservationPath: (typeof window !== 'undefined' ? (window.location.pathname + window.location.search) : '/reservation')
+      }
+      try {
+        const md = window.btoa(unescape(encodeURIComponent(JSON.stringify(merchantPayload))))
+        add('merchantData', md)
+      } catch {
+        // fallback plain JSON if base64 fails
+        add('merchantData', JSON.stringify(merchantPayload))
+      }
+
+      document.body.appendChild(form)
+
+      // @ts-ignore INIStdPay injected by stdpay.js
+      if (typeof (window as any).INIStdPay === 'undefined') {
+        showError('결제 오류', '결제 스크립트를 불러오지 못했습니다.')
+        setLoading(false)
+        return
+      }
+      // @ts-ignore
+      (window as any).INIStdPay.pay('SendPayForm_id')
+    } catch (e) {
+      showError('결제 오류', '결제 진행 중 오류가 발생했습니다.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  /*
+  백업: 기존 결제 처리 로직 (예약 생성 + 테스트 모드 완료 페이지 이동)
+  필요 시 아래 내용을 함수로 복구하여 사용하세요.
+
+  const handlePaymentLegacy = async () => {
+    if (!reservationData) return
+
+    // 예약자 정보 검증
+    if (!customerInfo.customerName.trim()) {
+      showError('입력 오류', '예약자명을 입력해주세요.')
+      return
+    }
+    if (!customerInfo.customerPhone.trim()) {
+      showError('입력 오류', '연락처를 입력해주세요.')
+      return
+    }
+    if (!customerInfo.customerEmail.trim()) {
+      showError('입력 오류', '이메일을 입력해주세요.')
+      return
+    }
     
     // 대표 탑승자 정보 검증
     if (!customerInfo.representativeName.trim()) {
@@ -209,6 +365,7 @@ function ReservationContent() {
       setLoading(false)
     }
   }
+  */
 
   if (!reservationData) {
     return (
@@ -314,12 +471,18 @@ function ReservationContent() {
                 <input
                   type="tel"
                   value={customerInfo.customerPhone}
-                  onChange={(e) => setCustomerInfo(prev => ({
-                    ...prev,
-                    customerPhone: e.target.value
-                  }))}
+                  onChange={(e) => {
+                    const sanitized = e.target.value.replace(/[^0-9\-]/g, '').slice(0, 13)
+                    setCustomerInfo(prev => ({
+                      ...prev,
+                      customerPhone: sanitized
+                    }))
+                  }}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="연락처를 입력하세요"
+                  inputMode="numeric"
+                  pattern="^[0-9\-]{9,13}$"
+                  maxLength={13}
                 />
               </div>
               <div>
@@ -335,6 +498,7 @@ function ReservationContent() {
                   }))}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="이메일을 입력하세요"
+                  maxLength={100}
                 />
               </div>
             </div>
@@ -366,12 +530,18 @@ function ReservationContent() {
                 <input
                   type="tel"
                   value={customerInfo.representativePhone}
-                  onChange={(e) => setCustomerInfo(prev => ({
-                    ...prev,
-                    representativePhone: e.target.value
-                  }))}
+                  onChange={(e) => {
+                    const sanitized = e.target.value.replace(/[^0-9\-]/g, '').slice(0, 13)
+                    setCustomerInfo(prev => ({
+                      ...prev,
+                      representativePhone: sanitized
+                    }))
+                  }}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="대표 탑승자 연락처를 입력하세요"
+                  inputMode="numeric"
+                  pattern="^[0-9\-]{9,13}$"
+                  maxLength={13}
                 />
               </div>
               <div>
@@ -387,6 +557,7 @@ function ReservationContent() {
                   }))}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="대표 탑승자 이메일을 입력하세요"
+                  maxLength={100}
                 />
               </div>
             </div>

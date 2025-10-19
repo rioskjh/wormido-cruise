@@ -33,6 +33,7 @@ function ReservationCompleteContent() {
   const { showError } = useToast()
   const [reservationData, setReservationData] = useState<ReservationData | null>(null)
   const [loading, setLoading] = useState(true)
+  // const [debugParams, setDebugParams] = useState<string[]>([])
 
   useEffect(() => {
     const loadReservationData = () => {
@@ -81,12 +82,33 @@ function ReservationCompleteContent() {
     loadReservationData()
   }, [searchParams, router, showError])
 
+  // Debug block disabled for production
+  // useEffect(() => {
+  //   try {
+  //     const list: string[] = []
+  //     searchParams.forEach((value: string, key: string) => {
+  //       list.push(`${key}=${value}`)
+  //     })
+  //     setDebugParams(list)
+  //   } catch {
+  //     setDebugParams([])
+  //   }
+  // }, [searchParams])
+
   const handleGoToMain = () => {
     router.push('/')
   }
 
   const handleReservationLookup = () => {
-    router.push('/reservation/lookup')
+    if (!reservationData) {
+      router.push('/reservation/lookup')
+      return
+    }
+    const q = new URLSearchParams({
+      orderNumber: reservationData.orderNumber,
+      customerName: reservationData.customerName,
+    })
+    router.push(`/reservation/lookup?${q.toString()}`)
   }
 
   if (loading) {
@@ -298,6 +320,8 @@ function ReservationCompleteContent() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Debug hidden */}
     </div>
   )
 }
